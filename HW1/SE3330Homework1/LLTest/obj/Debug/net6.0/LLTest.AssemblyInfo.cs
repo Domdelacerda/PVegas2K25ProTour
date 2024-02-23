@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LLTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df74d74bd079f64f6cc21f00a9226ced64722b6c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48c605d43df533f4d565fd685316359f797d49f2")]
 [assembly: System.Reflection.AssemblyProductAttribute("LLTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LLTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -73,6 +73,21 @@ namespace SE3330Homework1
 
         }
 
+        public int Length()
+        {
+            int length = 0;
+
+            LLNode current = GetHead();
+
+            while(current != null)
+            {
+                length++;
+                current = current.getNext();
+            }
+             
+            return length;
+        }
+
         public void DeleteList()
         {
             Dispose();

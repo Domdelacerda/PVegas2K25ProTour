@@ -68,7 +68,15 @@ namespace LLTest
 
         }
 
+        [TestMethod]
+        public void TestLength()
+        {
+            LLNode node = new LLNode(2, new LLNode(3, new LLNode(5, null)));
 
+            LList list = new LList(node);
+
+            Assert.AreEqual(list.Length(), 3);
+        }
 
         [TestMethod]
         public void TestDelete()
