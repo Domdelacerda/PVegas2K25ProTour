@@ -1,0 +1,12 @@
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.csproj.AssemblyReference.cache
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.AssemblyInfoInputs.cache
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.AssemblyInfo.cs
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.csproj.CoreCompileInputs.cache
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.deps.json
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.dll
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.pdb
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.dll
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\refint\SE3330Homework1.dll
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.pdb
+C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\ref\SE3330Homework1.dll
