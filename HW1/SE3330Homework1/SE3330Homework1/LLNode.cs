@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SE3330Homework1
 {
@@ -14,6 +15,20 @@ namespace SE3330Homework1
         {
             this.data = data;
             this.next = next;
+        }
+
+        // Andrew's Code
+        public int getData()
+        {
+
+            return data;
+        }
+
+        public LLNode getNext()
+
+        {
+            return next;
+
         }
     }
 }

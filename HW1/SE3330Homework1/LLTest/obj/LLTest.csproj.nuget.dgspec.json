@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\LLTest\\LLTest.csproj": {}
+    "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\LLTest\\LLTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\LLTest\\LLTest.csproj": {
+    "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\LLTest\\LLTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\LLTest\\LLTest.csproj",
+        "projectUniqueName": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\LLTest\\LLTest.csproj",
         "projectName": "LLTest",
-        "projectPath": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\LLTest\\LLTest.csproj",
-        "packagesPath": "C:\\Users\\delad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\LLTest\\obj\\",
+        "projectPath": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\LLTest\\LLTest.csproj",
+        "packagesPath": "C:\\Users\\camsc\\.nuget\\packages\\",
+        "outputPath": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\LLTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\delad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\camsc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj": {
-                "projectPath": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj"
+              "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj": {
+                "projectPath": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj"
               }
             }
           }
@@ -38,6 +38,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -77,21 +82,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj": {
+    "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj",
+        "projectUniqueName": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj",
         "projectName": "SE3330Homework1",
-        "projectPath": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj",
-        "packagesPath": "C:\\Users\\delad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\delad\\source\\repos\\SE3330Homework1\\SE3330Homework1\\obj\\",
+        "projectPath": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\SE3330Homework1.csproj",
+        "packagesPath": "C:\\Users\\camsc\\.nuget\\packages\\",
+        "outputPath": "C:\\Life Plans\\UW Platteville\\UWP Classes Spring 2024\\Intermediate SE\\compu-force\\HW1\\SE3330Homework1\\SE3330Homework1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\delad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\camsc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -111,6 +116,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -132,7 +142,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -10,3 +10,15 @@ C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3
 C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\refint\SE3330Homework1.dll
 C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.pdb
 C:\Users\delad\source\repos\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\ref\SE3330Homework1.dll
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.deps.json
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.dll
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\bin\Debug\net6.0\SE3330Homework1.pdb
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.AssemblyInfoInputs.cache
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.AssemblyInfo.cs
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.csproj.CoreCompileInputs.cache
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.sourcelink.json
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.dll
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\refint\SE3330Homework1.dll
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\SE3330Homework1.pdb
+C:\Life Plans\UW Platteville\UWP Classes Spring 2024\Intermediate SE\compu-force\HW1\SE3330Homework1\SE3330Homework1\obj\Debug\net6.0\ref\SE3330Homework1.dll

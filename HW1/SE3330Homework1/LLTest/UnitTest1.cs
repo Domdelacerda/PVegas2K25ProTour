@@ -27,16 +27,58 @@ namespace LLTest
             Assert.IsFalse(newList1.isEmpty());
         }
 
+        // Andrew's Code:
+        [TestMethod]
+
+        public void TestDisplay_Null()
+        {
+
+            LList nList = new LList(null);
+
+            Assert.IsNull(nList.displayList());
+
+        }
+
+        [TestMethod]
+
+        public void TestDisplay_NotNull()
+        {
+
+            LLNode node1 = new LLNode(2, new LLNode(3, new LLNode(5, null)));
+
+            LList nList = new LList(node1);
+
+            int[] nodeArray = nList.displayList();
+
+            int x = 0;
+
+            int[] ans = { 2, 3, 5 };
+
+            while (nodeArray.Length > x)
+
+            {
+
+                Assert.IsNotNull(nodeArray[x]);
+
+                Assert.IsTrue(nodeArray[x] == ans[x]);
+
+                x++;
+
+            }
+
+        }
 
 
-        // [TestMethod]
-        // public void TestDelete(LList myList)
-        // {
-                // This code will pass the test if the reference to the pointer is null and assume that the
-                // garbage collector will remove any dangling pointers that weren't successfully deallocated
-                // before the reference was set to null. 
 
-                // Assert.IsNull(myList);
-        // }
+        [TestMethod]
+        public void TestDelete()
+        {
+            LList myList = new LList(null);
+
+            myList.DeleteList();
+            
+
+            Assert.IsNull(myList.GetHead());
+        }
     }
 }
