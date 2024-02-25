@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike1", "Spike1\Spike1.csproj", "{4FB2A07E-61DD-40CE-B7B1-AA3C0CCB43BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike1Test", "Spike1Test\Spike1Test.csproj", "{2041C43E-5291-46B3-865B-03F4F157C957}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FB2A07E-61DD-40CE-B7B1-AA3C0CCB43BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB2A07E-61DD-40CE-B7B1-AA3C0CCB43BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB2A07E-61DD-40CE-B7B1-AA3C0CCB43BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB2A07E-61DD-40CE-B7B1-AA3C0CCB43BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2041C43E-5291-46B3-865B-03F4F157C957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2041C43E-5291-46B3-865B-03F4F157C957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2041C43E-5291-46B3-865B-03F4F157C957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2041C43E-5291-46B3-865B-03F4F157C957}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0211ED3D-FA61-41BF-8383-8E06B300FA54}
+	EndGlobalSection
+EndGlobal
