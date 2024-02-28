@@ -1,3 +1,3 @@
 ﻿
-using var game = new PVegas2K25ProTour.Game1();
+using var game = new PVegas2K25ProTour.GameControl();
 game.Run();
