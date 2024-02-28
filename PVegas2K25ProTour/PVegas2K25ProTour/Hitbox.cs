@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PVegas2K25ProTour
 {
-    internal interface Hitbox
+    public interface Hitbox
     {
+
     }
 }

@@ -6,17 +6,26 @@ namespace PVegas2K25ProTour
 {
     public class GameControl : Game
     {
+        private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
+
+        private Vector2 mouse_pos;
+        private bool dragging_mouse = false;
         private bool game_paused = false;
-        private Texture2D golf_ball;
+
+        private Ball golf_ball;
+        private Shot shot;
+
+        //---------------------------------------------------------------------
+        // GENERATED METHODS
+        //---------------------------------------------------------------------
 
         public GameControl()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            //_graphics.ToggleFullScreen();
         }
 
         protected override void Initialize()
@@ -28,18 +37,28 @@ namespace PVegas2K25ProTour
 
         protected override void LoadContent()
         {
-            _sprite_batch = new SpriteBatch(GraphicsDevice);
+            _device = GraphicsDevice;
+            _sprite_batch = new SpriteBatch(_device);
 
             // TODO: use this.Content to load your game content here
-            golf_ball = Content.Load<Texture2D>("GolfBall");
+            golf_ball = new Ball(_device, _sprite_batch);
+            golf_ball.LoadContent(Content);
+            shot = new Shot(_device, _sprite_batch);
+            shot.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
+                ButtonState.Pressed || 
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
+            MouseState mouse_state = Mouse.GetState();
+            moveMouseTo(mouse_state.X, mouse_state.Y);
+            updateDragState(isDraggingBall(mouse_state, golf_ball));
+            shot.Update(dragging_mouse, mouse_pos, golf_ball);
 
             base.Update(gameTime);
         }
@@ -50,15 +69,87 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
-            _sprite_batch.Draw(golf_ball, new Vector2(0, 0), Color.White);
+            shot.Draw();
+            golf_ball.Draw();
             _sprite_batch.End();
 
             base.Draw(gameTime);
         }
 
+        //---------------------------------------------------------------------
+        // PROGRAMMER-WRITTEN METHODS
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// Determines if the mouse is being dragged from the ball or
+        /// not
+        /// </summary>
+        /// <param name="mouse"> the mouse state that input data is pulled
+        /// from.</param>
+        /// <returns> if the mouse is dragging the ball.</returns>
+        public bool isDraggingBall(MouseState mouse, Ball ball)
+        {
+            bool drag_state = false;
+            if (mouse.LeftButton == ButtonState.Released)
+            {
+                drag_state = false;
+            }
+            // If the player's left mouse button is down AND the mouse is over
+            // the sprite OR if the player was already dragging the cursor from
+            // the ball previously
+            else if ((mouse.LeftButton == ButtonState.Pressed &&
+                ball.isPointOverBall(mouse_pos) || dragging_mouse == true))
+            {
+                drag_state = true;
+            }
+            return drag_state;
+        }
+
+        /// <summary>
+        /// Sets the current position of the mouse
+        /// </summary>
+        /// <param name="x">the new horizontal position of the mouse.</param>
+        /// <param name="y">the new vertical position of the mouse.</param>
+        public void moveMouseTo(float x, float y)
+        {
+            mouse_pos.X = x;
+            mouse_pos.Y = y;
+        }
+
+        /// <summary>
+        /// Sets the current dragging state of the mouse
+        /// </summary>
+        /// <param name="newDraggingState">the new power of the shot.</param>
+        public void updateDragState(bool newDraggingState)
+        {
+            dragging_mouse = newDraggingState;
+        }
+
         public bool isGamePaused()
         {
             return game_paused;
+        }
+
+        //---------------------------------------------------------------------
+        // FOR TEST PURPOSES ONLY
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// Gets the current ball active in the game scene
+        /// </summary>
+        /// <returns>the reference to the golf ball</returns>
+        public Ball getBall()
+        {
+            return golf_ball;
+        }
+
+        /// <summary>
+        /// Gets the current shot active in the game scene
+        /// </summary>
+        /// <returns>the reference to the shot</returns>
+        public Shot getShot()
+        {
+            return shot;
         }
     }
 }
