@@ -6,6 +6,7 @@ using PVegas2K25ProTour;
 
 namespace GameTest
 {
+
     [TestClass]
     public class UnitTest1
     {
@@ -91,6 +92,41 @@ namespace GameTest
             float farShotPower = shotReference.launchPower();
 
             Assert.IsTrue(farShotPower > closeShotPower);
+        }
+
+        [TestMethod]
+        public void TestBallStops()
+        {
+            bool ballLaunched = false;
+            using var newGame = new GameControl();
+            newGame.Run();
+            Ball golfBallReference = newGame.getBall();
+            Shot shotReference = newGame.getShot();
+
+            // Launch ball and set ballLaunched to true
+            // IMPLEMENT!!!! LAUNCH BALL
+
+            if (ballLaunched)
+            {
+                // let the ball stop rolling,wait for 10 seconds
+                Thread.Sleep(10000); 
+
+                // see if the ball speed reaches 0
+                Assert.IsTrue(golfBallReference.getBallSpeed().X == 0 &&
+                    golfBallReference.getBallSpeed().Y == 0);
+            }
+        }
+
+        [TestMethod]
+        public void TestBallFriction()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestBallLaunch()
+        {
+
         }
     }
 }

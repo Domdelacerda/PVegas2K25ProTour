@@ -40,7 +40,7 @@ namespace PVegas2K25ProTour
         {
             if (drag_state == false)
             {
-                releaseShot();
+                releaseShot(ball);
             }
             else
             {
@@ -61,9 +61,22 @@ namespace PVegas2K25ProTour
         /// <summary>
         /// Sets the current shot power to 0
         /// </summary>
-        public void releaseShot()
+        public void releaseShot(Ball myBall)
         {
+            myBall.setBallSpeed(launch_speed);
             launch_speed = Vector2.Zero;
+        }
+
+
+        // Checks to see if the shot has been released
+        public bool shotReleased()
+        {
+            bool shotReleased = false;
+
+            if (launch_speed == Vector2.Zero)
+                shotReleased = true;
+
+            return shotReleased;
         }
 
         /// <summary>
@@ -79,6 +92,7 @@ namespace PVegas2K25ProTour
                 arrow_sprite.Width, (int)launch_speed.Length());
         }
 
+
         /// <summary>
         /// Gets the power of the launch by determining the launch speed
         /// vector's magnitude
@@ -86,6 +100,11 @@ namespace PVegas2K25ProTour
         public float launchPower()
         {
             return launch_speed.Length();
+        }
+
+        public Vector2 getLaunchSpeed()
+        {
+            return launch_speed;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace PVegas2K25ProTour
 
         private const int BALL_START_POINT_X = 400;
         private const int BALL_START_POINT_Y = 200;
+        private const float DRAG_REDUCTION_FACTOR = 0.999f;
 
         private Vector2 ball_pos;
         private Vector2 ball_speed;
@@ -91,6 +92,68 @@ namespace PVegas2K25ProTour
         public Vector2 position()
         {
             return ball_pos;
+        }
+
+        // gives the ball friction and makes it slow down over time
+        // DRAG_REDUCTION_FACTOR is the % amount that the ball will reduce in speed per update
+        public void updateSpeed()
+        {
+            // Fix this 
+            bool isEitherZero = false;
+
+            if(ball_speed.X == 0 || ball_speed.Y == 0)
+            {
+                isEitherZero = true;
+            }
+
+            // Make sure that neither X or Y in speed Vector is already 0
+            if(!isEitherZero)
+            {
+                ball_speed *= DRAG_REDUCTION_FACTOR;
+            }
+        }
+
+        // Position updates based on the ball speed
+        public void updatePosition(GameTime gametime)
+        {
+            // the new position is based on old position and speed. += relationship
+
+            float time = (float)gametime.ElapsedGameTime.TotalSeconds;
+
+            // Calculate the movement vector
+            Vector2 movement = ball_speed * time;
+
+            // Update the position
+            ball_pos += movement;
+        }
+
+        public void launchBall(Shot myShot)
+        {
+            // Potential issue? If the shot has been released when is launch power set to zero?
+            // There's a chance this could never evaluate to true. 
+            if (myShot.launchPower() > 0 && myShot.shotReleased())
+            {
+                // get the angle of the user's shot using Vector2 launch_speed: 
+                
+                //  launch power?
+                /*float launchPower = myShot.launchPower();
+                ball_speed.X = launchPower;
+                ball_speed.Y = launchPower;*/
+
+                ball_speed = myShot.getLaunchSpeed();
+
+                // update the ball position with power according to launch power
+            }
+        }
+
+        public Vector2 getBallSpeed()
+        {
+            return ball_speed;
+        }
+
+        public void setBallSpeed(Vector2 newSpeed)
+        {
+            ball_speed = newSpeed;
         }
     }
 }

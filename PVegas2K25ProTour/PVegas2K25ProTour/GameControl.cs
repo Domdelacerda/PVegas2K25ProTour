@@ -49,10 +49,16 @@ namespace PVegas2K25ProTour
 
         protected override void Update(GameTime gameTime)
         {
+            // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
                 ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+
+            golf_ball.updateSpeed();
+            golf_ball.updatePosition(gameTime);
+
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
