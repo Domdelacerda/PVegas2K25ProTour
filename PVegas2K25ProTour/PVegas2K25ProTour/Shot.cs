@@ -46,7 +46,7 @@ namespace PVegas2K25ProTour
             {
                 windupShot(mouse_pos, ball.center());
             }
-            arrow_rect = resizeArrow(ball.position());
+            resizeArrow(ball.position());
         }
 
         /// <summary>
@@ -81,14 +81,14 @@ namespace PVegas2K25ProTour
 
         /// <summary>
         /// Creates a new rectangle representing the dimensions of the shot
-        /// display arrow
+        /// display arrow and sets the arrows dimensions to that rectangle
         /// </summary>
-        /// <param name="ball">the ball used for positioning the arrow.</param>
-        /// <returns>the new size and position of the display arrow.</returns>
-        public Rectangle resizeArrow(Vector2 ball_pos)
+        /// <param name="ball_center">the ball's center used for positioning
+        /// the arrow.</param>
+        public void resizeArrow(Vector2 ball_center)
         {
-            return new Rectangle((int)ball_pos.X, 
-                (int)ball_pos.Y - (int)launch_speed.Length(),
+            arrow_rect = new Rectangle((int)ball_center.X, 
+                (int)ball_center.Y - (int)launch_speed.Length(),
                 arrow_sprite.Width, (int)launch_speed.Length());
         }
 
@@ -105,6 +105,18 @@ namespace PVegas2K25ProTour
         public Vector2 getLaunchSpeed()
         {
             return launch_speed;
+        //---------------------------------------------------------------------
+        // FOR TEST PURPOSES ONLY
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// Gets the length of the arrow representing the shot's speed and
+        /// direction
+        /// </summary>
+        public float arrowLength()
+        {
+            return arrow_rect.Height;
+
         }
     }
 }

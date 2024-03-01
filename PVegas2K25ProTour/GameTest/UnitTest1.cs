@@ -17,11 +17,13 @@ namespace GameTest
         [TestMethod]
         public void TestIsPointOverSpriteCenter()
         {
-            using var newGame = new GameControl();
-            newGame.Run();
-            Ball golfBallReference = newGame.getBall();
-            Vector2 golfBallCenter = golfBallReference.center();
-            bool overlap = golfBallReference.isPointOverBall(golfBallCenter);
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Vector2 golf_ball_center = golf_ball_reference.center();
+            bool overlap = 
+                golf_ball_reference.isPointOverBall(golf_ball_center);
+            new_game.Exit();
             Assert.IsTrue(overlap);
         }
 
@@ -32,12 +34,12 @@ namespace GameTest
         [TestMethod]
         public void TestIsPointOverSpriteEdge()
         {
-            using var newGame = new GameControl();
-            newGame.Run();
-            Ball golfBallReference = newGame.getBall();
-            Vector2 golfBallEdge = golfBallReference.center();
-            golfBallEdge.Y += (golfBallReference.radius());
-            bool overlap = golfBallReference.isPointOverBall(golfBallEdge);
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Vector2 golf_ball_edge = golf_ball_reference.center();
+            golf_ball_edge.Y += (golf_ball_reference.radius());
+            bool overlap = golf_ball_reference.isPointOverBall(golf_ball_edge);
             Assert.IsTrue(overlap);
         }
 
@@ -48,16 +50,16 @@ namespace GameTest
         [TestMethod]
         public void TestIsPointNotOverSprite()
         {
-            using var newGame = new GameControl();
-            newGame.Run();
-            Ball golfBallReference = newGame.getBall();
-            Vector2 pointOnMap = golfBallReference.center();
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Vector2 point_on_map = golf_ball_reference.center();
             // Add the size of the radius to each coordinate so that the point
             // is in the top right corner of the ball's square sprite but is
             // not actually overlapping the circular ball itself
-            pointOnMap.X += golfBallReference.radius();
-            pointOnMap.Y += golfBallReference.radius();
-            bool overlap = golfBallReference.isPointOverBall(pointOnMap);
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            bool overlap = golf_ball_reference.isPointOverBall(point_on_map);
             Assert.IsFalse(overlap);
         }
 
@@ -69,29 +71,84 @@ namespace GameTest
         [TestMethod]
         public void TestWindupShot()
         {
-            using var newGame = new GameControl();
-            newGame.Run();
-            Ball golfBallReference = newGame.getBall();
-            Shot shotReference = newGame.getShot();
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
 
             // Set the mouse's position to a point close to the center of the
             // golf ball and record the shot's power at that point
-            Vector2 pointOnMap = golfBallReference.center();
-            pointOnMap.X += golfBallReference.radius();
-            pointOnMap.Y += golfBallReference.radius();
-            shotReference.windupShot(pointOnMap, 
-                golfBallReference.center());
-            float closeShotPower = shotReference.launchPower();
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+            float close_shot_power = shot_reference.launchPower();
 
             // Set the mouse's position to a point farther from the center of
             // the golf ball and record the shot's power at that point
-            pointOnMap.X += golfBallReference.radius();
-            pointOnMap.Y += golfBallReference.radius();
-            shotReference.windupShot(pointOnMap,
-                golfBallReference.center());
-            float farShotPower = shotReference.launchPower();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+            float far_shot_power = shot_reference.launchPower();
 
-            Assert.IsTrue(farShotPower > closeShotPower);
+            Assert.IsTrue(far_shot_power > close_shot_power);
+        }
+
+        /// <summary>
+        /// Examines 2 different points away from the ball--one farther and 
+        /// one closer--to determine if the farther point has a larger
+        /// arrow display, which it always should
+        /// </summary>
+        [TestMethod]
+        public void TestArrowSize()
+        {
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+
+            // Set the mouse's position to a point close to the center of the
+            // golf ball and record the shot's arrow length at that point
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+            shot_reference.resizeArrow(golf_ball_reference.center());
+            float close_shot_arrow_length = shot_reference.arrowLength();
+
+            // Set the mouse's position to a point farther from the center of
+            // the golf ball and record the shot's power at that point
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+            shot_reference.resizeArrow(golf_ball_reference.center());
+            float far_shot_arrow_length = shot_reference.arrowLength();
+
+            Assert.IsTrue(far_shot_arrow_length > close_shot_arrow_length);
+        }
+
+        /// <summary>
+        /// Determines if the shot arrow's length is zero (not visible) when
+        /// the mouse is dragged to the center of the ball, meaning that the
+        /// shot power is zero
+        /// </summary>
+        [TestMethod]
+        public void TestArrowSizeZero()
+        {
+            using var new_game = new GameControl();
+            new_game.Run();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+            Vector2 golf_ball_center = golf_ball_reference.center();
+            shot_reference.windupShot(golf_ball_center,
+                golf_ball_center);
+            shot_reference.resizeArrow(golf_ball_reference.center());
+            float shot_arrow_length = shot_reference.arrowLength();
+            Assert.IsTrue(shot_arrow_length == 0);
         }
 
         [TestMethod]
