@@ -23,7 +23,7 @@ namespace GameTest
             Vector2 golf_ball_center = golf_ball_reference.center();
             bool overlap = 
                 golf_ball_reference.isPointOverBall(golf_ball_center);
-            new_game.Exit();
+            new_game.quit();
             Assert.IsTrue(overlap);
         }
 
@@ -40,6 +40,7 @@ namespace GameTest
             Vector2 golf_ball_edge = golf_ball_reference.center();
             golf_ball_edge.Y += (golf_ball_reference.radius());
             bool overlap = golf_ball_reference.isPointOverBall(golf_ball_edge);
+            new_game.quit();
             Assert.IsTrue(overlap);
         }
 
@@ -60,6 +61,7 @@ namespace GameTest
             point_on_map.X += golf_ball_reference.radius();
             point_on_map.Y += golf_ball_reference.radius();
             bool overlap = golf_ball_reference.isPointOverBall(point_on_map);
+            new_game.quit();
             Assert.IsFalse(overlap);
         }
 
@@ -93,6 +95,7 @@ namespace GameTest
                 golf_ball_reference.center());
             float far_shot_power = shot_reference.launchPower();
 
+            new_game.quit();
             Assert.IsTrue(far_shot_power > close_shot_power);
         }
 
@@ -128,6 +131,7 @@ namespace GameTest
             shot_reference.resizeArrow(golf_ball_reference.center());
             float far_shot_arrow_length = shot_reference.arrowLength();
 
+            new_game.quit();
             Assert.IsTrue(far_shot_arrow_length > close_shot_arrow_length);
         }
 
@@ -148,6 +152,7 @@ namespace GameTest
                 golf_ball_center);
             shot_reference.resizeArrow(golf_ball_reference.center());
             float shot_arrow_length = shot_reference.arrowLength();
+            new_game.quit();
             Assert.IsTrue(shot_arrow_length == 0);
         }
 

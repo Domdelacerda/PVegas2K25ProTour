@@ -18,7 +18,9 @@ namespace PVegas2K25ProTour
 
         private const int BALL_START_POINT_X = 400;
         private const int BALL_START_POINT_Y = 200;
-        private const float DRAG_REDUCTION_FACTOR = 0.999f;
+        private const float DRAG_REDUCTION_FACTOR = 0.98f;
+        private const float SHOT_POWER_MULTIPLIER = 1.25f;
+        private const float MIN_BALL_SPEED = 10f;
 
         private Vector2 ball_pos;
         private Vector2 ball_speed;
@@ -98,19 +100,12 @@ namespace PVegas2K25ProTour
         // DRAG_REDUCTION_FACTOR is the % amount that the ball will reduce in speed per update
         public void updateSpeed()
         {
-            // Fix this 
-            bool isEitherZero = false;
-
-            if(ball_speed.X == 0 || ball_speed.Y == 0)
-            {
-                isEitherZero = true;
-            }
-
             // Make sure that neither X or Y in speed Vector is already 0
-            if(!isEitherZero)
+            if(!(ball_speed.Length() == 0))
             {
                 ball_speed *= DRAG_REDUCTION_FACTOR;
             }
+            ballStop();
         }
 
         // Position updates based on the ball speed
@@ -131,7 +126,7 @@ namespace PVegas2K25ProTour
         {
             // Potential issue? If the shot has been released when is launch power set to zero?
             // There's a chance this could never evaluate to true. 
-            if (myShot.launchPower() > 0 && myShot.shotReleased())
+            if (myShot.launchPower() > 0)
             {
                 // get the angle of the user's shot using Vector2 launch_speed: 
                 
@@ -140,9 +135,22 @@ namespace PVegas2K25ProTour
                 ball_speed.X = launchPower;
                 ball_speed.Y = launchPower;*/
 
-                ball_speed = myShot.getLaunchSpeed();
+                ball_speed = myShot.getLaunchSpeed() * SHOT_POWER_MULTIPLIER;
 
                 // update the ball position with power according to launch power
+            }
+        }
+
+        /// <summary>
+        /// If the ball's speed dips below a specified threshold, this function
+        /// will automatically round it down to zero so that speed doesn't
+        /// become an infintely small float (the ball never truly stops)
+        /// </summary>
+        public void ballStop()
+        {
+            if (ball_speed.Length() < MIN_BALL_SPEED)
+            {
+                ball_speed = Vector2.Zero;
             }
         }
 

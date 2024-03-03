@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace PVegas2K25ProTour
 {
@@ -55,16 +56,13 @@ namespace PVegas2K25ProTour
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
-            golf_ball.updateSpeed();
-            golf_ball.updatePosition(gameTime);
-
-
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
             moveMouseTo(mouse_state.X, mouse_state.Y);
             updateDragState(isDraggingBall(mouse_state, golf_ball));
             shot.Update(dragging_mouse, mouse_pos, golf_ball);
+            golf_ball.updateSpeed();
+            golf_ball.updatePosition(gameTime);
 
             base.Update(gameTime);
         }
@@ -156,6 +154,16 @@ namespace PVegas2K25ProTour
         public Shot getShot()
         {
             return shot;
+        }
+
+        /// <summary>
+        /// Exits the game and closes the game window; since Exit() cannot be
+        /// used outside of GameControl, this method is how other classes can
+        /// cause the game window to close
+        /// </summary>
+        public void quit()
+        {
+            Exit();
         }
     }
 }

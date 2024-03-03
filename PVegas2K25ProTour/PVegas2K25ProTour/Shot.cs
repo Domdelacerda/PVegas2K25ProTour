@@ -63,7 +63,7 @@ namespace PVegas2K25ProTour
         /// </summary>
         public void releaseShot(Ball myBall)
         {
-            myBall.setBallSpeed(launch_speed);
+            myBall.launchBall(this);
             launch_speed = Vector2.Zero;
         }
 
@@ -105,6 +105,7 @@ namespace PVegas2K25ProTour
         public Vector2 getLaunchSpeed()
         {
             return launch_speed;
+        }
         //---------------------------------------------------------------------
         // FOR TEST PURPOSES ONLY
         //---------------------------------------------------------------------
