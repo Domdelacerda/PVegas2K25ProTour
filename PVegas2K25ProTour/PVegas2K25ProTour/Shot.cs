@@ -16,6 +16,7 @@ namespace PVegas2K25ProTour
         private SpriteBatch _sprite_batch;
 
         private Vector2 launch_speed;
+        private Vector2 draw_point;
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
 
@@ -31,9 +32,11 @@ namespace PVegas2K25ProTour
             arrow_sprite = _content.Load<Texture2D>("Shot");
         }
 
-        public void Draw()
+        public void Draw(Ball golf_ball)
         {
-            _sprite_batch.Draw(arrow_sprite, arrow_rect, Color.Red);
+            draw_point = new Vector2(0, arrow_rect.Height / 2);
+            _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red, 
+                vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
         }
 
         public void Update(bool drag_state, Vector2 mouse_pos, Ball ball)
@@ -46,7 +49,7 @@ namespace PVegas2K25ProTour
             {
                 windupShot(mouse_pos, ball.center());
             }
-            resizeArrow(ball.position());
+            resizeArrow(ball.center());
         }
 
         /// <summary>
@@ -88,8 +91,8 @@ namespace PVegas2K25ProTour
         public void resizeArrow(Vector2 ball_center)
         {
             arrow_rect = new Rectangle((int)ball_center.X, 
-                (int)ball_center.Y - (int)launch_speed.Length(),
-                arrow_sprite.Width, (int)launch_speed.Length());
+                (int)ball_center.Y, (int)launch_speed.Length(), 
+                arrow_sprite.Height);
         }
 
 
@@ -116,8 +119,7 @@ namespace PVegas2K25ProTour
         /// </summary>
         public float arrowLength()
         {
-            return arrow_rect.Height;
-
+            return arrow_rect.Width;
         }
     }
 }

@@ -73,7 +73,7 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
-            shot.Draw();
+            shot.Draw(golf_ball);
             golf_ball.Draw();
             _sprite_batch.End();
 

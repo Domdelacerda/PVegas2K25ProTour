@@ -70,5 +70,16 @@ namespace PVegas2K25ProTour
             distance.Y -= point1.Y;
             return distance;
         }
+
+        /// <summary>
+        /// Calculates the angle of a vector
+        /// </summary>
+        /// <param name="vector">the vector the angle is needed for.
+        /// </param>
+        /// <returns>the angle of the vector.</returns>
+        public float vectorAngle(Vector2 vector)
+        {
+            return (float)Math.Atan2(vector.Y, vector.X);
+        }
     }
 }
