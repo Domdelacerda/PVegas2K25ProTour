@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike1", "Spike1\Spike1.csproj", "{AA075A80-914B-480B-91D6-586EE11753B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{04D65097-1C33-4BCF-82AA-6D2E1E349289}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA075A80-914B-480B-91D6-586EE11753B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA075A80-914B-480B-91D6-586EE11753B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA075A80-914B-480B-91D6-586EE11753B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA075A80-914B-480B-91D6-586EE11753B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04C72314-81A9-4500-BC15-46A53077114B}
+	EndGlobalSection
+EndGlobal
