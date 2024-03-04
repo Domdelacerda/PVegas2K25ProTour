@@ -159,36 +159,78 @@ namespace GameTest
         [TestMethod]
         public void TestBallStops()
         {
-            bool ballLaunched = false;
             using var newGame = new GameControl();
             newGame.Run();
             Ball golfBallReference = newGame.getBall();
             Shot shotReference = newGame.getShot();
 
-            // Launch ball and set ballLaunched to true
-            // IMPLEMENT!!!! LAUNCH BALL
+            // set mouse position and ball center position to different 
+            // then call windup shot
 
-            if (ballLaunched)
-            {
-                // let the ball stop rolling,wait for 10 seconds
-                Thread.Sleep(10000); 
+            Vector2 point_on_map = golfBallReference.center();
+            point_on_map.X += golfBallReference.radius();
+            point_on_map.Y += golfBallReference.radius();
+            shotReference.windupShot(point_on_map,
+                golfBallReference.center());
 
-                // see if the ball speed reaches 0
-                Assert.IsTrue(golfBallReference.getBallSpeed().X == 0 &&
-                    golfBallReference.getBallSpeed().Y == 0);
-            }
+            // Release the Shot to give it some movement
+            shotReference.releaseShot(golfBallReference);
+
+            // Stop the ball
+            golfBallReference.ballStop();
+
+            Assert.IsTrue(golfBallReference.getBallSpeed() == Vector2.Zero);
         }
 
         [TestMethod]
         public void TestBallFriction()
         {
+            Vector2 ballSpeed1;
+            Vector2 ballSpeed2;
+            using var newGame = new GameControl();
+            newGame.Run();
+            Ball golfBallReference = newGame.getBall();
+            Shot shotReference = newGame.getShot();
 
+            // set mouse position and ball center position to different 
+            // then call windup shot
+
+            Vector2 point_on_map = golfBallReference.center();
+            point_on_map.X += golfBallReference.radius();
+            point_on_map.Y += golfBallReference.radius();
+            shotReference.windupShot(point_on_map,
+                golfBallReference.center());
+
+            shotReference.releaseShot(golfBallReference);
+
+            ballSpeed1 = golfBallReference.getBallSpeed();
+            Thread.Sleep(300); // Waits for 3 seconds
+            ballSpeed2 = golfBallReference.getBallSpeed();
+
+            Assert.AreNotEqual(ballSpeed1, ballSpeed2);
         }
 
         [TestMethod]
         public void TestBallLaunch()
         {
+            using var newGame = new GameControl();
+            newGame.Run();
+            Ball golfBallReference = newGame.getBall();
+            Shot shotReference = newGame.getShot();
 
+            // set mouse position and ball center position to different 
+            // then call windup shot
+ 
+            Vector2 point_on_map = golfBallReference.center();
+            point_on_map.X += golfBallReference.radius();
+            point_on_map.Y += golfBallReference.radius();
+            shotReference.windupShot(point_on_map,
+                golfBallReference.center());
+
+            shotReference.releaseShot(golfBallReference);
+
+            Assert.IsTrue(golfBallReference.getBallSpeed().X != 0 || 
+                golfBallReference.getBallSpeed().Y != 0);
         }
     }
 }
