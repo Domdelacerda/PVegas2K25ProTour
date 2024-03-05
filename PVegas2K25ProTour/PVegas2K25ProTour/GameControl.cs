@@ -18,6 +18,11 @@ namespace PVegas2K25ProTour
         private Ball golf_ball;
         private Shot shot;
 
+        Texture2D line;
+        private float angleOfLine;
+
+        private SpriteBatch _spriteBatch;
+
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
@@ -29,9 +34,15 @@ namespace PVegas2K25ProTour
             IsMouseVisible = true;
         }
 
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            line = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            line.SetData(new[] { Color.Black });
+            angleOfLine = (float)0;
+
+
 
             base.Initialize();
         }
@@ -48,11 +59,13 @@ namespace PVegas2K25ProTour
             shot.LoadContent(Content);
         }
 
+
+
         protected override void Update(GameTime gameTime)
         {
             // See if the user pressed Quit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
-                ButtonState.Pressed || 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
+                ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -75,6 +88,7 @@ namespace PVegas2K25ProTour
             _sprite_batch.Begin();
             shot.Draw(golf_ball);
             golf_ball.Draw();
+            drawBorder();
             _sprite_batch.End();
 
             base.Draw(gameTime);
@@ -132,6 +146,21 @@ namespace PVegas2K25ProTour
         public bool isGamePaused()
         {
             return game_paused;
+        }
+
+        public void drawBorder()
+        {
+            //Left border
+            _sprite_batch.Draw(line, new Rectangle(0, 0, 20, Window.ClientBounds.Height), null, Color.Black, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Right border
+            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width - 20, 0, 20, 500), null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Top border
+            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Bottom border
+            _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
         }
 
         //---------------------------------------------------------------------
