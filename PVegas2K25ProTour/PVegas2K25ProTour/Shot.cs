@@ -20,7 +20,9 @@ namespace PVegas2K25ProTour
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
 
-        public Shot(GraphicsDevice _device, SpriteBatch _sprite_batch) : 
+        private float stroke_count;
+
+        public Shot(GraphicsDevice _device, SpriteBatch _sprite_batch) :
             base(_device, _sprite_batch)
         {
             this._device = _device;
@@ -35,21 +37,33 @@ namespace PVegas2K25ProTour
         public void Draw(Ball golf_ball)
         {
             draw_point = new Vector2(0, arrow_rect.Height / 2);
-            _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red, 
+            _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red,
                 vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
         }
 
         public void Update(bool drag_state, Vector2 mouse_pos, Ball ball)
         {
-            if (drag_state == false)
+            MouseState mouse_state = Mouse.GetState();
+
+            if (mouse_state.RightButton == ButtonState.Pressed && drag_state)
             {
-                releaseShot(ball);
+                cancelShot();
+                return;
             }
-            else
+
+            if (mouse_state.RightButton == ButtonState.Released)
             {
-                windupShot(mouse_pos, ball.center());
+                if (drag_state == false)
+                {
+                    releaseShot(ball);
+                    stroke_count++;
+                }
+                else
+                {
+                    windupShot(mouse_pos, ball.center());
+                }
+                resizeArrow(ball.center());
             }
-            resizeArrow(ball.center());
         }
 
         /// <summary>
@@ -90,8 +104,8 @@ namespace PVegas2K25ProTour
         /// the arrow.</param>
         public void resizeArrow(Vector2 ball_center)
         {
-            arrow_rect = new Rectangle((int)ball_center.X, 
-                (int)ball_center.Y, (int)launch_speed.Length(), 
+            arrow_rect = new Rectangle((int)ball_center.X,
+                (int)ball_center.Y, (int)launch_speed.Length(),
                 arrow_sprite.Height);
         }
 
@@ -109,6 +123,16 @@ namespace PVegas2K25ProTour
         {
             return launch_speed;
         }
+
+        /// <summary>
+        /// Resets the power of ball back to zero effectivly canceling the 
+        /// ball from being released
+        /// </summary>
+        public void cancelShot()
+        {
+            launch_speed = Vector2.Zero;
+        }
+
         //---------------------------------------------------------------------
         // FOR TEST PURPOSES ONLY
         //---------------------------------------------------------------------
