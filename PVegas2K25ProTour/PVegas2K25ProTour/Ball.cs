@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
+﻿//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Have a ball object that has realistic physics
+//-----------------------------------------------------------------------------
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace PVegas2K25ProTour
 {
+    /// <summary>--------------------------------------------------------------
+    /// Ball is able to be moved according to it's position value, which is
+    /// where the ball will be drawn on screen. Position is augmented by the
+    /// ball's speed each frame. The ball's speed decreases exponentially so
+    /// that it will eventually come to a stop
+    /// </summary>-------------------------------------------------------------
     public class Ball : GameObject
     {
-        private GraphicsDevice _device;
         private SpriteBatch _sprite_batch;
 
         private const int BALL_START_POINT_X = 400;
@@ -27,21 +31,43 @@ namespace PVegas2K25ProTour
 
         private Texture2D ball_sprite;
 
-        public Ball(GraphicsDevice _device, SpriteBatch
-            _sprite_batch) : base(_device, _sprite_batch)
+        //---------------------------------------------------------------------
+        // CONSTRUCTORS
+        //---------------------------------------------------------------------
+
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new ball using a default starting point inherent to
+        /// all ball objects
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch the ball's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
+        public Ball(SpriteBatch _sprite_batch) : base(_sprite_batch)
         {
             ball_pos = new Vector2(BALL_START_POINT_X, BALL_START_POINT_Y);
-            this._device = _device;
             this._sprite_batch = _sprite_batch;
         }
 
-        public Ball(Vector2 ball_pos, GraphicsDevice _device, SpriteBatch 
-            _sprite_batch) : base(ball_pos, _device, _sprite_batch)
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new ball at a specified starting point
+        /// </summary>
+        /// /// <param name="ball_pos">the position of the ball at the start of
+        /// the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the ball's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
+        public Ball(Vector2 ball_pos, SpriteBatch _sprite_batch) : 
+            base(ball_pos, _sprite_batch)
         {
             this.ball_pos = ball_pos;
-            this._device = _device;
             this._sprite_batch = _sprite_batch;
         }
+
+        //---------------------------------------------------------------------
+        // GENERATED METHODS
+        //---------------------------------------------------------------------
 
         public void LoadContent(ContentManager _content)
         {
@@ -53,47 +79,55 @@ namespace PVegas2K25ProTour
             _sprite_batch.Draw(ball_sprite, ball_pos, Color.White);
         }
 
-        /// <summary>
+        //---------------------------------------------------------------------
+        // PROGRAMMER-WRITTEN METHODS
+        //---------------------------------------------------------------------
+
+        /// <summary>----------------------------------------------------------
         /// Determines whether or not a point in space overlaps the ball based
         /// on the position of its center and the size of its sprite
         /// </summary>
         /// <param name="point">the point to be checked.</param>
-        /// <returns>whether or not the point overlaps the circle.</returns>
+        /// <returns>whether or not the point overlaps the ball.</returns>
+        /// -------------------------------------------------------------------
         public bool isPointOverBall(Vector2 point)
         {
             float pointToCenter = distance(point, center());
             return (pointToCenter <= radius());
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Obtains the radius of the ball from the size of its sprite
         /// </summary>
-        /// <returns>the radius of the ball</returns>
+        /// <returns>the radius of the ball.</returns>
+        /// -------------------------------------------------------------------
         public float radius()
         {
             return (ball_sprite.Width / 2);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
+        /// Gets the position where the ball is drawn (ball_pos)
+        /// </summary>
+        /// <returns>the position of the ball.</returns>
+        /// -------------------------------------------------------------------
+        public Vector2 position()
+        {
+            return ball_pos;
+        }
+
+        /// <summary>----------------------------------------------------------
         /// Gets the position where the center of the ball is by using its
         /// drawn position and its radius
         /// </summary>
         /// <returns>the position of the ball's center.</returns>
+        /// -------------------------------------------------------------------
         public Vector2 center()
         {
             Vector2 center = ball_pos;
             center.X += radius();
             center.Y += radius();
             return center;
-        }
-
-        /// <summary>
-        /// Gets the position where the ball is drawn (ball_pos)
-        /// </summary>
-        /// <returns>the position of the ball.</returns>
-        public Vector2 position()
-        {
-            return ball_pos;
         }
 
         // gives the ball friction and makes it slow down over time
@@ -104,8 +138,8 @@ namespace PVegas2K25ProTour
             if(!(ball_speed.Length() == 0))
             {
                 ball_speed *= DRAG_REDUCTION_FACTOR;
+                truncateSpeed();
             }
-            ballStop();
         }
 
         // Position updates based on the ball speed
@@ -141,16 +175,24 @@ namespace PVegas2K25ProTour
             }
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
+        /// Stop the ball immediately by setting its speed vector to zero
+        /// </summary>---------------------------------------------------------
+        public void ballStop()
+        {
+            ball_speed = Vector2.Zero;
+        }
+
+        /// <summary>----------------------------------------------------------
         /// If the ball's speed dips below a specified threshold, this function
         /// will automatically round it down to zero so that speed doesn't
-        /// become an infintely small float (the ball never truly stops)
-        /// </summary>
-        public void ballStop()
+        /// become an infintely small float (A.K.A. the ball never truly stops)
+        /// </summary>---------------------------------------------------------
+        public void truncateSpeed()
         {
             if (ball_speed.Length() < MIN_BALL_SPEED)
             {
-                ball_speed = Vector2.Zero;
+                ballStop();
             }
         }
 

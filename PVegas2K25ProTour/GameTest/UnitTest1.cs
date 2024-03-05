@@ -1,19 +1,25 @@
+//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Continuously test the functionality of our game 
+//-----------------------------------------------------------------------------
+
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using PVegas2K25ProTour;
 
 namespace GameTest
 {
-
+    /// <summary>--------------------------------------------------------------
+    /// Tests all expected behaviors in our game to ensure that when code is
+    /// refactored that functionality does not change
+    /// </summary>-------------------------------------------------------------
     [TestClass]
     public class UnitTest1
     {
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Checks to see if the point at the center of the ball overlaps the 
-        /// ball itself, which it always should.
-        /// </summary>
+        /// ball itself, which it always should
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestIsPointOverSpriteCenter()
         {
@@ -27,10 +33,10 @@ namespace GameTest
             Assert.IsTrue(overlap);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Checks to see if the point at the edge of the ball overlaps the 
-        /// ball itself, which it always should.
-        /// </summary>
+        /// ball itself, which it always should
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestIsPointOverSpriteEdge()
         {
@@ -44,10 +50,10 @@ namespace GameTest
             Assert.IsTrue(overlap);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Checks to see if a point off of the ball overlaps the ball itself, 
-        /// which it never should.
-        /// </summary>
+        /// which it never should
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestIsPointNotOverSprite()
         {
@@ -65,11 +71,11 @@ namespace GameTest
             Assert.IsFalse(overlap);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Examines 2 different points away from the ball--one farther and 
         /// one closer--to determine if the farther point has more shot power, 
         /// which it always should
-        /// </summary>
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestWindupShot()
         {
@@ -99,11 +105,11 @@ namespace GameTest
             Assert.IsTrue(far_shot_power > close_shot_power);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Examines 2 different points away from the ball--one farther and 
         /// one closer--to determine if the farther point has a larger
         /// arrow display, which it always should
-        /// </summary>
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestArrowSize()
         {
@@ -135,11 +141,11 @@ namespace GameTest
             Assert.IsTrue(far_shot_arrow_length > close_shot_arrow_length);
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Determines if the shot arrow's length is zero (not visible) when
         /// the mouse is dragged to the center of the ball, meaning that the
         /// shot power is zero
-        /// </summary>
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void TestArrowSizeZero()
         {
@@ -204,7 +210,8 @@ namespace GameTest
             shotReference.releaseShot(golfBallReference);
 
             ballSpeed1 = golfBallReference.getBallSpeed();
-            Thread.Sleep(300); // Waits for 3 seconds
+            // update reduces speed by drag reduction scale
+            golfBallReference.updateSpeed();
             ballSpeed2 = golfBallReference.getBallSpeed();
 
             Assert.AreNotEqual(ballSpeed1, ballSpeed2);

@@ -1,59 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Have an obstacle that balls can collide with and bounce off of
+//-----------------------------------------------------------------------------
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace PVegas2K25ProTour
 {
+    /// <summary>--------------------------------------------------------------
+    /// Obstacle checks for collisions with a ball and upon collision inverts
+    /// that ball's velocity to appear as though it bounces off
+    /// </summary>-------------------------------------------------------------
     public class Obstacle : GameObject
     {
-        private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
         private Texture2D line;
         private Vector2 obstacle_pos;
         private float angleOfLine = 0;
 
-        public Obstacle(Texture2D line, Vector2 obstacle_pos, 
-            GraphicsDevice _device, SpriteBatch _sprite_batch) : 
-            base(line, obstacle_pos, _device, _sprite_batch)
-        {
-            this.line = line;
-            this.obstacle_pos = obstacle_pos;
-            this._device = _device;
-        }
-        /*
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-            line = new Texture2D(GraphicsDevice, 1, 1, false, 
-                SurfaceFormat.Color);
-            line.SetData(new[] { Color.Black });
-            base.Initialize();
-        }
+        //---------------------------------------------------------------------
+        // CONSTRUCTORS
+        //---------------------------------------------------------------------
 
-        public void drawBorder()
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new obstacle using a specified position and sprite 
+        /// batch
+        /// </summary>
+        /// <param name="obstacle_pos">the position of the obstacle at the 
+        /// start of the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the obstacle's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
+        public Obstacle(Vector2 obstacle_pos, SpriteBatch _sprite_batch) : 
+            base(obstacle_pos, _sprite_batch)
         {
-            //Drawing border 
-            _sprite_batch.Draw(line, new Rectangle(0, 0, 20, 500), null, 
-                Color.Black, 2 * MathHelper.Pi, new Vector2(0, 0), 
-                SpriteEffects.None, 0);
-            _sprite_batch.Draw(line, new Rectangle(620, 0, 20, 500), null,
-                Color.Black, 0, new Vector2(0, 0), 
-                SpriteEffects.None, 0);
-            _sprite_batch.Draw(line, new Rectangle(0, 0, 1000, 20), null,
-                Color.Black, angleOfLine, new Vector2(0, 0), 
-                SpriteEffects.None, 0);
-            _sprite_batch.Draw(line, new Rectangle(0, 460, 1000, 20), null,
-                Color.Black, angleOfLine, new Vector2(0, 0), 
-                SpriteEffects.None, 0);
-        
+            this.obstacle_pos = obstacle_pos;
+            this._sprite_batch = _sprite_batch;
         }
-        */
     }
 }

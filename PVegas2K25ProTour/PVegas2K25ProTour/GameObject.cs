@@ -1,50 +1,84 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Have a generic class for all objects in the game that require a
+// position, sprite, and a sprite batch to be drawn on
+//-----------------------------------------------------------------------------
+
+using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace PVegas2K25ProTour
 {
-    public class GameObject : Hitbox
+    /// <summary>--------------------------------------------------------------
+    /// GameObject contains all information that objects in our game need to be
+    /// drawn on screen
+    /// </summary>-------------------------------------------------------------
+    public class GameObject
     {
-        private GraphicsDevice _device;
         private SpriteBatch _sprite_batch;
-
         private Texture2D object_sprite;
         private Vector2 start_pos;
 
-        // Constructor with no image or starting position (default values
-        // for both already exist in class)
-        public GameObject(GraphicsDevice _device, SpriteBatch _sprite_batch)
+        //---------------------------------------------------------------------
+        // CONSTRUCTORS
+        //---------------------------------------------------------------------
+
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new game object with only the sprite batch to be drawn
+        /// on specified, meaning that the child object already has a default
+        /// position and sprite
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch the object's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
+        public GameObject(SpriteBatch _sprite_batch)
         {
-            this._device = _device;
             this._sprite_batch = _sprite_batch;
         }
 
-        // Constructor with no image supplied (content is supplied instead
-        // so that the class loads its own image)
-        public GameObject(Vector2 start_pos, GraphicsDevice _device,
-            SpriteBatch _sprite_batch)
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new game object with the starting position and the 
+        /// sprite batch to be drawn on specified, meaning that the child 
+        /// object already has a default sprite
+        /// </summary>
+        /// <param name="start_pos">the position of the game object at the
+        /// start of the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the object's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
+        public GameObject(Vector2 start_pos, SpriteBatch _sprite_batch)
         {
             this.start_pos = start_pos;
-            this._device = _device;
             this._sprite_batch = _sprite_batch;
         }
 
-        // Constructor with image supplied
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new game object with the sprite, starting position, 
+        /// and the sprite batch to be drawn on specified
+        /// </summary>
+        /// <param name="object_sprite">the sprite of the game object to be
+        /// drawn on screen.</param>
+        /// <param name="start_pos">the position of the game object at the
+        /// start of the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the object's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// -------------------------------------------------------------------
         public GameObject(Texture2D object_sprite, Vector2 start_pos, 
-            GraphicsDevice _device, SpriteBatch _sprite_batch)
+            SpriteBatch _sprite_batch)
         {
             this.object_sprite = object_sprite;
             this.start_pos = start_pos;
-            this._device = _device;
             this._sprite_batch = _sprite_batch;
         }
+
+        //---------------------------------------------------------------------
+        // PROGRAMMER-WRITTEN METHODS
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Calculates the distance between two provided points
