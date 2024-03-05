@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace PVegas2K25ProTour
 {
@@ -24,6 +25,7 @@ namespace PVegas2K25ProTour
         private Vector2 draw_point;
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
+        private int stroke_count;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -77,9 +79,17 @@ namespace PVegas2K25ProTour
         /// -------------------------------------------------------------------
         public void Update(bool drag_state, Vector2 mouse_pos, Ball ball)
         {
+            MouseState mouse_state = Mouse.GetState();
+            if (mouse_state.RightButton == ButtonState.Pressed && drag_state)
+            {
+                cancelShot();
+                return;
+            }
+
             if (drag_state == false)
             {
                 releaseShot(ball);
+                stroke_count++;
             }
             else
             {
@@ -148,6 +158,15 @@ namespace PVegas2K25ProTour
         public Vector2 getLaunchSpeed()
         {
             return launch_speed;
+        }
+
+        /// <summary>
+        /// Resets the power of ball back to zero effectivly canceling the 
+        /// ball from being released
+        /// </summary>
+        public void cancelShot()
+        {
+            launch_speed = Vector2.Zero;
         }
 
         //---------------------------------------------------------------------

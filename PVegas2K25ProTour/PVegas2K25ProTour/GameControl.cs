@@ -29,6 +29,12 @@ namespace PVegas2K25ProTour
         private Ball golf_ball;
         private Shot shot;
 
+        Texture2D holeTexture;
+        Vector2 holePosition;
+
+        Texture2D line;
+        private float angleOfLine;
+
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
@@ -43,6 +49,12 @@ namespace PVegas2K25ProTour
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            line = new Texture2D(GraphicsDevice, 1, 1, false, 
+                SurfaceFormat.Color);
+            line.SetData(new[] { Color.Black });
+            angleOfLine = (float)0;
+
+            holePosition = new Vector2(100, 100);
 
             base.Initialize();
         }
@@ -57,6 +69,8 @@ namespace PVegas2K25ProTour
             golf_ball.LoadContent(Content);
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
+
+            holeTexture = Content.Load<Texture2D>("Hole");
         }
 
         protected override void Update(GameTime gameTime)
@@ -84,8 +98,10 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
+            drawHole();
             shot.Draw(golf_ball);
             golf_ball.Draw();
+            drawBorder();
             _sprite_batch.End();
 
             base.Draw(gameTime);
@@ -94,6 +110,29 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
+
+        public void drawBorder()
+        {
+            //Left border
+            _sprite_batch.Draw(line, new Rectangle(0, 0, 20, Window.ClientBounds.Height), null, Color.Black, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Right border
+            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width - 20, 0, 20, 500), null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Top border
+            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
+
+            //Bottom border
+            _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
+        }
+
+        public void drawHole()
+        {
+            //Drawing hole
+            _sprite_batch.Draw(holeTexture, holePosition, null, Color.White, 0f, new Vector2(holeTexture.Width / 2,
+            holeTexture.Height / 2), 1f, SpriteEffects.None, 0f);
+        }
+
 
         /// <summary>----------------------------------------------------------
         /// Determines if the mouse is being dragged from the ball or not
