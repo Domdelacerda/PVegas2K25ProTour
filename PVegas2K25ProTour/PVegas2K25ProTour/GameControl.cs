@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace PVegas2K25ProTour
 {
@@ -20,6 +21,9 @@ namespace PVegas2K25ProTour
 
         Texture2D line;
         private float angleOfLine;
+
+        Texture2D holeTexture;
+        Vector2 holePosition;
 
         private SpriteBatch _spriteBatch;
 
@@ -42,7 +46,7 @@ namespace PVegas2K25ProTour
             line.SetData(new[] { Color.Black });
             angleOfLine = (float)0;
 
-
+            holePosition = new Vector2(100, 50);
 
             base.Initialize();
         }
@@ -57,6 +61,8 @@ namespace PVegas2K25ProTour
             golf_ball.LoadContent(Content);
             shot = new Shot(_device, _sprite_batch);
             shot.LoadContent(Content);
+
+            holeTexture = Content.Load<Texture2D>("hole");
         }
 
 
@@ -88,6 +94,7 @@ namespace PVegas2K25ProTour
             _sprite_batch.Begin();
             shot.Draw(golf_ball);
             golf_ball.Draw();
+            drawHole();
             drawBorder();
             _sprite_batch.End();
 
@@ -161,6 +168,14 @@ namespace PVegas2K25ProTour
 
             //Bottom border
             _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
+        }
+
+        public void drawHole()
+        {
+
+            //Drawing hole
+            _spriteBatch.Draw(holeTexture, holePosition, null, Color.White, 0f, new Vector2(holeTexture.Width / 2,
+             holeTexture.Height / 2), 0.2f, SpriteEffects.None, 0f);
         }
 
         //---------------------------------------------------------------------
