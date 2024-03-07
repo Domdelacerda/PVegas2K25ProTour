@@ -39,5 +39,13 @@ namespace PVegas2K25ProTour
             this.hole_pos = hole_pos;
             this._sprite_batch = _sprite_batch;
         }
+        public Vector2 position()
+        {
+            return this.hole_pos;
+        }
+        public float radius()
+        {
+            return hole_sprite.Width / 2;
+        }
     }
 }
