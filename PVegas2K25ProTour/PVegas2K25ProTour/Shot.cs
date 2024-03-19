@@ -20,6 +20,7 @@ namespace PVegas2K25ProTour
     public class Shot : GameObject
     {
         private SpriteBatch _sprite_batch;
+        private bool drawSprite;
 
         private Vector2 launch_speed;
         private Vector2 draw_point;
@@ -56,9 +57,12 @@ namespace PVegas2K25ProTour
 
         public void Draw(Ball golf_ball)
         {
-            draw_point = new Vector2(0, arrow_rect.Height / 2);
-            _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red, 
-                vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
+            if (drawSprite)
+            {
+                draw_point = new Vector2(0, arrow_rect.Height / 2);
+                _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red,
+                    vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -80,8 +84,10 @@ namespace PVegas2K25ProTour
         public void Update(bool drag_state, Vector2 mouse_pos, Ball ball)
         {
             MouseState mouse_state = Mouse.GetState();
+
             if (mouse_state.RightButton == ButtonState.Pressed && drag_state)
             {
+                drawSprite = false;
                 cancelShot();
                 return;
             }
@@ -91,8 +97,10 @@ namespace PVegas2K25ProTour
                 releaseShot(ball);
                 stroke_count++;
             }
+
             else
             {
+                drawSprite = true;
                 windupShot(mouse_pos, ball.center());
             }
             resizeArrow(ball.center());
