@@ -47,5 +47,20 @@ namespace PVegas2K25ProTour
             return (ballPos.X <= 0 || ballPos.X + ballCircumfrance >= gdm.PreferredBackBufferWidth
                 || ballPos.Y <= 0 || ballPos.Y + ballCircumfrance >= gdm.PreferredBackBufferHeight);
         }
+        /// <summary>
+        /// tells when the ball hits a rectangle object
+        /// </summary>
+        /// <param name="ball">the ball position and circumfrance</param>
+        /// <param name="rect">the rectang that it may be colliding with</param>
+        /// <returns></returns>
+        public bool isCollidingWithRectangle(Ball ball, Rectangle rect)
+        {
+            //right->left->bottom->top
+            float radius = ball.radius() * 2;
+            if (ball.position().X + radius + 24 >= rect.X && ball.position().X <= rect.X + rect.Width
+                && ball.position().Y - radius <= rect.Y && ball.position().Y + 24 >= rect.Y - rect.Height)
+                return true;
+            return false;
+        }
     }
 }
