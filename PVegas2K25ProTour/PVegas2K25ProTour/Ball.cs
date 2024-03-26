@@ -23,7 +23,7 @@ namespace PVegas2K25ProTour
         private const int BALL_START_POINT_X = 400;
         private const int BALL_START_POINT_Y = 200;
         private const float DRAG_REDUCTION_FACTOR = 0.98f;
-        private const float SHOT_POWER_MULTIPLIER = 1.25f;
+        private const float SHOT_POWER_MULTIPLIER = 2.5f;
         private const float MIN_BALL_SPEED = 10f;
 
         private Vector2 ball_pos;
@@ -196,12 +196,12 @@ namespace PVegas2K25ProTour
             }
         }
 
-        public Vector2 getBallSpeed()
+        public Vector2 getSpeed()
         {
             return ball_speed;
         }
 
-        public void setBallSpeed(Vector2 newSpeed)
+        public void setSpeed(Vector2 newSpeed)
         {
             ball_speed = newSpeed;
         }
