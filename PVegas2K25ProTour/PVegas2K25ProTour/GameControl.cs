@@ -8,6 +8,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace PVegas2K25ProTour
 {
@@ -32,8 +36,11 @@ namespace PVegas2K25ProTour
         Texture2D holeTexture;
         Vector2 holePosition;
 
+        private PlayerRecord playerRecord;
+
         Texture2D line;
         private float angleOfLine;
+
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -61,8 +68,14 @@ namespace PVegas2K25ProTour
 
         protected override void LoadContent()
         {
+            // Load the current user name and stroke count
+            playerRecord = SaveLoadSystem.Load<PlayerRecord>();
+            Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
+
+            // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
+            
 
             // TODO: use this.Content to load your game content here
             golf_ball = new Ball(_sprite_batch);
@@ -79,7 +92,12 @@ namespace PVegas2K25ProTour
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
                 ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                // save and exit...
+                saveGame();
                 Exit();
+            }
+
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
@@ -217,7 +235,15 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void quit()
         {
+            saveGame();
             Exit();
+        }
+
+
+        public void saveGame()
+        {
+            playerRecord.Strokes = shot.getStrokeCount();
+            SaveLoadSystem.Save(playerRecord);
         }
     }
 }

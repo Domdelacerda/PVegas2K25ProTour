@@ -1,9 +1,47 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
+using System.Text.Json;
+using System;
+using System.IO;
 
 namespace Spike1_Iteration1
 {
+    public class PlayerStats
+    {
+        public int Strokes { get; set; }
+        public int Score { get; set; }
+
+    }
+
+    public class SaveLoadSystem
+    {
+        // https://www.youtube.com/watch?v=gYksT0d_xLM
+
+        private const string PATH = "stats.json";
+
+        public void Save(PlayerStats stats)
+        {
+            try
+            {
+                var serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
+                Trace.WriteLine(serializedText);
+                File.WriteAllText(PATH, serializedText);
+
+                Console.WriteLine("File saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving file: " + ex.Message);
+            }
+        }
+
+        public void Load()
+        {
+
+        }
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -24,6 +62,8 @@ namespace Spike1_Iteration1
         int score = 0;
         bool mReleased = true;
 
+        private PlayerStats pStats;
+        private SaveLoadSystem saveLoadSystem;
 
         public Game1()
         {
@@ -41,6 +81,13 @@ namespace Spike1_Iteration1
 
         protected override void LoadContent()
         {
+            pStats = new PlayerStats();
+            pStats.Strokes = 7;
+            pStats.Score = 3000;
+
+            saveLoadSystem = new SaveLoadSystem();
+            saveLoadSystem.Save(pStats);
+            //******************************************
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here

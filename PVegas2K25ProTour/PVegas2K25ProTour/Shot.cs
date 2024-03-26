@@ -26,7 +26,9 @@ namespace PVegas2K25ProTour
         private Vector2 draw_point;
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
-        private int stroke_count;
+        private int stroke_count = -1;
+
+        private bool shot_released_bool = false;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -94,14 +96,19 @@ namespace PVegas2K25ProTour
 
             if (drag_state == false)
             {
-                releaseShot(ball);
-                stroke_count++;
+                if (!shot_released_bool)
+                {
+                    releaseShot(ball);
+                    stroke_count++;
+                    shot_released_bool = true;
+                }
             }
 
             else
             {
                 drawSprite = true;
                 windupShot(mouse_pos, ball.center());
+                shot_released_bool = false;
             }
             resizeArrow(ball.center());
         }
@@ -135,6 +142,12 @@ namespace PVegas2K25ProTour
                 shotReleased = true;
 
             return shotReleased;
+        }
+
+        // getter method for the stroke_count var
+        public int getStrokeCount()
+        {
+            return stroke_count;
         }
 
         /// <summary>----------------------------------------------------------
