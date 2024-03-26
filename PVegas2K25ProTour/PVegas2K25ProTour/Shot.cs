@@ -30,6 +30,8 @@ namespace PVegas2K25ProTour
 
         private bool shot_released_bool = false;
 
+        private const float MAX_SHOT_POWER = 200f;
+
         //---------------------------------------------------------------------
         // CONSTRUCTORS
         //---------------------------------------------------------------------
@@ -104,11 +106,11 @@ namespace PVegas2K25ProTour
                 }
             }
 
-            else
+            else if (ball.getSpeed().Length() == 0f)
             {
-                drawSprite = true;
                 windupShot(mouse_pos, ball.center());
                 shot_released_bool = false;
+                clampShotPower();
             }
             resizeArrow(ball.center());
         }
@@ -181,14 +183,29 @@ namespace PVegas2K25ProTour
             return launch_speed;
         }
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Resets the power of ball back to zero effectivly canceling the 
         /// ball from being released
-        /// </summary>
+        /// </summary>---------------------------------------------------------
         public void cancelShot()
         {
             launch_speed = Vector2.Zero;
         }
+
+        /// <summary>----------------------------------------------------------
+        /// If the current launch speed of the shot is greater than the 
+        /// maximum allowed shot power, set the launch power equal to the max
+        /// while keeping the vector's direction the same
+        /// </summary>---------------------------------------------------------
+        public void clampShotPower()
+        {
+            if (launchPower() > MAX_SHOT_POWER)
+            {
+                launch_speed.Normalize();
+                launch_speed *= MAX_SHOT_POWER;
+            }
+        }
+
 
         //---------------------------------------------------------------------
         // FOR TEST PURPOSES ONLY
