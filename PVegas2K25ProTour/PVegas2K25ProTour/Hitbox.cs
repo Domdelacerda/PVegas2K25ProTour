@@ -27,13 +27,14 @@ namespace PVegas2K25ProTour
         /// <summary>
         /// Tells when ball and Holw collide with each other
         /// </summary>
-        /// <param name="ball">the ball for its position and radius</param>
-        /// <param name="hole">the hole for its position and radius</param>
-        /// <returns></returns>
-        public bool isBallCollidingWithHole(Ball ball, Hole hole)
+        /// <param name="circle1">the ball for its position and radius</param>
+        /// <param name="circle2">the hole for its position and radius</param>
+        public bool collisionCircleToCircle(GameObject circle1, 
+            GameObject circle2)
         {
-            float radius = ball.radius()*hole.radius();
-            return (!((Vector2.DistanceSquared(ball.position(), hole.position()) > (radius * radius))));
+            float radius = circle1.radius() + circle2.radius();
+            return Vector2.Distance(circle1.center(), 
+                circle2.center()) <= radius;
         }
         /// <summary>
         /// tells when the ball "hits" the boarder 

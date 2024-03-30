@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace PVegas2K25ProTour
@@ -18,6 +19,7 @@ namespace PVegas2K25ProTour
     {
         private SpriteBatch _sprite_batch;
         private Texture2D hole_sprite;
+        private Hitbox hitbox;
         private Vector2 hole_pos;
 
         //---------------------------------------------------------------------
@@ -33,19 +35,79 @@ namespace PVegas2K25ProTour
         /// will be drawn in (the same as all other game objects in game 
         /// control).</param>
         /// -------------------------------------------------------------------
-        public Hole(Vector2 hole_pos, SpriteBatch _sprite_batch) : 
-            base(hole_pos, _sprite_batch)
+        public Hole(Vector2 hole_pos, SpriteBatch _sprite_batch, 
+            Hitbox hitbox) : base(hole_pos, _sprite_batch, hitbox)
         {
             this.hole_pos = hole_pos;
             this._sprite_batch = _sprite_batch;
+            this.hitbox = hitbox;
         }
-        public Vector2 position()
+
+        //---------------------------------------------------------------------
+        // GENERATED METHODS
+        //---------------------------------------------------------------------
+
+        public void LoadContent(ContentManager _content)
         {
-            return this.hole_pos;
+            hole_sprite = _content.Load<Texture2D>("Hole");
         }
-        public float radius()
+
+        public void Draw()
+        {
+            _sprite_batch.Draw(hole_sprite, hole_pos, Color.White);
+        }
+
+        //---------------------------------------------------------------------
+        // PROGRAMMER-WRITTEN METHODS
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// Checks for collisions with a ball game object every frame
+        /// </summary>
+        /// <param name="ball">the ball that can collide with this obstacle.
+        /// </param>
+        public void Update(Ball ball)
+        {
+            if (isPointOverHole(ball.center()) == true)
+            {
+                collide(ball);
+            }
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Determines whether or not a point in space overlaps the hole based
+        /// on the position of its center and the size of its sprite
+        /// </summary>
+        /// <param name="point">the point to be checked.</param>
+        /// <returns>whether or not the point overlaps the hole.</returns>
+        /// -------------------------------------------------------------------
+        public bool isPointOverHole(Vector2 point)
+        {
+            float pointToCenter = distance(point, center());
+            return pointToCenter <= radius();
+        }
+
+        public virtual void collide(Ball ball)
+        {
+            ball.setSpeed(new Vector2(100000f, 0f));
+        }
+
+        public override Vector2 position()
+        {
+            return hole_pos;
+        }
+
+        public override float radius()
         {
             return hole_sprite.Width / 2;
+        }
+
+        public override Vector2 center()
+        {
+            Vector2 center = hole_pos;
+            center.X += radius();
+            center.Y += radius();
+            return center;
         }
     }
 }

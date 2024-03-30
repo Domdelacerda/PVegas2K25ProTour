@@ -185,7 +185,7 @@ namespace GameTest
             // Stop the ball
             golfBallReference.ballStop();
 
-            Assert.IsTrue(golfBallReference.getBallSpeed() == Vector2.Zero);
+            Assert.IsTrue(golfBallReference.getSpeed() == Vector2.Zero);
         }
 
         [TestMethod]
@@ -209,10 +209,10 @@ namespace GameTest
 
             shotReference.releaseShot(golfBallReference);
 
-            ballSpeed1 = golfBallReference.getBallSpeed();
+            ballSpeed1 = golfBallReference.getSpeed();
             // update reduces speed by drag reduction scale
             golfBallReference.updateSpeed();
-            ballSpeed2 = golfBallReference.getBallSpeed();
+            ballSpeed2 = golfBallReference.getSpeed();
 
             Assert.AreNotEqual(ballSpeed1, ballSpeed2);
         }
@@ -236,8 +236,8 @@ namespace GameTest
 
             shotReference.releaseShot(golfBallReference);
 
-            Assert.IsTrue(golfBallReference.getBallSpeed().X != 0 || 
-                golfBallReference.getBallSpeed().Y != 0);
+            Assert.IsTrue(golfBallReference.getSpeed().X != 0 || 
+                golfBallReference.getSpeed().Y != 0);
         }
     }
 }

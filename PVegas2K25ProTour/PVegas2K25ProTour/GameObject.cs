@@ -20,6 +20,7 @@ namespace PVegas2K25ProTour
         private SpriteBatch _sprite_batch;
         private Texture2D object_sprite;
         private Vector2 start_pos;
+        private Hitbox hitbox;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -76,9 +77,67 @@ namespace PVegas2K25ProTour
             this._sprite_batch = _sprite_batch;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new game object with the sprite, starting position, 
+        /// and the sprite batch to be drawn on specified
+        /// </summary>
+        /// <param name="start_pos">the position of the game object at the
+        /// start of the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the object's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// <param name="hitbox">the hitbox the game object uses for
+        /// detecting collisions with other game objects.</param>
+        /// -------------------------------------------------------------------
+        public GameObject(Vector2 start_pos, SpriteBatch _sprite_batch,
+            Hitbox hitbox)
+        {
+            this.start_pos = start_pos;
+            this._sprite_batch = _sprite_batch;
+            this.hitbox = hitbox;
+        }
+
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the position where the ball is drawn (ball_pos)
+        /// </summary>
+        /// <returns>the position of the ball.</returns>
+        /// -------------------------------------------------------------------
+        public virtual Vector2 position()
+        {
+            return start_pos;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Obtains the radius of the object from the size of its sprite
+        /// </summary>
+        /// <returns>the radius of the object.</returns>
+        /// -------------------------------------------------------------------
+        public virtual float radius()
+        {
+            float radius = 0f;
+            if (object_sprite != null)
+            {
+                radius = (object_sprite.Width / 2);
+            }
+            return radius;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Obtains the center of a circular object using it's radius
+        /// </summary>
+        /// <returns>the center of the object.</returns>
+        /// -------------------------------------------------------------------
+        public virtual Vector2 center()
+        {
+            Vector2 center = start_pos;
+            center.X += radius();
+            center.Y += radius();
+            return center;
+        }
 
         /// <summary>
         /// Calculates the distance between two provided points

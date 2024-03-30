@@ -20,7 +20,7 @@ namespace PVegas2K25ProTour
     {
         private SpriteBatch _sprite_batch;
 
-        private const int BALL_START_POINT_X = 400;
+        private const int BALL_START_POINT_X = 600;
         private const int BALL_START_POINT_Y = 200;
         private const float DRAG_REDUCTION_FACTOR = 0.98f;
         private const float SHOT_POWER_MULTIPLIER = 2.5f;
@@ -93,17 +93,7 @@ namespace PVegas2K25ProTour
         public bool isPointOverBall(Vector2 point)
         {
             float pointToCenter = distance(point, center());
-            return (pointToCenter <= radius());
-        }
-
-        /// <summary>----------------------------------------------------------
-        /// Obtains the radius of the ball from the size of its sprite
-        /// </summary>
-        /// <returns>the radius of the ball.</returns>
-        /// -------------------------------------------------------------------
-        public float radius()
-        {
-            return (ball_sprite.Width / 2);
+            return pointToCenter <= radius();
         }
 
         /// <summary>----------------------------------------------------------
@@ -111,10 +101,21 @@ namespace PVegas2K25ProTour
         /// </summary>
         /// <returns>the position of the ball.</returns>
         /// -------------------------------------------------------------------
-        public Vector2 position()
+        public override Vector2 position()
         {
             return ball_pos;
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Obtains the radius of the ball from the size of its sprite
+        /// </summary>
+        /// <returns>the radius of the ball.</returns>
+        /// -------------------------------------------------------------------
+        public override float radius()
+        {
+            return ball_sprite.Width / 2;
+        }
+
 
         /// <summary>----------------------------------------------------------
         /// Gets the position where the center of the ball is by using its
@@ -122,7 +123,7 @@ namespace PVegas2K25ProTour
         /// </summary>
         /// <returns>the position of the ball's center.</returns>
         /// -------------------------------------------------------------------
-        public Vector2 center()
+        public override Vector2 center()
         {
             Vector2 center = ball_pos;
             center.X += radius();

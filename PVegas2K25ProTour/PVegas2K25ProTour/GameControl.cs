@@ -28,9 +28,8 @@ namespace PVegas2K25ProTour
 
         private Ball golf_ball;
         private Shot shot;
-
-        Texture2D holeTexture;
-        Vector2 holePosition;
+        private Mushroom obstacle;
+        private Hole hole;
 
         Texture2D line;
         private float angleOfLine;
@@ -54,8 +53,6 @@ namespace PVegas2K25ProTour
             line.SetData(new[] { Color.Black });
             angleOfLine = (float)0;
 
-            holePosition = new Vector2(100, 100);
-
             base.Initialize();
         }
 
@@ -69,8 +66,14 @@ namespace PVegas2K25ProTour
             golf_ball.LoadContent(Content);
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
-
-            holeTexture = Content.Load<Texture2D>("Hole");
+            var hitbox = new Hitbox(_graphics);
+            obstacle = new Mushroom(new Vector2(400, 0), _sprite_batch, 
+                hitbox);
+            obstacle.LoadContent(Content);
+            var holeHitbox = new Hitbox(_graphics);
+            hole = new Hole(new Vector2(100, 200), _sprite_batch,
+                holeHitbox);
+            hole.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -86,6 +89,8 @@ namespace PVegas2K25ProTour
             moveMouseTo(mouse_state.X, mouse_state.Y);
             updateDragState(isDraggingBall(mouse_state, golf_ball));
             shot.Update(dragging_mouse, mouse_pos, golf_ball);
+            obstacle.Update(golf_ball);
+            hole.Update(golf_ball);
             golf_ball.updateSpeed();
             golf_ball.updatePosition(gameTime);
 
@@ -98,7 +103,8 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
-            drawHole();
+            obstacle.Draw();
+            hole.Draw();
             shot.Draw(golf_ball);
             golf_ball.Draw();
             drawBorder();
@@ -124,13 +130,6 @@ namespace PVegas2K25ProTour
 
             //Bottom border
             _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
-        }
-
-        public void drawHole()
-        {
-            //Drawing hole
-            _sprite_batch.Draw(holeTexture, holePosition, null, Color.White, 0f, new Vector2(holeTexture.Width / 2,
-            holeTexture.Height / 2), 1f, SpriteEffects.None, 0f);
         }
 
 
