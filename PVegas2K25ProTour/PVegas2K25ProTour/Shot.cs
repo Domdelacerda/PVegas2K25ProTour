@@ -20,12 +20,15 @@ namespace PVegas2K25ProTour
     public class Shot : GameObject
     {
         private SpriteBatch _sprite_batch;
+        private bool drawSprite;
 
         private Vector2 launch_speed;
         private Vector2 draw_point;
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
-        private int stroke_count;
+        private int stroke_count = -1;
+
+        private bool shot_released_bool = false;
 
         private const float MAX_SHOT_POWER = 200f;
 
@@ -58,9 +61,12 @@ namespace PVegas2K25ProTour
 
         public void Draw(Ball golf_ball)
         {
-            draw_point = new Vector2(0, arrow_rect.Height / 2);
-            _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red, 
-                vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
+            if (drawSprite)
+            {
+                draw_point = new Vector2(0, arrow_rect.Height / 2);
+                _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red,
+                    vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -82,20 +88,28 @@ namespace PVegas2K25ProTour
         public void Update(bool drag_state, Vector2 mouse_pos, Ball ball)
         {
             MouseState mouse_state = Mouse.GetState();
+
             if (mouse_state.RightButton == ButtonState.Pressed && drag_state)
             {
+                drawSprite = false;
                 cancelShot();
                 return;
             }
 
             if (drag_state == false)
             {
-                releaseShot(ball);
-                stroke_count++;
+                if (!shot_released_bool)
+                {
+                    releaseShot(ball);
+                    stroke_count++;
+                    shot_released_bool = true;
+                }
             }
+
             else if (ball.getSpeed().Length() == 0f)
             {
                 windupShot(mouse_pos, ball.center());
+                shot_released_bool = false;
                 clampShotPower();
             }
             resizeArrow(ball.center());
@@ -130,6 +144,12 @@ namespace PVegas2K25ProTour
                 shotReleased = true;
 
             return shotReleased;
+        }
+
+        // getter method for the stroke_count var
+        public int getStrokeCount()
+        {
+            return stroke_count;
         }
 
         /// <summary>----------------------------------------------------------
@@ -185,6 +205,7 @@ namespace PVegas2K25ProTour
                 launch_speed *= MAX_SHOT_POWER;
             }
         }
+
 
         //---------------------------------------------------------------------
         // FOR TEST PURPOSES ONLY
