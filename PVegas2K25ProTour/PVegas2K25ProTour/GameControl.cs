@@ -32,14 +32,17 @@ namespace PVegas2K25ProTour
 
         private Ball golf_ball;
         private Shot shot;
-        private Mushroom obstacle;
         private Hole hole;
+        private Hitbox hitbox;
+        private List<Obstacle> obstacle_list;
+        private Obstacle[] borders;
+        private List<Action> levels_list;
 
         private PlayerRecord playerRecord;
+        private int level = 0;
 
         Texture2D line;
         private float angleOfLine;
-
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -59,6 +62,9 @@ namespace PVegas2K25ProTour
                 SurfaceFormat.Color);
             line.SetData(new[] { Color.Black });
             angleOfLine = (float)0;
+            obstacle_list = new List<Obstacle>();
+            levels_list = new List<Action>();
+            borders = new Obstacle[4];
 
             base.Initialize();
         }
@@ -66,8 +72,8 @@ namespace PVegas2K25ProTour
         protected override void LoadContent()
         {
             // Load the current user name and stroke count
-            playerRecord = SaveLoadSystem.Load<PlayerRecord>();
-            Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
+            //playerRecord = SaveLoadSystem.Load<PlayerRecord>();
+            //Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
 
             // Load the graphics device
             _device = GraphicsDevice;
@@ -79,14 +85,31 @@ namespace PVegas2K25ProTour
             golf_ball.LoadContent(Content);
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
-            var hitbox = new Hitbox(_graphics);
-            obstacle = new Mushroom(new Vector2(400, 0), _sprite_batch, 
-                hitbox);
-            obstacle.LoadContent(Content);
-            var holeHitbox = new Hitbox(_graphics);
+            hitbox = new Hitbox(_graphics);
             hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                holeHitbox);
+                hitbox);
             hole.LoadContent(Content);
+            loadBorders();
+            // Update all content in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
+            {
+                if (obstacle_list[i] != null)
+                {
+                    obstacle_list[i].LoadContent(Content);
+                }
+            }
+            for (int i = 0; i < borders.Length; i++)
+            {
+                borders[i].LoadContent(Content);
+            }
+            levels_list.Add(loadLevelZero);
+            levels_list.Add(loadLevelOne);
+            levels_list.Add(loadLevelTwo);
+            levels_list.Add(loadLevelThree);
+            levels_list.Add(loadLevelFour);
+            levels_list.Add(loadLevelFive);
+
+            levels_list[level].Invoke();
         }
 
         protected override void Update(GameTime gameTime)
@@ -97,7 +120,7 @@ namespace PVegas2K25ProTour
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 // save and exit...
-                saveGame();
+                //saveGame();
                 Exit();
             }
 
@@ -107,10 +130,35 @@ namespace PVegas2K25ProTour
             moveMouseTo(mouse_state.X, mouse_state.Y);
             updateDragState(isDraggingBall(mouse_state, golf_ball));
             shot.Update(dragging_mouse, mouse_pos, golf_ball);
-            obstacle.Update(golf_ball);
             hole.Update(golf_ball);
             golf_ball.updateSpeed();
             golf_ball.updatePosition(gameTime);
+            // Update all items in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
+            {
+                if (obstacle_list[i] != null)
+                {
+                    obstacle_list[i].Update(golf_ball);
+                }
+            }
+            for (int i = 0; i < borders.Length; i++)
+            {
+                borders[i].Update(golf_ball);
+            }
+            if (hole.getCollision() == true)
+            {
+                level += 1;
+                hole.setCollision(false);
+                if (level < levels_list.Count)
+                {
+                    levels_list[level].Invoke();
+                }
+                else
+                {
+                    // Display win screen
+                    Exit();
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -121,11 +169,22 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
-            obstacle.Draw();
+            // Draw all obstacles in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
+            {
+                if (obstacle_list[i] != null)
+                {
+                    obstacle_list[i].Draw();
+                }
+            }
+            for (int i = 0; i < borders.Length; i++)
+            {
+                borders[i].Draw();
+            }
             hole.Draw();
-            shot.Draw(golf_ball);
+            shot.Draw();
             golf_ball.Draw();
-            drawBorder();
+            //drawBorder();
             _sprite_batch.End();
 
             base.Draw(gameTime);
@@ -134,7 +193,7 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
-
+        
         public void drawBorder()
         {
             //Left border
@@ -149,7 +208,6 @@ namespace PVegas2K25ProTour
             //Bottom border
             _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
         }
-
 
         /// <summary>----------------------------------------------------------
         /// Determines if the mouse is being dragged from the ball or not
@@ -203,6 +261,138 @@ namespace PVegas2K25ProTour
             return game_paused;
         }
 
+        public void loadBorders()
+        {
+            Obstacle left_border = new Obstacle(Vector2.Zero, _sprite_batch,
+                hitbox, new Vector2(1, Window.ClientBounds.Height));
+            borders[0] = left_border;
+            Obstacle right_border = new Obstacle(new Vector2
+                (Window.ClientBounds.Width, 0), _sprite_batch,
+                hitbox, new Vector2(1, Window.ClientBounds.Height));
+            borders[1] = right_border;
+            Obstacle top_border = new Obstacle(Vector2.Zero, _sprite_batch, 
+                hitbox, new Vector2(Window.ClientBounds.Width, 1));
+            borders[2] = top_border;
+            Obstacle bottom_border = new Obstacle(new Vector2
+                (0, Window.ClientBounds.Height), _sprite_batch,
+                hitbox, new Vector2(Window.ClientBounds.Width, 1));
+            borders[3] = bottom_border;
+        }
+
+        public void clearObstacles()
+        {
+            obstacle_list.Clear();
+        }
+
+        public void addObstacle(Obstacle obstacle)
+        {
+            obstacle.LoadContent(Content);
+            obstacle_list.Add(obstacle);
+        }
+
+        public void loadLevelZero()
+        {
+            golf_ball.setPosition(new Vector2(600, 200));
+            hole.setPosition(new Vector2(100, 200));
+        }
+
+        public void loadLevelOne()
+        {
+            clearObstacles();
+            golf_ball.ballStop();
+            golf_ball.setPosition(new Vector2(700, 350));
+            hole.setPosition(new Vector2(25, 100));
+            SandPit pit1 = new SandPit(new Vector2(100, -175),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(2f, 2f));
+            addObstacle(pit1);
+            SandPit pit2 = new SandPit(new Vector2(275, 250),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(2f, 2f));
+            addObstacle(pit2);
+        }
+
+        public void loadLevelTwo()
+        {
+            clearObstacles();
+            golf_ball.ballStop();
+            golf_ball.setPosition(new Vector2(700, 200));
+            hole.setPosition(new Vector2(200, 200));
+            Lake lake1 = new Lake(new Vector2(-50, 0),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1f, 2.4f));
+            addObstacle(lake1);
+            Puddle puddle1 = new Puddle(new Vector2(400, -100),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1.5f, 1.5f));
+            addObstacle(puddle1);
+            Puddle puddle2 = new Puddle(new Vector2(350, 300),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1f, 1f));
+            addObstacle(puddle2);
+            Obstacle wall1 = new Obstacle(new Vector2(300, 185),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(25, 100));
+            addObstacle(wall1);
+        }
+
+        public void loadLevelThree()
+        {
+            clearObstacles();
+            golf_ball.ballStop();
+            golf_ball.setPosition(new Vector2(700, 200));
+            hole.setPosition(new Vector2(100, 200));
+            Mushroom mushroom1 = new Mushroom(new Vector2(200, 175),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(mushroom1);
+            Mushroom mushroom2 = new Mushroom(new Vector2(100, 275),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(mushroom2);
+            Mushroom mushroom3 = new Mushroom(new Vector2(100, 75),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(mushroom3);
+            Mushroom mushroom4 = new Mushroom(new Vector2(450, 0),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(mushroom4);
+            Mushroom mushroom5 = new Mushroom(new Vector2(600, 400),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(mushroom5);
+        }
+
+        public void loadLevelFour()
+        {
+            clearObstacles();
+            golf_ball.ballStop();
+            golf_ball.setPosition(new Vector2(700, 425));
+            hole.setPosition(new Vector2(125, 275));
+            Downslope slope1 = new Downslope(new Vector2(0, 200),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(slope1);
+            Downslope slope2 = new Downslope(new Vector2(600, 200),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+            addObstacle(slope2);
+            Lake lake1 = new Lake(new Vector2(0, 0),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(4, 0.5f));
+            addObstacle(lake1);
+            Lake lake2 = new Lake(new Vector2(200, 200),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(2, 2));
+            addObstacle(lake2);
+        }
+
+        public void loadLevelFive()
+        {
+            clearObstacles();
+            golf_ball.ballStop();
+            golf_ball.setPosition(new Vector2(700, 400));
+            hole.setPosition(new Vector2(75, 350));
+            Downslope slope1 = new Downslope(new Vector2(0, 0),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(4, 1.5f));
+            addObstacle(slope1);
+            Lake lake1 = new Lake(new Vector2(200, 310),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(2, 2f));
+            addObstacle(lake1);
+            Obstacle wall1 = new Obstacle(new Vector2(300, 150),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(100, 25));
+            addObstacle(wall1);
+            Obstacle wall2 = new Obstacle(new Vector2(575, 250),
+                _sprite_batch, new Hitbox(_graphics), new Vector2(100, 25));
+            addObstacle(wall2);
+        }
+
         //---------------------------------------------------------------------
         // FOR TEST PURPOSES ONLY
         //---------------------------------------------------------------------
@@ -237,7 +427,6 @@ namespace PVegas2K25ProTour
             saveGame();
             Exit();
         }
-
 
         public void saveGame()
         {

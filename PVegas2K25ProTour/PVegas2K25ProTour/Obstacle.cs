@@ -21,6 +21,8 @@ namespace PVegas2K25ProTour
         private Texture2D obstacle_sprite;
         private Vector2 obstacle_pos;
         private Hitbox hitbox;
+        private Vector2 scale;
+        private const float MIN_BOUNCE_SPEED = 30f;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -56,11 +58,13 @@ namespace PVegas2K25ProTour
         /// collisions with other game objects.</param>
         /// -------------------------------------------------------------------
         public Obstacle(Vector2 obstacle_pos, SpriteBatch _sprite_batch, 
-            Hitbox hitbox) : base(obstacle_pos, _sprite_batch, hitbox)
+            Hitbox hitbox, Vector2 scale) : base(obstacle_pos, _sprite_batch, 
+                hitbox, scale)
         {
             this.obstacle_pos = obstacle_pos;
             this._sprite_batch = _sprite_batch;
             this.hitbox = hitbox;
+            this.scale = scale;
         }
 
         //---------------------------------------------------------------------
@@ -69,12 +73,13 @@ namespace PVegas2K25ProTour
 
         public virtual void LoadContent(ContentManager _content)
         {
-            obstacle_sprite = _content.Load<Texture2D>("Sand");
+            obstacle_sprite = _content.Load<Texture2D>("Wall");
         }
 
         public virtual void Draw()
         {
-            _sprite_batch.Draw(obstacle_sprite, obstacle_pos, Color.White);
+            _sprite_batch.Draw(obstacle_sprite, new Rectangle((int)obstacle_pos.X, 
+                (int)obstacle_pos.Y, (int)scale.X, (int)scale.Y), Color.Black);
         }
 
         //---------------------------------------------------------------------
@@ -86,9 +91,9 @@ namespace PVegas2K25ProTour
         /// </summary>
         /// <param name="ball">the ball that can collide with this obstacle.
         /// </param>
-        public void Update(Ball ball)
+        public virtual void Update(Ball ball)
         {
-            if (hitbox.collisionCircleToCircle(ball, this))
+            if (hitbox.collisionCircleToRect(ball, this))
             {
                 collide(ball);
             }
@@ -96,12 +101,54 @@ namespace PVegas2K25ProTour
 
         public virtual void collide(Ball ball)
         {
-            ball.setSpeed(Vector2.Zero);
+            if (ball.getSpeed().Length() < MIN_BOUNCE_SPEED)
+            {
+                ball.ballStop();
+            }
+            else
+            {
+                ball.setSpeed(reflect(ball.getSpeed(),
+                hitbox.rectCollisionNormal(ball, this)));
+            }
         }
 
         public override float radius()
         {
-            return obstacle_sprite.Width / 2;
+            return scale.X / 2;
+        }
+
+        public override float width()
+        {
+            return scale.X;
+        }
+
+        public override float height()
+        {
+            return scale.Y;
+        }
+
+        public override Vector2 center()
+        {
+            Vector2 center = obstacle_pos;
+            center.X += width() / 2;
+            center.Y += height() / 2;
+            return center;
+        }
+
+        public float dotProduct(Vector2 vector1, Vector2 vector2)
+        {
+            return (vector1.X * vector2.X) + (vector1.Y * vector2.Y);
+        }
+
+        public virtual Vector2 reflect(Vector2 direction, Vector2 normal)
+        {
+            normal.Normalize();
+            return direction - 2 * dotProduct(direction, normal) * normal;
+        }
+
+        public void setScale(Vector2 new_scale)
+        {
+            scale = new_scale;
         }
     }
 }

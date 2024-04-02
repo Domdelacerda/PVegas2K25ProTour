@@ -10,15 +10,18 @@ namespace PVegas2K25ProTour
         private Texture2D mushroom_sprite;
         private Vector2 mushroom_pos;
         private Hitbox hitbox;
+        private Vector2 scale;
 
         private const float BOUNCINESS = 1.5f;
 
         public Mushroom(Vector2 mushroom_pos, SpriteBatch _sprite_batch,
-            Hitbox hitbox) : base(mushroom_pos, _sprite_batch, hitbox)
+            Hitbox hitbox, Vector2 scale) : base(mushroom_pos, 
+                _sprite_batch, hitbox, scale)
         {
             this.mushroom_pos = mushroom_pos;
             this._sprite_batch = _sprite_batch;
             this.hitbox = hitbox;
+            this.scale = scale;
         }
 
         //---------------------------------------------------------------------
@@ -31,12 +34,23 @@ namespace PVegas2K25ProTour
 
         public override void Draw()
         {
-            _sprite_batch.Draw(mushroom_sprite, mushroom_pos, Color.White);
+            _sprite_batch.Draw(mushroom_sprite, new
+                Rectangle((int)mushroom_pos.X, (int)mushroom_pos.Y,
+                (int)(mushroom_sprite.Width * scale.X),
+                (int)(mushroom_sprite.Height * scale.Y)), Color.White);
         }
 
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
+
+        public override void Update(Ball ball)
+        {
+            if (hitbox.collisionCircleToCircle(ball, this))
+            {
+                collide(ball);
+            }
+        }
 
         /// <summary>
         /// Unique collision behavior for the mushroom obstacle: bounces the
@@ -49,13 +63,31 @@ namespace PVegas2K25ProTour
             Vector2 distance_vector = distanceVector(center(),
                     ball.center());
             distance_vector.Normalize();
-            ball.setSpeed(distance_vector * ball.getSpeed().Length() *
+            ball.setSpeed(reflect(ball.getSpeed(), distance_vector) * 
                 BOUNCINESS);
         }
 
         public override float radius()
         {
-            return mushroom_sprite.Width / 2;
+            return mushroom_sprite.Width / 2 * scale.X;
+        }
+
+        public override float width()
+        {
+            return mushroom_sprite.Width * scale.X;
+        }
+
+        public override float height()
+        {
+            return mushroom_sprite.Height * scale.Y;
+        }
+
+        public override Vector2 center()
+        {
+            Vector2 center = mushroom_pos;
+            center.X += width() / 2;
+            center.Y += height() / 2;
+            return center;
         }
     }
 }

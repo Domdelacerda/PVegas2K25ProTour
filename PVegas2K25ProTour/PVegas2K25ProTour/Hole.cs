@@ -21,6 +21,7 @@ namespace PVegas2K25ProTour
         private Texture2D hole_sprite;
         private Hitbox hitbox;
         private Vector2 hole_pos;
+        private bool collision = false;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -68,28 +69,20 @@ namespace PVegas2K25ProTour
         /// </param>
         public void Update(Ball ball)
         {
-            if (isPointOverHole(ball.center()) == true)
+            if (hitbox.collisionPointToCircle(ball.center(), this) == true)
             {
-                collide(ball);
+                collide();
             }
         }
 
-        /// <summary>----------------------------------------------------------
-        /// Determines whether or not a point in space overlaps the hole based
-        /// on the position of its center and the size of its sprite
-        /// </summary>
-        /// <param name="point">the point to be checked.</param>
-        /// <returns>whether or not the point overlaps the hole.</returns>
-        /// -------------------------------------------------------------------
-        public bool isPointOverHole(Vector2 point)
+        public void setPosition(Vector2 new_position)
         {
-            float pointToCenter = distance(point, center());
-            return pointToCenter <= radius();
+            hole_pos = new_position;
         }
 
-        public virtual void collide(Ball ball)
+        public void collide()
         {
-            ball.setSpeed(new Vector2(100000f, 0f));
+            setCollision(true);
         }
 
         public override Vector2 position()
@@ -108,6 +101,16 @@ namespace PVegas2K25ProTour
             center.X += radius();
             center.Y += radius();
             return center;
+        }
+
+        public bool getCollision()
+        {
+            return collision;
+        }
+
+        public void setCollision(bool new_collision)
+        {
+            collision = new_collision;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace PVegas2K25ProTour
         private Texture2D object_sprite;
         private Vector2 start_pos;
         private Hitbox hitbox;
+        private Vector2 scale;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -97,6 +98,29 @@ namespace PVegas2K25ProTour
             this.hitbox = hitbox;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Constructs a new game object with the sprite, starting position, 
+        /// and the sprite batch to be drawn on specified
+        /// </summary>
+        /// <param name="start_pos">the position of the game object at the
+        /// start of the game.</param>
+        /// <param name="_sprite_batch">the sprite batch the object's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
+        /// <param name="hitbox">the hitbox the game object uses for
+        /// detecting collisions with other game objects.</param>
+        /// <param name="scale">the scale of the game object when it
+        /// is drawn.</param>
+        /// -------------------------------------------------------------------
+        public GameObject(Vector2 start_pos, SpriteBatch _sprite_batch,
+            Hitbox hitbox, Vector2 scale)
+        {
+            this.start_pos = start_pos;
+            this._sprite_batch = _sprite_batch;
+            this.hitbox = hitbox;
+            this.scale = scale;
+        }
+
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
@@ -126,16 +150,26 @@ namespace PVegas2K25ProTour
             return radius;
         }
 
+        public virtual float width()
+        {
+            return object_sprite.Width;
+        }
+
+        public virtual float height()
+        {
+            return object_sprite.Height;
+        }
+
         /// <summary>----------------------------------------------------------
-        /// Obtains the center of a circular object using it's radius
+        /// Obtains the center of a game object using it's dimensions
         /// </summary>
         /// <returns>the center of the object.</returns>
         /// -------------------------------------------------------------------
         public virtual Vector2 center()
         {
             Vector2 center = start_pos;
-            center.X += radius();
-            center.Y += radius();
+            center.X += width() / 2;
+            center.Y += height() / 2;
             return center;
         }
 

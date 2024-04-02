@@ -4,21 +4,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PVegas2K25ProTour
 {
-    public class SandPit : Obstacle
+    public class Lake : Obstacle
     {
         private SpriteBatch _sprite_batch;
-        private Texture2D sand_pit_sprite;
-        private Vector2 sand_pit_pos;
+        private Texture2D lake_sprite;
+        private Vector2 lake_pos;
         private Hitbox hitbox;
         private Vector2 scale;
 
-        private const float SAND_FRICTION = 0.955f;
+        private const float BOUNCINESS = 1.5f;
 
-        public SandPit(Vector2 sand_pit_pos, SpriteBatch _sprite_batch,
-            Hitbox hitbox, Vector2 scale) : base(sand_pit_pos, 
+        public Lake(Vector2 lake_pos, SpriteBatch _sprite_batch,
+            Hitbox hitbox, Vector2 scale) : base(lake_pos,
                 _sprite_batch, hitbox, scale)
         {
-            this.sand_pit_pos = sand_pit_pos;
+            this.lake_pos = lake_pos;
             this._sprite_batch = _sprite_batch;
             this.hitbox = hitbox;
             this.scale = scale;
@@ -29,15 +29,14 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
         public override void LoadContent(ContentManager _content)
         {
-            sand_pit_sprite = _content.Load<Texture2D>("Sand");
+            lake_sprite = _content.Load<Texture2D>("Lake");
         }
 
         public override void Draw()
         {
-            _sprite_batch.Draw(sand_pit_sprite, new 
-                Rectangle((int)sand_pit_pos.X, (int)sand_pit_pos.Y, 
-                (int)(sand_pit_sprite.Width * scale.X),
-                (int)(sand_pit_sprite.Height * scale.Y)), Color.White);
+            _sprite_batch.Draw(lake_sprite, new Rectangle((int)lake_pos.X,
+                (int)lake_pos.Y, (int)(lake_sprite.Width * scale.X),
+                (int)(lake_sprite.Height * scale.Y)), Color.White);
         }
 
         //---------------------------------------------------------------------
@@ -46,40 +45,42 @@ namespace PVegas2K25ProTour
 
         public override void Update(Ball ball)
         {
-            if (hitbox.collisionPointToCircle(ball.center(), this))
+            if (hitbox.collisionPointToRect(ball.center(), this))
             {
                 collide(ball);
             }
         }
 
         /// <summary>
-        /// Unique collision behavior for the sand pit obstacle: slows down the
-        /// ball faster while on sand
+        /// Unique collision behavior for the mushroom obstacle: bounces the
+        /// ball away from the mushroom with a different speed value than it
+        /// initially had
         /// </summary>
-        /// <param name="ball">the ball to be slowed down</param>
+        /// <param name="ball">the ball to be bounced back</param>
         public override void collide(Ball ball)
         {
-            ball.setSpeed(ball.getSpeed() * SAND_FRICTION);
+            ball.resetPosition();
+            ball.ballStop();
         }
 
         public override float radius()
         {
-            return sand_pit_sprite.Width / 2 * scale.X;
+            return lake_sprite.Width / 2 * scale.X;
         }
 
         public override float width()
         {
-            return sand_pit_sprite.Width * scale.X;
+            return lake_sprite.Width * scale.X;
         }
 
         public override float height()
         {
-            return sand_pit_sprite.Height * scale.Y;
+            return lake_sprite.Height * scale.Y;
         }
 
         public override Vector2 center()
         {
-            Vector2 center = sand_pit_pos;
+            Vector2 center = lake_pos;
             center.X += width() / 2;
             center.Y += height() / 2;
             return center;

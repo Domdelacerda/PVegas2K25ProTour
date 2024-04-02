@@ -7,6 +7,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using System.Diagnostics;
 
 namespace PVegas2K25ProTour
 {
@@ -23,11 +25,14 @@ namespace PVegas2K25ProTour
         private const int BALL_START_POINT_X = 600;
         private const int BALL_START_POINT_Y = 200;
         private const float DRAG_REDUCTION_FACTOR = 0.98f;
-        private const float SHOT_POWER_MULTIPLIER = 2.5f;
+        private const float SHOT_POWER_MULTIPLIER = 3f;
         private const float MIN_BALL_SPEED = 10f;
+        private const float MAX_BALL_SPEED = 1000f;
 
         private Vector2 ball_pos;
         private Vector2 ball_speed;
+        private Vector2 previous_ball_pos;
+        private bool rolling = false;
 
         private Texture2D ball_sprite;
 
@@ -58,7 +63,7 @@ namespace PVegas2K25ProTour
         /// will be drawn in (the same as all other game objects in game 
         /// control).</param>
         /// -------------------------------------------------------------------
-        public Ball(Vector2 ball_pos, SpriteBatch _sprite_batch) : 
+        public Ball(Vector2 ball_pos, SpriteBatch _sprite_batch) :
             base(ball_pos, _sprite_batch)
         {
             this.ball_pos = ball_pos;
@@ -136,10 +141,15 @@ namespace PVegas2K25ProTour
         public void updateSpeed()
         {
             // Make sure that neither X or Y in speed Vector is already 0
-            if(!(ball_speed.Length() == 0))
+            if (ball_speed.Length() != 0)
             {
                 ball_speed *= DRAG_REDUCTION_FACTOR;
-                truncateSpeed();
+                truncateSpeedLower();
+                truncateSpeedUpper();
+            }
+            else
+            {
+                setPreviousPosition(ball_pos);
             }
         }
 
@@ -164,7 +174,7 @@ namespace PVegas2K25ProTour
             if (myShot.launchPower() > 0)
             {
                 // get the angle of the user's shot using Vector2 launch_speed: 
-                
+
                 //  launch power?
                 /*float launchPower = myShot.launchPower();
                 ball_speed.X = launchPower;
@@ -189,12 +199,36 @@ namespace PVegas2K25ProTour
         /// will automatically round it down to zero so that speed doesn't
         /// become an infintely small float (A.K.A. the ball never truly stops)
         /// </summary>---------------------------------------------------------
-        public void truncateSpeed()
+        public void truncateSpeedLower()
         {
-            if (ball_speed.Length() < MIN_BALL_SPEED)
+            if (belowMinSpeed() && rolling == false)
             {
                 ballStop();
             }
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// If the ball's speed dips below a specified threshold, this function
+        /// will automatically round it down to zero so that speed doesn't
+        /// become an infintely small float (A.K.A. the ball never truly stops)
+        /// </summary>---------------------------------------------------------
+        public void truncateSpeedUpper()
+        {
+            if (aboveMaxSpeed())
+            {
+                Vector2 direction = ball_speed / ball_speed.Length();
+                setSpeed(direction * MAX_BALL_SPEED);
+            }
+        }
+
+        public bool belowMinSpeed()
+        {
+            return ball_speed.Length() < MIN_BALL_SPEED;
+        }
+
+        public bool aboveMaxSpeed()
+        {
+            return ball_speed.Length() > MAX_BALL_SPEED;
         }
 
         public Vector2 getSpeed()
@@ -202,9 +236,29 @@ namespace PVegas2K25ProTour
             return ball_speed;
         }
 
-        public void setSpeed(Vector2 newSpeed)
+        public void setSpeed(Vector2 new_speed)
         {
-            ball_speed = newSpeed;
+            ball_speed = new_speed;
+        }
+
+        public void setPosition(Vector2 new_position)
+        {
+            ball_pos = new_position;
+        }
+
+        public void setPreviousPosition(Vector2 new_prev_position)
+        {
+            previous_ball_pos = new_prev_position;
+        }
+
+        public void resetPosition()
+        {
+            ball_pos = previous_ball_pos;
+        }
+
+        public void setRolling(bool new_roll_state)
+        {
+            rolling = new_roll_state;
         }
     }
 }
