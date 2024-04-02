@@ -30,6 +30,7 @@ namespace PVegas2K25ProTour
         private Vector2 ball_speed;
 
         private Texture2D ball_sprite;
+        private Hitbox hitbox;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -205,6 +206,15 @@ namespace PVegas2K25ProTour
         public void setSpeed(Vector2 newSpeed)
         {
             ball_speed = newSpeed;
+        }
+        public void Update()
+        {
+            if (hitbox.isBallOutOfbounds(this))
+                collide();
+        }
+        public virtual void collide()
+        {
+            this.setSpeed(Vector2.Zero);
         }
     }
 }
