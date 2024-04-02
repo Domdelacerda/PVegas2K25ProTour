@@ -35,6 +35,7 @@ namespace PVegas2K25ProTour
         private bool rolling = false;
 
         private Texture2D ball_sprite;
+        private Hitbox hitbox;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -259,6 +260,15 @@ namespace PVegas2K25ProTour
         public void setRolling(bool new_roll_state)
         {
             rolling = new_roll_state;
+        }
+        public void Update()
+        {
+            if (hitbox.isBallOutOfbounds(this))
+                collide();
+        }
+        public virtual void collide()
+        {
+            this.setSpeed(Vector2.Zero);
         }
     }
 }
