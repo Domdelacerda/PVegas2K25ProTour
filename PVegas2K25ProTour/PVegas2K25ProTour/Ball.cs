@@ -36,7 +36,6 @@ namespace PVegas2K25ProTour
 
         private Texture2D ball_sprite;
         private Hitbox hitbox;
-        private int strokeCount = 0;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -185,7 +184,6 @@ namespace PVegas2K25ProTour
                 ball_speed = myShot.getLaunchSpeed() * SHOT_POWER_MULTIPLIER;
 
                 // update the ball position with power according to launch power
-                strokeCount += 1;
             }
         }
 
@@ -271,17 +269,6 @@ namespace PVegas2K25ProTour
         public virtual void collide()
         {
             this.setSpeed(Vector2.Zero);
-        }
-
-        public void setStrokeCount(int count)
-        {
-            strokeCount= count;
-        }
-
-        internal int getStrokeCount()
-        {
-
-            return strokeCount;
         }
     }
 }
