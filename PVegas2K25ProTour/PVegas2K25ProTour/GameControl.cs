@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using PVegas2K25ProTour.Controls;
 
 namespace PVegas2K25ProTour
 {
@@ -44,12 +43,6 @@ namespace PVegas2K25ProTour
 
         Texture2D line;
         private float angleOfLine;
-
-        private List<Component> _gameComponents;
-        private String stateOfGame = "menu";
-        Vector2 strokeCounter;
-
-
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -85,110 +78,38 @@ namespace PVegas2K25ProTour
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
-
-            
             
 
-                var playButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
-                {
-                    Position = new Vector2(0, 0),
-                    Text = "Play",
-
-                };
-
-                playButton.Click += PlayButton_Click;
-
-                var quitButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
-                {
-                    Position = new Vector2(0, 390),
-                    Text = "Quit",
-
-                };
-
-
-                quitButton.Click += QuitButton_Click;
-
-                var settingsButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
-                {
-                    Position = new Vector2(0, 130),
-                    Text = "Settings",
-
-                };
-
-                settingsButton.Click += SettingsButton_Click;
-
-                var LevelButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
-                {
-                    Position = new Vector2(0, 260),
-                    Text = "Level",
-
-                };
-
-                LevelButton.Click += LevelButton_Click;
-
-            _gameComponents = new List<Component>()
+            // TODO: use this.Content to load your game content here
+            golf_ball = new Ball(_sprite_batch);
+            golf_ball.LoadContent(Content);
+            shot = new Shot(_sprite_batch);
+            shot.LoadContent(Content);
+            hitbox = new Hitbox(_graphics);
+            hole = new Hole(new Vector2(100, 200), _sprite_batch,
+                hitbox);
+            hole.LoadContent(Content);
+            loadBorders();
+            // Update all content in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
             {
-                playButton,
-                quitButton,
-                settingsButton,
-                LevelButton
-            };
-            
-            
-                // TODO: use this.Content to load your game content here
-                golf_ball = new Ball(_sprite_batch);
-                golf_ball.LoadContent(Content);
-                shot = new Shot(_sprite_batch);
-                shot.LoadContent(Content);
-                hitbox = new Hitbox(_graphics);
-                hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                    hitbox);
-                hole.LoadContent(Content);
-                loadBorders();
-                // Update all content in the obstacle list
-                for (int i = 0; i < obstacle_list.Count; i++)
+                if (obstacle_list[i] != null)
                 {
-                    if (obstacle_list[i] != null)
-                    {
-                        obstacle_list[i].LoadContent(Content);
-                    }
+                    obstacle_list[i].LoadContent(Content);
                 }
-                for (int i = 0; i < borders.Length; i++)
-                {
-                    borders[i].LoadContent(Content);
-                }
-                levels_list.Add(loadLevelZero);
-                levels_list.Add(loadLevelOne);
-                levels_list.Add(loadLevelTwo);
-                levels_list.Add(loadLevelThree);
-                levels_list.Add(loadLevelFour);
-                levels_list.Add(loadLevelFive);
+            }
+            for (int i = 0; i < borders.Length; i++)
+            {
+                borders[i].LoadContent(Content);
+            }
+            levels_list.Add(loadLevelZero);
+            levels_list.Add(loadLevelOne);
+            levels_list.Add(loadLevelTwo);
+            levels_list.Add(loadLevelThree);
+            levels_list.Add(loadLevelFour);
+            levels_list.Add(loadLevelFive);
 
-                levels_list[level].Invoke();
-            
-        }
-        private void SettingsButton_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-        private void LevelButton_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void QuitButton_Click(object sender, System.EventArgs e)
-        {
-            Exit();
-        }
-
-        private void PlayButton_Click(object sender, System.EventArgs e)
-        {
-
-            stateOfGame = "play";
-            LoadContent();
-            
-            
-
+            levels_list[level].Invoke();
         }
 
         protected override void Update(GameTime gameTime)
@@ -203,60 +124,43 @@ namespace PVegas2K25ProTour
                 Exit();
             }
 
-            if (stateOfGame == "menu")
+
+            // TODO: Add your update logic here
+            MouseState mouse_state = Mouse.GetState();
+            moveMouseTo(mouse_state.X, mouse_state.Y);
+            updateDragState(isDraggingBall(mouse_state, golf_ball));
+            shot.Update(dragging_mouse, mouse_pos, golf_ball);
+            hole.Update(golf_ball);
+            golf_ball.updateSpeed();
+            golf_ball.updatePosition(gameTime);
+            // Update all items in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
             {
-                foreach (var component in _gameComponents)
+                if (obstacle_list[i] != null)
                 {
-                    component.Update(gameTime);
-
+                    obstacle_list[i].Update(golf_ball);
                 }
-                // TODO: Add your update logic here
-
-
-
             }
-            else
+            for (int i = 0; i < borders.Length; i++)
             {
-
-
-                // TODO: Add your update logic here
-                MouseState mouse_state = Mouse.GetState();
-                moveMouseTo(mouse_state.X, mouse_state.Y);
-                updateDragState(isDraggingBall(mouse_state, golf_ball));
-                shot.Update(dragging_mouse, mouse_pos, golf_ball);
-                hole.Update(golf_ball);
-                golf_ball.updateSpeed();
-                golf_ball.updatePosition(gameTime);
-                // Update all items in the obstacle list
-                for (int i = 0; i < obstacle_list.Count; i++)
-                {
-                    if (obstacle_list[i] != null)
-                    {
-                        obstacle_list[i].Update(golf_ball);
-                    }
-                }
-                for (int i = 0; i < borders.Length; i++)
-                {
-                    borders[i].Update(golf_ball);
-                }
-                if (hole.getCollision() == true)
-                {
-                    level += 1;
-                    hole.setCollision(false);
-                    if (level < levels_list.Count)
-                    {
-                        golf_ball.setStrokeCount(0);
-                        levels_list[level].Invoke();
-                    }
-                    else
-                    {
-                        // Display win screen
-                        Exit();
-                    }
-                }
-
-                base.Update(gameTime);
+                borders[i].Update(golf_ball);
             }
+            if (hole.getCollision() == true)
+            {
+                level += 1;
+                hole.setCollision(false);
+                if (level < levels_list.Count)
+                {
+                    levels_list[level].Invoke();
+                }
+                else
+                {
+                    // Display win screen
+                    Exit();
+                }
+            }
+
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -265,43 +169,25 @@ namespace PVegas2K25ProTour
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
-            if (stateOfGame == "menu")
+            // Draw all obstacles in the obstacle list
+            for (int i = 0; i < obstacle_list.Count; i++)
             {
-
-                foreach (var component in _gameComponents)
+                if (obstacle_list[i] != null)
                 {
-                    component.Draw(gameTime, _sprite_batch);
-
-
+                    obstacle_list[i].Draw();
                 }
-                _sprite_batch.End();
-
-                base.Draw(gameTime);
             }
-            if (stateOfGame == "play")
+            for (int i = 0; i < borders.Length; i++)
             {
-                // Draw all obstacles in the obstacle list
-                for (int i = 0; i < obstacle_list.Count; i++)
-                {
-                    if (obstacle_list[i] != null)
-                    {
-                        obstacle_list[i].Draw();
-                    }
-                }
-                for (int i = 0; i < borders.Length; i++)
-                {
-                    borders[i].Draw();
-                }
-                hole.Draw();
-                shot.Draw();
-                golf_ball.Draw();
-                //drawBorder();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("font/Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
-                   , strokeCounter, Color.Black);
-                _sprite_batch.End();
-
-                base.Draw(gameTime);
+                borders[i].Draw();
             }
+            hole.Draw();
+            shot.Draw();
+            golf_ball.Draw();
+            //drawBorder();
+            _sprite_batch.End();
+
+            base.Draw(gameTime);
         }
 
         //---------------------------------------------------------------------
