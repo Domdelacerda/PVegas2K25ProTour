@@ -25,6 +25,9 @@ namespace PVegas2K25ProTour
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
+        private int MAX_SCORE = 5000;
+        private int MAX_COINS = 50;
+        private bool clickedNext;
 
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
@@ -37,6 +40,9 @@ namespace PVegas2K25ProTour
         private List<Obstacle> obstacle_list;
         private Obstacle[] borders;
         private List<Action> levels_list;
+        SpriteFont font;
+        MouseState prevMouseState;
+
 
         private PlayerRecord playerRecord;
         private int level = 0;
@@ -78,11 +84,13 @@ namespace PVegas2K25ProTour
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
-            
+            font = Content.Load<SpriteFont>("File");
+
 
             // TODO: use this.Content to load your game content here
             golf_ball = new Ball(_sprite_batch);
             golf_ball.LoadContent(Content);
+            
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
             hitbox = new Hitbox(_graphics);
@@ -102,6 +110,7 @@ namespace PVegas2K25ProTour
             {
                 borders[i].LoadContent(Content);
             }
+           
             levels_list.Add(loadLevelZero);
             levels_list.Add(loadLevelOne);
             levels_list.Add(loadLevelTwo);
@@ -147,17 +156,22 @@ namespace PVegas2K25ProTour
             }
             if (hole.getCollision() == true)
             {
-                level += 1;
-                hole.setCollision(false);
-                if (level < levels_list.Count)
+                if (nextLevelCheck())
                 {
-                    levels_list[level].Invoke();
+                    level += 1;
+                    hole.setCollision(false);
+                    if (level < levels_list.Count)
+                    {
+                        levels_list[level].Invoke();
+                    }
+                    else
+                    {
+                        // Display win screen
+                        Exit();
+                    }
+                    
                 }
-                else
-                {
-                    // Display win screen
-                    Exit();
-                }
+                   
             }
 
             base.Update(gameTime);
@@ -184,6 +198,10 @@ namespace PVegas2K25ProTour
             hole.Draw();
             shot.Draw();
             golf_ball.Draw();
+            if (hole.getCollision() == true)
+            {
+                drawVictoryScreen(shot.getStrokeCount());
+            }
             //drawBorder();
             _sprite_batch.End();
 
@@ -233,6 +251,7 @@ namespace PVegas2K25ProTour
             }
             return drag_state;
         }
+
 
         /// <summary>----------------------------------------------------------
         /// Sets the current position of the mouse
@@ -391,6 +410,87 @@ namespace PVegas2K25ProTour
             Obstacle wall2 = new Obstacle(new Vector2(575, 250),
                 _sprite_batch, new Hitbox(_graphics), new Vector2(100, 25));
             addObstacle(wall2);
+        }
+
+        public int calculateScore(int number_of_shots)
+        {
+            //scaling value to be determined
+            int score = MAX_SCORE - number_of_shots * 343;
+
+            if (score < 0)
+            {
+                score = 0;
+            }
+            return score;
+        }
+        public int calculateCoins(int number_of_shots)
+        {
+            //scaling value to be determined
+            int coins = MAX_COINS - number_of_shots * 10;
+
+            if (coins < 0)
+            {
+                coins = 0;
+            }
+            return coins;
+        }
+
+        public void populateVictoryScreen(int number_of_shots)
+        {
+            //Finds the  center of the text
+            Vector2 textMiddlePoint = font.MeasureString("You Won!") / 2;
+            // Finds were to place "You Won!")
+            Vector2 position1 = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 5);
+
+            //Used to position the score and coin amount on victory screen
+            Vector2 position2 = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 3);
+
+            //Methods to format the text 
+            String score = "Score: " + calculateScore(number_of_shots).ToString();
+            String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
+
+            //Populates the victory screen
+            _sprite_batch.DrawString(font, "You Won!", position1, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, score, position2 - new Vector2(100, -40), Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, coins, position2 + new Vector2(100, 40), Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 2 - 75, Window.ClientBounds.Height - 240, 150, 75), null, Color.White, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0);
+
+            _sprite_batch.DrawString(font, "Next Level", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height - 200), Color.Black, 0, textMiddlePoint, 1.5f, SpriteEffects.None, 0.5f);
+        }
+        public void drawVictoryScreen(int number_of_shots)
+        {
+            line.SetData(new[] { Color.DarkSlateGray });
+            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 6 + 10, Window.ClientBounds.Height / 10, 500, 300), null,
+                Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
+            populateVictoryScreen(number_of_shots);
+        }
+        public bool nextLevelCheck()
+        {
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle Rect = new Rectangle(Window.ClientBounds.Width / 2 - 75, Window.ClientBounds.Height - 240, 150, 75);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (Rect.Contains(mousePosition))
+                {
+                    return true;
+                }
+
+            }
+
+            // Update the previous mouse state for the next frame
+            prevMouseState = currentMouseState;
+            return false;
+
+
         }
 
         //---------------------------------------------------------------------
