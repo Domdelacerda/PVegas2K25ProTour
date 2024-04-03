@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.ComponentModel;
+using PVegas2K25ProTour.Controls;
 
 namespace PVegas2K25ProTour
 {
@@ -50,6 +52,10 @@ namespace PVegas2K25ProTour
         Texture2D line;
         private float angleOfLine;
 
+        private List<Component> _gameComponents;
+        private String stateOfGame = "menu";
+        Vector2 strokeCounter;
+
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
@@ -86,6 +92,45 @@ namespace PVegas2K25ProTour
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
 
+            // TODO: use this.Content to load your game content here
+            golf_ball = new Ball(_sprite_batch);
+            golf_ball.LoadContent(Content);
+
+            var playButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            {
+                Position = new Vector2(0, 0),
+                Text = "Play",
+            };
+            playButton.Click += PlayButton_Click;
+            var quitButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            {
+                Position = new Vector2(0, 390),
+                Text = "Quit",
+            };
+            // TODO: use this.Content to load your game content here
+            quitButton.Click += QuitButton_Click;
+            golf_ball = new Ball(_sprite_batch);
+            var settingsButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            {
+                Position = new Vector2(0, 130),
+                Text = "Settings",
+            };
+            settingsButton.Click += SettingsButton_Click;
+            var LevelButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            {
+                Position = new Vector2(0, 260),
+                Text = "Level",
+            };
+            LevelButton.Click += LevelButton_Click;
+
+            golf_ball.LoadContent(Content);
+            _gameComponents = new List<Component>()
+            {
+                playButton,
+                quitButton,
+                settingsButton,
+                LevelButton
+            };
 
             // TODO: use this.Content to load your game content here
             golf_ball = new Ball(_sprite_batch);
@@ -120,8 +165,28 @@ namespace PVegas2K25ProTour
 
             levels_list[level].Invoke();
         }
+    private void SettingsButton_Click(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+    private void LevelButton_Click(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+    private void QuitButton_Click(object sender, System.EventArgs e)
+    {
+        Exit();
+    }
+    private void PlayButton_Click(object sender, System.EventArgs e)
+    {
+        stateOfGame = "play";
+        LoadContent();
 
-        protected override void Update(GameTime gameTime)
+
+    }
+    
+
+    protected override void Update(GameTime gameTime)
         {
             // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
@@ -133,6 +198,14 @@ namespace PVegas2K25ProTour
                 Exit();
             }
 
+            if (stateOfGame == "menu")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
+         
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
@@ -162,6 +235,8 @@ namespace PVegas2K25ProTour
                     hole.setCollision(false);
                     if (level < levels_list.Count)
                     {
+
+                        golf_ball.setStrokeCount(0);
                         levels_list[level].Invoke();
                     }
                     else
@@ -184,28 +259,55 @@ namespace PVegas2K25ProTour
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
             // Draw all obstacles in the obstacle list
-            for (int i = 0; i < obstacle_list.Count; i++)
+            if (stateOfGame == "menu")
             {
-                if (obstacle_list[i] != null)
+                foreach (var component in _gameComponents)
                 {
-                    obstacle_list[i].Draw();
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
                 }
+                _sprite_batch.End();
+                base.Draw(gameTime);
             }
-            for (int i = 0; i < borders.Length; i++)
+            else
             {
-                borders[i].Draw();
-            }
-            hole.Draw();
-            shot.Draw();
-            golf_ball.Draw();
-            if (hole.getCollision() == true)
-            {
-                drawVictoryScreen(shot.getStrokeCount());
-            }
-            //drawBorder();
-            _sprite_batch.End();
+                for (int i = 0; i < obstacle_list.Count; i++)
+                {
+                    {
+                        if (obstacle_list[i] != null)
+                        {
+                            obstacle_list[i].Draw();
+                        }
+                            
+                    }
+                }
+            
+                for (int i = 0; i < obstacle_list.Count; i++)
+                {
+                    if (obstacle_list[i] != null)
+                    {
+                        obstacle_list[i].Draw();
+                    }
+                }
+                for (int i = 0; i < borders.Length; i++)
+                {
+                    borders[i].Draw();
+                }
+                hole.Draw();
+                shot.Draw();
+                golf_ball.Draw();
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("font/Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
+                   , strokeCounter, Color.Black);
+                if (hole.getCollision() == true)
+                {
+                    drawVictoryScreen(shot.getStrokeCount());
+                }
+                //drawBorder();
+                _sprite_batch.End();
 
-            base.Draw(gameTime);
+                base.Draw(gameTime);
+            }
         }
 
         //---------------------------------------------------------------------
