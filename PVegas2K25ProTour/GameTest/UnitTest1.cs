@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using PVegas2K25ProTour;
 
 namespace GameTest
@@ -24,12 +25,12 @@ namespace GameTest
         public void TestIsPointOverSpriteCenter()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Vector2 golf_ball_center = golf_ball_reference.center();
-            bool overlap = 
+            bool overlap =
                 golf_ball_reference.isPointOverBall(golf_ball_center);
-            //new_game.quit();
+
             Assert.IsTrue(overlap);
         }
 
@@ -41,12 +42,12 @@ namespace GameTest
         public void TestIsPointOverSpriteEdge()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Vector2 golf_ball_edge = golf_ball_reference.center();
             golf_ball_edge.Y += (golf_ball_reference.radius());
             bool overlap = golf_ball_reference.isPointOverBall(golf_ball_edge);
-            //new_game.quit();
+
             Assert.IsTrue(overlap);
         }
 
@@ -58,7 +59,7 @@ namespace GameTest
         public void TestIsPointNotOverSprite()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Vector2 point_on_map = golf_ball_reference.center();
             // Add the size of the radius to each coordinate so that the point
@@ -67,7 +68,7 @@ namespace GameTest
             point_on_map.X += golf_ball_reference.radius();
             point_on_map.Y += golf_ball_reference.radius();
             bool overlap = golf_ball_reference.isPointOverBall(point_on_map);
-            //new_game.quit();
+
             Assert.IsFalse(overlap);
         }
 
@@ -80,7 +81,7 @@ namespace GameTest
         public void TestWindupShot()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Shot shot_reference = new_game.getShot();
 
@@ -101,7 +102,6 @@ namespace GameTest
                 golf_ball_reference.center());
             float far_shot_power = shot_reference.launchPower();
 
-            //new_game.quit();
             Assert.IsTrue(far_shot_power > close_shot_power);
         }
 
@@ -114,7 +114,7 @@ namespace GameTest
         public void TestArrowSize()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Shot shot_reference = new_game.getShot();
 
@@ -137,7 +137,6 @@ namespace GameTest
             shot_reference.resizeArrow(golf_ball_reference.center());
             float far_shot_arrow_length = shot_reference.arrowLength();
 
-            //new_game.quit();
             Assert.IsTrue(far_shot_arrow_length > close_shot_arrow_length);
         }
 
@@ -150,7 +149,7 @@ namespace GameTest
         public void TestArrowSizeZero()
         {
             using var new_game = new GameControl();
-            new_game.Run();
+            new_game.RunOneFrame();
             Ball golf_ball_reference = new_game.getBall();
             Shot shot_reference = new_game.getShot();
             Vector2 golf_ball_center = golf_ball_reference.center();
@@ -158,7 +157,7 @@ namespace GameTest
                 golf_ball_center);
             shot_reference.resizeArrow(golf_ball_reference.center());
             float shot_arrow_length = shot_reference.arrowLength();
-            //new_game.quit();
+
             Assert.IsTrue(shot_arrow_length == 0);
         }
 
@@ -166,7 +165,7 @@ namespace GameTest
         public void TestBallStops()
         {
             using var newGame = new GameControl();
-            newGame.Run();
+            newGame.RunOneFrame();
             Ball golfBallReference = newGame.getBall();
             Shot shotReference = newGame.getShot();
 
@@ -194,7 +193,7 @@ namespace GameTest
             Vector2 ballSpeed1;
             Vector2 ballSpeed2;
             using var newGame = new GameControl();
-            newGame.Run();
+            newGame.RunOneFrame();
             Ball golfBallReference = newGame.getBall();
             Shot shotReference = newGame.getShot();
 
@@ -221,7 +220,7 @@ namespace GameTest
         public void TestBallLaunch()
         {
             using var newGame = new GameControl();
-            newGame.Run();
+            newGame.RunOneFrame();
             Ball golfBallReference = newGame.getBall();
             Shot shotReference = newGame.getShot();
 
@@ -238,6 +237,74 @@ namespace GameTest
 
             Assert.IsTrue(golfBallReference.getSpeed().X != 0 || 
                 golfBallReference.getSpeed().Y != 0);
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if a shot power greater than the maximum is truncated
+        /// to the maximum value
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void TestClampShotPower()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+            Vector2 far_point = new Vector2(10000f, 10000f);
+            shot_reference.Update(true, far_point, golf_ball_reference);
+
+            Assert.IsTrue(shot_reference.launchPower() == 
+                shot_reference.maxShotPower());
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if a vector is reflected correctly when its angle
+        /// of incidence is equal to the normal vector of collision, which
+        /// means that the angle between incidence and normal should be the
+        /// same as the angle between normal and reflection
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void TestVectorReflectionStraight()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Hitbox hitbox_reference = new Hitbox();
+            Obstacle obstacle_reference = new Obstacle(Vector2.Zero, 
+                new_game.getSpriteBatch(), hitbox_reference, Vector2.One);
+            Vector2 incidence = Vector2.UnitX;
+            Vector2 normal = Vector2.UnitX;
+            Vector2 reflection = obstacle_reference.reflectVector(incidence, 
+                normal);
+            float angle_in = obstacle_reference.angleBetweenVectors(incidence,
+                normal);
+            float angle_ir = (float)Math.PI - 
+                obstacle_reference.angleBetweenVectors(normal, reflection);
+            Assert.IsTrue(angle_in == angle_ir);
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if a vector is reflected correctly when its angle
+        /// of incidence is different from the normal vector of collision, 
+        /// which means that the angle between incidence and normal should be 
+        /// the same as the angle between normal and reflection
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void TestVectorReflectionSkew()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Hitbox hitbox_reference = new Hitbox();
+            Obstacle obstacle_reference = new Obstacle(Vector2.Zero,
+                new_game.getSpriteBatch(), hitbox_reference, Vector2.One);
+            Vector2 incidence = -Vector2.One;
+            Vector2 normal = Vector2.UnitY;
+            Vector2 reflection = obstacle_reference.reflectVector(incidence,
+                normal);
+            float angle_in = obstacle_reference.angleBetweenVectors(incidence,
+                normal);
+            float angle_ir = (float)Math.PI - 
+                obstacle_reference.angleBetweenVectors(normal, reflection);
+            Assert.IsTrue(angle_in == angle_ir);
         }
     }
 }

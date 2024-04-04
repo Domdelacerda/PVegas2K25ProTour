@@ -7,8 +7,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using System.Diagnostics;
 
 namespace PVegas2K25ProTour
 {
@@ -22,8 +20,6 @@ namespace PVegas2K25ProTour
     {
         private SpriteBatch _sprite_batch;
 
-        private const int BALL_START_POINT_X = 600;
-        private const int BALL_START_POINT_Y = 200;
         private const float DRAG_REDUCTION_FACTOR = 0.98f;
         private const float SHOT_POWER_MULTIPLIER = 3f;
         private const float MIN_BALL_SPEED = 10f;
@@ -35,7 +31,6 @@ namespace PVegas2K25ProTour
         private bool rolling = false;
 
         private Texture2D ball_sprite;
-        private Hitbox hitbox;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -51,23 +46,6 @@ namespace PVegas2K25ProTour
         /// -------------------------------------------------------------------
         public Ball(SpriteBatch _sprite_batch) : base(_sprite_batch)
         {
-            ball_pos = new Vector2(BALL_START_POINT_X, BALL_START_POINT_Y);
-            this._sprite_batch = _sprite_batch;
-        }
-
-        /// <summary>----------------------------------------------------------
-        /// Constructs a new ball at a specified starting point
-        /// </summary>
-        /// /// <param name="ball_pos">the position of the ball at the start of
-        /// the game.</param>
-        /// <param name="_sprite_batch">the sprite batch the ball's sprite
-        /// will be drawn in (the same as all other game objects in game 
-        /// control).</param>
-        /// -------------------------------------------------------------------
-        public Ball(Vector2 ball_pos, SpriteBatch _sprite_batch) :
-            base(ball_pos, _sprite_batch)
-        {
-            this.ball_pos = ball_pos;
             this._sprite_batch = _sprite_batch;
         }
 
@@ -122,7 +100,6 @@ namespace PVegas2K25ProTour
             return ball_sprite.Width / 2;
         }
 
-
         /// <summary>----------------------------------------------------------
         /// Gets the position where the center of the ball is by using its
         /// drawn position and its radius
@@ -137,8 +114,22 @@ namespace PVegas2K25ProTour
             return center;
         }
 
-        // gives the ball friction and makes it slow down over time
-        // DRAG_REDUCTION_FACTOR is the % amount that the ball will reduce in speed per update
+        /// <summary>----------------------------------------------------------
+        /// Composite update function to update speed and position every frame
+        /// </summary>
+        /// <param name="time">the time used for physics calculations.</param>
+        /// -------------------------------------------------------------------
+        public void Update(GameTime time)
+        {
+            updateSpeed();
+            updatePosition(time);
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gives the ball friction and makes it slow down over time
+        /// DRAG_REDUCTION_FACTOR is the % amount that the ball will reduce in 
+        /// speed per update
+        /// </summary>---------------------------------------------------------
         public void updateSpeed()
         {
             // Make sure that neither X or Y in speed Vector is already 0
@@ -154,12 +145,17 @@ namespace PVegas2K25ProTour
             }
         }
 
-        // Position updates based on the ball speed
-        public void updatePosition(GameTime gametime)
+        /// <summary>----------------------------------------------------------
+        /// Position updates based on the ball speed
+        /// </summary>
+        /// <param name="game_time">the time used for physics calculations.
+        /// </param>
+        /// -------------------------------------------------------------------
+        public void updatePosition(GameTime game_time)
         {
             // the new position is based on old position and speed. += relationship
 
-            float time = (float)gametime.ElapsedGameTime.TotalSeconds;
+            float time = (float)game_time.ElapsedGameTime.TotalSeconds;
 
             // Calculate the movement vector
             Vector2 movement = ball_speed * time;
@@ -168,11 +164,20 @@ namespace PVegas2K25ProTour
             ball_pos += movement;
         }
 
-        public void launchBall(Shot myShot)
+        /// <summary>----------------------------------------------------------
+        /// Give the ball a specified speed vector as long as the magnitude of
+        /// that vector is not zero
+        /// </summary>
+        /// <param name="launch_power">the magnitude of the speed the ball will
+        /// be given.</param>
+        /// <param name="launch_speed">the speed vector the ball is given.
+        /// </param>
+        /// -------------------------------------------------------------------
+        public void launchBall(float launch_power, Vector2 launch_speed)
         {
             // Potential issue? If the shot has been released when is launch power set to zero?
             // There's a chance this could never evaluate to true. 
-            if (myShot.launchPower() > 0)
+            if (launch_power > 0)
             {
                 // get the angle of the user's shot using Vector2 launch_speed: 
 
@@ -181,7 +186,7 @@ namespace PVegas2K25ProTour
                 ball_speed.X = launchPower;
                 ball_speed.Y = launchPower;*/
 
-                ball_speed = myShot.getLaunchSpeed() * SHOT_POWER_MULTIPLIER;
+                ball_speed = launch_speed * SHOT_POWER_MULTIPLIER;
 
                 // update the ball position with power according to launch power
             }
@@ -222,53 +227,82 @@ namespace PVegas2K25ProTour
             }
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Determines if the magnitude of the ball's speed is below its set
+        /// minimum value
+        /// </summary>---------------------------------------------------------
         public bool belowMinSpeed()
         {
             return ball_speed.Length() < MIN_BALL_SPEED;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Determines if the magnitude of the ball's speed is above its set
+        /// maximum value
+        /// </summary>---------------------------------------------------------
         public bool aboveMaxSpeed()
         {
             return ball_speed.Length() > MAX_BALL_SPEED;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Gets the current speed of the ball
+        /// <returns>the speed of the ball.</returns>
+        /// </summary>---------------------------------------------------------
         public Vector2 getSpeed()
         {
             return ball_speed;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the current speed of the ball
+        /// <param name="new_speed">the new speed the ball is set to.</param>
+        /// </summary>---------------------------------------------------------
         public void setSpeed(Vector2 new_speed)
         {
             ball_speed = new_speed;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the current position of the ball in the scene
+        /// <param name="new_position">the new position the ball is set to.
+        /// </param>
+        /// </summary>---------------------------------------------------------
         public void setPosition(Vector2 new_position)
         {
             ball_pos = new_position;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the save state for the ball's previous position, used when
+        /// resetting the ball after hitting an out-of-bounds obstacle such as
+        /// lake or puddle
+        /// <param name="new_prev_position">the new previous position of the 
+        /// ball.</param>
+        /// </summary>---------------------------------------------------------
         public void setPreviousPosition(Vector2 new_prev_position)
         {
             previous_ball_pos = new_prev_position;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the ball's position to the value stored in the previous
+        /// position save state, effectively undoing the ball's most recent
+        /// movement
+        /// </summary>---------------------------------------------------------
         public void resetPosition()
         {
             ball_pos = previous_ball_pos;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the rolling state for the ball, which is used when on a
+        /// downslope so that the ball's speed isn't truncated when it
+        /// approaches zero and still rolls down even if it has no speed
+        /// </summary>---------------------------------------------------------
         public void setRolling(bool new_roll_state)
         {
             rolling = new_roll_state;
-        }
-        public void Update()
-        {
-            if (hitbox.isBallOutOfbounds(this))
-                collide();
-        }
-        public virtual void collide()
-        {
-            this.setSpeed(Vector2.Zero);
         }
     }
 }

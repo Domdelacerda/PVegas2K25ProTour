@@ -10,8 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
 
 namespace PVegas2K25ProTour
 {
@@ -85,9 +83,9 @@ namespace PVegas2K25ProTour
             golf_ball.LoadContent(Content);
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
-            hitbox = new Hitbox(_graphics);
+            hitbox = new Hitbox();
             hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                hitbox);
+                hitbox, Vector2.One);
             hole.LoadContent(Content);
             loadBorders();
             // Update all content in the obstacle list
@@ -120,7 +118,7 @@ namespace PVegas2K25ProTour
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 // save and exit...
-                //saveGame();
+                saveGame();
                 Exit();
             }
 
@@ -130,10 +128,8 @@ namespace PVegas2K25ProTour
             moveMouseTo(mouse_state.X, mouse_state.Y);
             updateDragState(isDraggingBall(mouse_state, golf_ball));
             shot.Update(dragging_mouse, mouse_pos, golf_ball);
-            hole.Update(golf_ball);
-            golf_ball.updateSpeed();
-            golf_ball.updatePosition(gameTime);
-            // Update all items in the obstacle list
+            hole.Update(golf_ball.center());
+            golf_ball.Update(gameTime);
             for (int i = 0; i < obstacle_list.Count; i++)
             {
                 if (obstacle_list[i] != null)
@@ -303,10 +299,10 @@ namespace PVegas2K25ProTour
             golf_ball.setPosition(new Vector2(700, 350));
             hole.setPosition(new Vector2(25, 100));
             SandPit pit1 = new SandPit(new Vector2(100, -175),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(2f, 2f));
+                _sprite_batch, new Hitbox(), new Vector2(2f, 2f));
             addObstacle(pit1);
             SandPit pit2 = new SandPit(new Vector2(275, 250),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(2f, 2f));
+                _sprite_batch, new Hitbox(), new Vector2(2f, 2f));
             addObstacle(pit2);
         }
 
@@ -317,16 +313,16 @@ namespace PVegas2K25ProTour
             golf_ball.setPosition(new Vector2(700, 200));
             hole.setPosition(new Vector2(200, 200));
             Lake lake1 = new Lake(new Vector2(-50, 0),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1f, 2.4f));
+                _sprite_batch, new Hitbox(), new Vector2(1f, 2.4f));
             addObstacle(lake1);
             Puddle puddle1 = new Puddle(new Vector2(400, -100),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1.5f, 1.5f));
+                _sprite_batch, new Hitbox(), new Vector2(1.5f, 1.5f));
             addObstacle(puddle1);
             Puddle puddle2 = new Puddle(new Vector2(350, 300),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1f, 1f));
+                _sprite_batch, new Hitbox(), new Vector2(1f, 1f));
             addObstacle(puddle2);
             Obstacle wall1 = new Obstacle(new Vector2(300, 185),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(25, 100));
+                _sprite_batch, new Hitbox(), new Vector2(25, 100));
             addObstacle(wall1);
         }
 
@@ -337,19 +333,19 @@ namespace PVegas2K25ProTour
             golf_ball.setPosition(new Vector2(700, 200));
             hole.setPosition(new Vector2(100, 200));
             Mushroom mushroom1 = new Mushroom(new Vector2(200, 175),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom1);
             Mushroom mushroom2 = new Mushroom(new Vector2(100, 275),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom2);
             Mushroom mushroom3 = new Mushroom(new Vector2(100, 75),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom3);
             Mushroom mushroom4 = new Mushroom(new Vector2(450, 0),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom4);
             Mushroom mushroom5 = new Mushroom(new Vector2(600, 400),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom5);
         }
 
@@ -360,16 +356,16 @@ namespace PVegas2K25ProTour
             golf_ball.setPosition(new Vector2(700, 425));
             hole.setPosition(new Vector2(125, 275));
             Downslope slope1 = new Downslope(new Vector2(0, 200),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(slope1);
             Downslope slope2 = new Downslope(new Vector2(600, 200),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(1, 1));
+                _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(slope2);
             Lake lake1 = new Lake(new Vector2(0, 0),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(4, 0.5f));
+                _sprite_batch, new Hitbox(), new Vector2(4, 0.5f));
             addObstacle(lake1);
             Lake lake2 = new Lake(new Vector2(200, 200),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(2, 2));
+                _sprite_batch, new Hitbox(), new Vector2(2, 2));
             addObstacle(lake2);
         }
 
@@ -380,16 +376,16 @@ namespace PVegas2K25ProTour
             golf_ball.setPosition(new Vector2(700, 400));
             hole.setPosition(new Vector2(75, 350));
             Downslope slope1 = new Downslope(new Vector2(0, 0),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(4, 1.5f));
+                _sprite_batch, new Hitbox(), new Vector2(4, 1.5f));
             addObstacle(slope1);
             Lake lake1 = new Lake(new Vector2(200, 310),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(2, 2f));
+                _sprite_batch, new Hitbox(), new Vector2(2, 2f));
             addObstacle(lake1);
             Obstacle wall1 = new Obstacle(new Vector2(300, 150),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(100, 25));
+                _sprite_batch, new Hitbox(), new Vector2(100, 25));
             addObstacle(wall1);
             Obstacle wall2 = new Obstacle(new Vector2(575, 250),
-                _sprite_batch, new Hitbox(_graphics), new Vector2(100, 25));
+                _sprite_batch, new Hitbox(), new Vector2(100, 25));
             addObstacle(wall2);
         }
 
@@ -415,6 +411,16 @@ namespace PVegas2K25ProTour
         public Shot getShot()
         {
             return shot;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the game's sprite batch used for drawing sprites
+        /// </summary>
+        /// <returns>the reference to the sprite batch in this game.</returns>
+        /// -------------------------------------------------------------------
+        public SpriteBatch getSpriteBatch()
+        {
+            return _sprite_batch;
         }
 
         /// <summary>----------------------------------------------------------

@@ -122,7 +122,7 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void windupShot(Vector2 mouse_pos, Vector2 ball_center)
         {
-            launch_speed = distanceVector(mouse_pos, ball_center);
+            launch_speed = distanceVector(ball_center, mouse_pos);
         }
 
         /// <summary>----------------------------------------------------------
@@ -131,12 +131,14 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void releaseShot(Ball myBall)
         {
-            myBall.launchBall(this);
+            myBall.launchBall(launchPower(), launch_speed);
             launch_speed = Vector2.Zero;
         }
 
-
-        // Checks to see if the shot has been released
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if the shot has been released
+        /// <return>whether the shot is released or not.</return>
+        /// </summary>---------------------------------------------------------
         public bool shotReleased()
         {
             bool shotReleased = false;
@@ -147,7 +149,10 @@ namespace PVegas2K25ProTour
             return shotReleased;
         }
 
-        // getter method for the stroke_count var
+        /// <summary>----------------------------------------------------------
+        /// Getter method for the stroke_count variable
+        /// <return>the number of strokes.</return>
+        /// </summary>---------------------------------------------------------
         public int getStrokeCount()
         {
             return stroke_count;
@@ -177,11 +182,6 @@ namespace PVegas2K25ProTour
         public float launchPower()
         {
             return launch_speed.Length();
-        }
-
-        public Vector2 getLaunchSpeed()
-        {
-            return launch_speed;
         }
 
         /// <summary>----------------------------------------------------------
@@ -218,6 +218,14 @@ namespace PVegas2K25ProTour
         public float arrowLength()
         {
             return arrow_rect.Width;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the maximum shot power
+        /// </summary>---------------------------------------------------------
+        public float maxShotPower()
+        {
+            return MAX_SHOT_POWER;
         }
     }
 }

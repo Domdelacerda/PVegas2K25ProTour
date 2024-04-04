@@ -60,10 +60,10 @@ namespace PVegas2K25ProTour
         /// <param name="ball">the ball to be bounced back</param>
         public override void collide(Ball ball)
         {
-            Vector2 distance_vector = distanceVector(center(),
-                    ball.center());
+            Vector2 distance_vector = distanceVector(ball.center(),
+                    center());
             distance_vector.Normalize();
-            ball.setSpeed(reflect(ball.getSpeed(), distance_vector) * 
+            ball.setSpeed(reflectVector(ball.getSpeed(), distance_vector) * 
                 BOUNCINESS);
         }
 

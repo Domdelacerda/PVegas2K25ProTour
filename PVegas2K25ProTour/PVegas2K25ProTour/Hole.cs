@@ -21,6 +21,7 @@ namespace PVegas2K25ProTour
         private Texture2D hole_sprite;
         private Hitbox hitbox;
         private Vector2 hole_pos;
+        private Vector2 scale;
         private bool collision = false;
 
         //---------------------------------------------------------------------
@@ -35,13 +36,20 @@ namespace PVegas2K25ProTour
         /// <param name="_sprite_batch">the sprite batch the hole's sprite
         /// will be drawn in (the same as all other game objects in game 
         /// control).</param>
+        /// <param name="hitbox">the hitbox the game object uses for
+        /// detecting collisions with other game objects.</param>
+        /// <param name="_sprite_batch">the sprite batch the hole's sprite
+        /// will be drawn in (the same as all other game objects in game 
+        /// control).</param>
         /// -------------------------------------------------------------------
         public Hole(Vector2 hole_pos, SpriteBatch _sprite_batch, 
-            Hitbox hitbox) : base(hole_pos, _sprite_batch, hitbox)
+            Hitbox hitbox, Vector2 scale) : base(hole_pos, _sprite_batch, 
+                hitbox, scale)
         {
             this.hole_pos = hole_pos;
             this._sprite_batch = _sprite_batch;
             this.hitbox = hitbox;
+            this.scale = scale;
         }
 
         //---------------------------------------------------------------------
@@ -62,39 +70,66 @@ namespace PVegas2K25ProTour
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
 
-        /// <summary>
+        /// <summary>----------------------------------------------------------
         /// Checks for collisions with a ball game object every frame
         /// </summary>
-        /// <param name="ball">the ball that can collide with this obstacle.
+        /// <param name="ball">the ball that can collide with this hole.
         /// </param>
-        public void Update(Ball ball)
+        /// -------------------------------------------------------------------
+        public void Update(Vector2 ball_center)
         {
-            if (hitbox.collisionPointToCircle(ball.center(), this) == true)
+            if (hitbox.collisionPointToCircle(ball_center, this) == true)
             {
                 collide();
             }
         }
 
-        public void setPosition(Vector2 new_position)
-        {
-            hole_pos = new_position;
-        }
-
+        /// <summary>----------------------------------------------------------
+        /// On collision with a ball, enact unique collision behavior. The
+        /// hole's collision behavior sets off a flag letting game control
+        /// know that the current level has been completed
+        /// </summary>---------------------------------------------------------
         public void collide()
         {
             setCollision(true);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Gets the position of the hole in the game view
+        /// </summary>
+        /// <returns>the position of the hole.</returns>
+        /// -------------------------------------------------------------------
         public override Vector2 position()
         {
             return hole_pos;
         }
 
-        public override float radius()
+        /// <summary>----------------------------------------------------------
+        /// Sets the new position of the hole in the game view
+        /// </summary>
+        /// <param name="new_position">the new position of the hole.</param>
+        /// -------------------------------------------------------------------
+        public void setPosition(Vector2 new_position)
         {
-            return hole_sprite.Width / 2;
+            hole_pos = new_position;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Gets the radius of the hole from the size of its sprite and the
+        /// scale factor
+        /// </summary>
+        /// <returns>the radius of the hole.</returns>
+        /// -------------------------------------------------------------------
+        public override float radius()
+        {
+            return hole_sprite.Width / 2 * scale.X;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the center of the hole from its position and radius
+        /// </summary>
+        /// <returns>the center of the hole.</returns>
+        /// -------------------------------------------------------------------
         public override Vector2 center()
         {
             Vector2 center = hole_pos;
@@ -103,11 +138,25 @@ namespace PVegas2K25ProTour
             return center;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Gets the collision flag for the hole, used for determining if the
+        /// player has reached the end of a level or not
+        /// </summary>
+        /// <returns>whether or not the ball has collided with the hole.
+        /// </returns>
+        /// -------------------------------------------------------------------
         public bool getCollision()
         {
             return collision;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the collision flag for the hole, activated when the ball
+        /// collides with the hole
+        /// </summary>
+        /// <param name="new_collision">the new collision state of the hole.\
+        /// </param>
+        /// -------------------------------------------------------------------
         public void setCollision(bool new_collision)
         {
             collision = new_collision;

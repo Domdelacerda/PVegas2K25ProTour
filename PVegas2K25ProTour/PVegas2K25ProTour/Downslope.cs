@@ -67,7 +67,8 @@ namespace PVegas2K25ProTour
         {
             if (ball.getSpeed().Length() != 0)
             {
-                ball.setSpeed(new Vector2(ball.getSpeed().X, ball.getSpeed().Y + INCLINE));
+                ball.setSpeed(new Vector2(ball.getSpeed().X, 
+                    ball.getSpeed().Y + INCLINE));
             }
         }
 
