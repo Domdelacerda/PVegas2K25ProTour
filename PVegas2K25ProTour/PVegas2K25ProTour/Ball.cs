@@ -31,6 +31,8 @@ namespace PVegas2K25ProTour
         private bool rolling = false;
 
         private Texture2D ball_sprite;
+        private Hitbox hitbox;
+        private int strokeCount = 0;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -189,6 +191,7 @@ namespace PVegas2K25ProTour
                 ball_speed = launch_speed * SHOT_POWER_MULTIPLIER;
 
                 // update the ball position with power according to launch power
+                strokeCount += 1;
             }
         }
 
@@ -304,5 +307,16 @@ namespace PVegas2K25ProTour
         {
             rolling = new_roll_state;
         }
+
+        public void setStrokeCount(int count)
+        {
+            strokeCount = count;
+        }
+
+        internal int getStrokeCount()
+        {
+
+            return strokeCount;
+        }
     }
-}
+}   
