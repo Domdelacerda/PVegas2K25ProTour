@@ -96,13 +96,13 @@ namespace PVegas2K25ProTour
             golf_ball = new Ball(_sprite_batch);
             golf_ball.LoadContent(Content);
 
-            var playButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 0),
                 Text = "Play",
             };
             playButton.Click += PlayButton_Click;
-            var quitButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 390),
                 Text = "Quit",
@@ -110,13 +110,13 @@ namespace PVegas2K25ProTour
             // TODO: use this.Content to load your game content here
             quitButton.Click += QuitButton_Click;
             golf_ball = new Ball(_sprite_batch);
-            var settingsButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var settingsButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 130),
                 Text = "Settings",
             };
             settingsButton.Click += SettingsButton_Click;
-            var LevelButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 260),
                 Text = "Level",
@@ -295,7 +295,7 @@ namespace PVegas2K25ProTour
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("font/Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
                 if (hole.getCollision() == true)
                 {
