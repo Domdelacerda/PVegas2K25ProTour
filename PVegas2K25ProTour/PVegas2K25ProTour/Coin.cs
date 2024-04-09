@@ -25,7 +25,7 @@ namespace PVegas2K25ProTour
         }
         public override float  radius()
         {
-            return coinTexture.Height / 2;
+            return coinTexture.Height / 2; 
         }
         public void LoadContent(ContentManager content_)
         {
