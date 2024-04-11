@@ -117,7 +117,7 @@ namespace PVegas2K25ProTour
         }
 
         /// <summary>----------------------------------------------------------
-        /// Composite update function to update speed and position every frame
+        /// Composite date function to update speed and position every frame
         /// </summary>
         /// <param name="time">the time used for physics calculations.</param>
         /// -------------------------------------------------------------------

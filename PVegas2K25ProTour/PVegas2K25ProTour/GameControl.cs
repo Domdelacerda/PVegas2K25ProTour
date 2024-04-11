@@ -300,6 +300,7 @@ namespace PVegas2K25ProTour
                 if (hole.getCollision() == true)
                 {
                     drawVictoryScreen(shot.getStrokeCount());
+                    golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
                 //drawBorder();
                 _sprite_batch.End();
@@ -568,10 +569,10 @@ namespace PVegas2K25ProTour
         public bool nextLevelCheck()
         {
             MouseState currentMouseState = Mouse.GetState();
-            bool isLeftButtonClicked = currentMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
             // Check if left button was clicked and released
-            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released;
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == ButtonState.Released;
 
             if (wasLeftButtonClickedAndReleased)
             {
