@@ -27,6 +27,7 @@ namespace PVegas2K25ProTour
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
+        private RenderTarget2D _render_target;
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 25;
         private bool clickedNext;
@@ -45,12 +46,14 @@ namespace PVegas2K25ProTour
         SpriteFont font;
         MouseState prevMouseState;
 
-
         private PlayerRecord playerRecord;
         private int level = 0;
 
         Texture2D line;
         private float angleOfLine;
+
+        private Vector2 game_resolution = new Vector2(800, 480);
+        private Rectangle render_target_rect;
 
         private List<Component> _gameComponents;
         private String stateOfGame = "menu";
@@ -83,7 +86,43 @@ namespace PVegas2K25ProTour
             borders = new Obstacle[4];
             coinList=new List<Coin>();
 
+            Window.AllowAltF4 = true;
+            Window.AllowUserResizing = true;
+            _render_target = new RenderTarget2D(_graphics.GraphicsDevice, 
+                160, 144);
+
             base.Initialize();
+        }
+
+        Rectangle GetRenderTargetDestination(Vector2 resolution, int preferredBackBufferWidth, int preferredBackBufferHeight)
+        {
+            float resolutionRatio = resolution.X / resolution.Y;
+            float screenRatio;
+            Vector2 bounds = new Vector2(preferredBackBufferWidth, preferredBackBufferHeight);
+            screenRatio = bounds.X / bounds.Y;
+            float scale;
+            Rectangle rectangle = new Rectangle();
+
+            if (resolutionRatio < screenRatio)
+                scale = bounds.Y / resolution.Y;
+            else if (resolutionRatio > screenRatio)
+                scale = bounds.X / resolution.X;
+            else
+            {
+                // Resolution and window/screen share aspect ratio
+                rectangle.Size = new Point((int)bounds.X, (int)bounds.Y);
+                return rectangle;
+            }
+            rectangle.Width = (int)(resolution.X * scale);
+            rectangle.Height = (int)(resolution.Y * scale);
+            return CenterRectangle(new Rectangle(0, 0, (int)bounds.X, (int)bounds.Y), rectangle);
+        }
+
+        static Rectangle CenterRectangle(Rectangle outerRectangle, Rectangle innerRectangle)
+        {
+            Point delta = outerRectangle.Center - innerRectangle.Center;
+            innerRectangle.Offset(delta);
+            return innerRectangle;
         }
 
         protected override void LoadContent()
@@ -97,17 +136,24 @@ namespace PVegas2K25ProTour
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
 
-            // TODO: use this.Content to load your game content here
-            golf_ball = new Ball(_sprite_batch);
-            golf_ball.LoadContent(Content);
+            _graphics.PreferredBackBufferWidth = (int)game_resolution.X;
+            _graphics.PreferredBackBufferHeight = (int)game_resolution.Y;
+            _graphics.ApplyChanges();
+            _render_target = new RenderTarget2D(GraphicsDevice, 
+                (int)game_resolution.X, (int)game_resolution.Y, false, 
+                SurfaceFormat.Color, DepthFormat.None, 0, 
+                RenderTargetUsage.PreserveContents);
+            render_target_rect = GetRenderTargetDestination
+                (game_resolution, _graphics.PreferredBackBufferWidth, 
+                _graphics.PreferredBackBufferHeight);
 
-            var playButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 0),
                 Text = "Play",
             };
             playButton.Click += PlayButton_Click;
-            var quitButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 390),
                 Text = "Quit",
@@ -115,13 +161,13 @@ namespace PVegas2K25ProTour
             // TODO: use this.Content to load your game content here
             quitButton.Click += QuitButton_Click;
             golf_ball = new Ball(_sprite_batch);
-            var settingsButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var settingsButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 130),
                 Text = "Settings",
             };
             settingsButton.Click += SettingsButton_Click;
-            var LevelButton = new Button(Content.Load<Texture2D>("Controls/button"), Content.Load<SpriteFont>("Font/Font"))
+            var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 260),
                 Text = "Level",
@@ -140,6 +186,9 @@ namespace PVegas2K25ProTour
             // TODO: use this.Content to load your game content here
             golf_ball = new Ball(_sprite_batch);
             golf_ball.LoadContent(Content);
+            // USE THESE METHODS TO ALTER BALL COSMETICS
+            golf_ball.setHat(Content, "Sunglasses");
+            golf_ball.setColor(Color.Aqua);
             
             shot = new Shot(_sprite_batch);
             shot.LoadContent(Content);
@@ -174,7 +223,6 @@ namespace PVegas2K25ProTour
             levels_list.Add(loadLevelThree);
             levels_list.Add(loadLevelFour);
             levels_list.Add(loadLevelFive);
-
             levels_list[level].Invoke();
         }
     private void SettingsButton_Click(object sender, EventArgs e)
@@ -193,11 +241,8 @@ namespace PVegas2K25ProTour
     {
         stateOfGame = "play";
         LoadContent();
-
-
     }
     
-
     protected override void Update(GameTime gameTime)
         {
             // See if the user pressed Quit
@@ -269,12 +314,12 @@ namespace PVegas2K25ProTour
                 }
                    
             }
-            
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            //GraphicsDevice.SetRenderTarget(_render_target);
             GraphicsDevice.Clear(Color.DarkOliveGreen);
 
             // TODO: Add your drawing code here
@@ -315,7 +360,7 @@ namespace PVegas2K25ProTour
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("font/Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
                 if(hole.getCollision() == true&&!coinAddLevel)
                 {
@@ -335,6 +380,15 @@ namespace PVegas2K25ProTour
                 }
                 //drawBorder();
                 _sprite_batch.End();
+
+                //GraphicsDevice.SetRenderTarget(null);
+                //GraphicsDevice.Clear(Color.DarkOliveGreen);
+
+                /*
+                _sprite_batch.Begin();
+                _sprite_batch.Draw(_render_target, render_target_rect, Color.White);
+                _sprite_batch.End();
+                */
 
                 base.Draw(gameTime);
             }
