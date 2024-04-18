@@ -10,6 +10,8 @@ namespace PVegas2K25ProTour
     {
         public string User { get; set; }
         public int Strokes { get; set; }
+
+        public int Coins { get; set; } 
     }
 
 }

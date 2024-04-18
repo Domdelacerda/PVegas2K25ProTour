@@ -59,7 +59,7 @@ namespace PVegas2K25ProTour
         private String stateOfGame = "menu";
         Vector2 strokeCounter;
 
-        private float coins=0;
+        private int coins = 0;
         private List<Coin> coinList;
         private bool coinAddLevel=false;
 
@@ -128,8 +128,12 @@ namespace PVegas2K25ProTour
         protected override void LoadContent()
         {
             // Load the current user name and stroke count
-            //playerRecord = SaveLoadSystem.Load<PlayerRecord>();
-            //Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
+            playerRecord = SaveLoadSystem.Load<PlayerRecord>();
+            Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
+
+            coins = playerRecord.Coins;
+            Debug.WriteLine("The number of coins is: " + coins);
+
 
             // Load the graphics device
             _device = GraphicsDevice;
@@ -791,12 +795,13 @@ namespace PVegas2K25ProTour
         public void saveGame()
         {
             playerRecord.Strokes = shot.getStrokeCount();
+            playerRecord.Coins = coins;
             SaveLoadSystem.Save(playerRecord);
         }
 
         public void addMoney(float amount)
         {
-            coins += amount;
+            coins += (int)amount;
         }
     }
 }
