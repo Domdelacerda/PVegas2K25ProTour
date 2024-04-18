@@ -30,7 +30,7 @@ namespace PVegas2K25ProTour
         }
         public virtual void LoadContent(ContentManager content_)
         {
-            coinTexture = content_.Load<Texture2D>("CoinPVegas");
+            coinTexture = content_.Load<Texture2D>("C:\\Users\\numbe\\source\\repos\\compu-force\\PVegas2K25ProTour\\PVegas2K25ProTour\\Content\\CoinPVegas.png");
         }
        public virtual Vector2 center()
        {
