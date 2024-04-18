@@ -16,7 +16,7 @@ namespace PVegas2K25ProTour
         private SpriteBatch spriteBatch;
         private Vector2 scale;
 
-        public Coin(Vector2 pos, SpriteBatch spriteBatch)
+        public Coin(Vector2 pos, SpriteBatch spriteBatch) : base(pos, spriteBatch)
         {
             this.pos = pos;
             this.spriteBatch = spriteBatch;

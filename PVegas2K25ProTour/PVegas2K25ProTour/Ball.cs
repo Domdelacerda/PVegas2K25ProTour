@@ -34,6 +34,9 @@ namespace PVegas2K25ProTour
         private Hitbox hitbox;
         private int strokeCount = 0;
 
+        private Texture2D hat_sprite;
+        private Color ball_color;
+
         //---------------------------------------------------------------------
         // CONSTRUCTORS
         //---------------------------------------------------------------------
@@ -49,6 +52,7 @@ namespace PVegas2K25ProTour
         public Ball(SpriteBatch _sprite_batch) : base(_sprite_batch)
         {
             this._sprite_batch = _sprite_batch;
+            ball_color = Color.White;
         }
 
         //---------------------------------------------------------------------
@@ -62,7 +66,12 @@ namespace PVegas2K25ProTour
 
         public void Draw()
         {
-            _sprite_batch.Draw(ball_sprite, ball_pos, Color.White);
+            _sprite_batch.Draw(ball_sprite, ball_pos, ball_color);
+            if (hat_sprite != null)
+            {
+                _sprite_batch.Draw(hat_sprite, new Vector2(ball_pos.X, ball_pos.Y -
+                radius()), Color.White);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -315,8 +324,17 @@ namespace PVegas2K25ProTour
 
         internal int getStrokeCount()
         {
-
             return strokeCount;
+        }
+
+        public void setHat(ContentManager _content, string hatName)
+        {
+            hat_sprite = _content.Load<Texture2D>(hatName);
+        }
+
+        public void setColor(Color new_color)
+        {
+            ball_color = new_color;
         }
     }
 }   
