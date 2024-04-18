@@ -28,7 +28,7 @@ namespace PVegas2K25ProTour
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
         private int MAX_SCORE = 5000;
-        private int MAX_COINS = 50;
+        private int MAX_COINS = 25;
         private bool clickedNext;
 
         private Vector2 mouse_pos;
@@ -58,6 +58,7 @@ namespace PVegas2K25ProTour
 
         private float coins=0;
         private List<Coin> coinList;
+        private bool coinAddLevel=false;
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -316,10 +317,21 @@ namespace PVegas2K25ProTour
                 golf_ball.Draw();
                 _sprite_batch.DrawString(Content.Load<SpriteFont>("font/Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
-                if (hole.getCollision() == true)
+                if(hole.getCollision() == true&&!coinAddLevel)
                 {
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
+                    coins += addCoins(golf_ball.getStrokeCount());
+                    coinAddLevel = !coinAddLevel;
+                }
+                else if (hole.getCollision() == true)
+                {
+                    drawVictoryScreen(shot.getStrokeCount());
+                    golf_ball.setPosition(new Vector2(100000, 1000000));
+                }
+                else if (hole.getCollision() == false)
+                {
+                    coinAddLevel = false;
                 }
                 //drawBorder();
                 _sprite_batch.End();
@@ -599,6 +611,18 @@ namespace PVegas2K25ProTour
         {
             //scaling value to be determined
             int coins = MAX_COINS - number_of_shots * 10;
+            
+            if (coins < 0)
+            {
+                coins = 0;
+            }
+            //this.coins += coins;
+            return (int)this.coins;
+        }
+        public int addCoins(int number_of_shots)
+        {
+            //scaling value to be determined
+            int coins = MAX_COINS - number_of_shots * 10;
 
             if (coins < 0)
             {
@@ -635,7 +659,7 @@ namespace PVegas2K25ProTour
             line.SetData(new[] { Color.DarkSlateGray });
             _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 6 + 10, Window.ClientBounds.Height / 10, 500, 300), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
-            populateVictoryScreen(number_of_shots);
+            populateVictoryScreen(golf_ball.getStrokeCount());
         }
         public bool nextLevelCheck()
         {

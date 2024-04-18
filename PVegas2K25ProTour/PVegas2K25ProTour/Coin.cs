@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 
 
@@ -56,7 +57,9 @@ namespace PVegas2K25ProTour
         }
         public float moneyAmount()
         {
-            return 15f;
+            Random rand = new Random();
+            float coinCost = (float)rand.NextInt64(1,16);
+            return coinCost;
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
