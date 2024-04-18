@@ -48,6 +48,9 @@ namespace PVegas2K25ProTour
 
         private PlayerRecord playerRecord;
         private int level = 0;
+        private int totalHolesCompleted;
+        private bool canIncrementHolesCompleted = true;
+        private int totalStrokesLifetime;
 
         Texture2D line;
         private float angleOfLine;
@@ -91,7 +94,16 @@ namespace PVegas2K25ProTour
             _render_target = new RenderTarget2D(_graphics.GraphicsDevice, 
                 160, 144);
 
+            Exiting += OnExiting;
             base.Initialize();
+        }
+
+        private void OnExiting(object sender, EventArgs args)
+        {
+            // Handle window closing
+            // You can put your cleanup code here before the game exits
+            // Save upon exiting... 
+            saveGame();
         }
 
         Rectangle GetRenderTargetDestination(Vector2 resolution, int preferredBackBufferWidth, int preferredBackBufferHeight)
@@ -132,7 +144,11 @@ namespace PVegas2K25ProTour
             Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
 
             coins = playerRecord.Coins;
-            Debug.WriteLine("The number of coins is: " + coins);
+            totalHolesCompleted = playerRecord.TotalHolesCompleted;
+            totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
+            Debug.WriteLine("The number of coins is: " + coins + ". " +
+                "\nThe Total number of Holes completed is: " + totalHolesCompleted + 
+                "\nThe Total Number of Strokes in the player's lifetime is: " + totalStrokesLifetime);
 
 
             // Load the graphics device
@@ -254,8 +270,6 @@ namespace PVegas2K25ProTour
                 ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                // save and exit...
-                saveGame();
                 Exit();
             }
 
@@ -299,8 +313,22 @@ namespace PVegas2K25ProTour
             }
             if (hole.getCollision() == true)
             {
+                // uses a flag to ensure stats counters are only
+                // updated once per level
+                if (canIncrementHolesCompleted)
+                {
+                    Debug.WriteLine("Updating stats counters...");
+                    totalHolesCompleted++;
+                    // Note, user's lifetime strokes only update after a
+                    // level is completed
+                    totalStrokesLifetime += golf_ball.getStrokeCount();
+                    canIncrementHolesCompleted = false;
+                }
+
                 if (nextLevelCheck())
                 {
+                    // reset flag back to true
+                    canIncrementHolesCompleted = true;
                     level += 1;
                     hole.setCollision(false);
                     if (level < levels_list.Count)
@@ -796,6 +824,8 @@ namespace PVegas2K25ProTour
         {
             playerRecord.Strokes = shot.getStrokeCount();
             playerRecord.Coins = coins;
+            playerRecord.TotalHolesCompleted = totalHolesCompleted;
+            playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
             SaveLoadSystem.Save(playerRecord);
         }
 
