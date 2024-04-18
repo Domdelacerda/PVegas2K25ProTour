@@ -59,6 +59,9 @@ namespace PVegas2K25ProTour
         private String stateOfGame = "menu";
         Vector2 strokeCounter;
 
+        private float coins=0;
+        private List<Coin> coinList;
+
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
@@ -80,6 +83,7 @@ namespace PVegas2K25ProTour
             obstacle_list = new List<Obstacle>();
             levels_list = new List<Action>();
             borders = new Obstacle[4];
+            coinList=new List<Coin>();
 
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = true;
@@ -200,6 +204,13 @@ namespace PVegas2K25ProTour
                     obstacle_list[i].LoadContent(Content);
                 }
             }
+            for (int i = 0; i < coinList.Count; i++)
+            {
+                if (coinList[i] != null)
+                {
+                    coinList[i].LoadContent(Content);
+                }
+            }
             for (int i = 0; i < borders.Length; i++)
             {
                 borders[i].LoadContent(Content);
@@ -266,6 +277,17 @@ namespace PVegas2K25ProTour
                     obstacle_list[i].Update(golf_ball);
                 }
             }
+            for (int i = 0; i < coinList.Count; i++)
+            {
+                if (coinList[i] != null)
+                {
+                    if (coinList[i].Update(golf_ball))
+                    {
+                        addMoney(coinList[i].moneyAmount());
+                        removeCoin(coinList[i]);
+                    }
+                }
+            }
             for (int i = 0; i < borders.Length; i++)
             {
                 borders[i].Update(golf_ball);
@@ -315,22 +337,19 @@ namespace PVegas2K25ProTour
             }
             else
             {
-                for (int i = 0; i < obstacle_list.Count; i++)
-                {
-                    {
-                        if (obstacle_list[i] != null)
-                        {
-                            obstacle_list[i].Draw();
-                        }
-                            
-                    }
-                }
             
                 for (int i = 0; i < obstacle_list.Count; i++)
                 {
                     if (obstacle_list[i] != null)
                     {
                         obstacle_list[i].Draw();
+                    }
+                }
+                for (int i = 0; i < coinList.Count; i++)
+                {
+                    if (coinList[i] != null)
+                    {
+                        coinList[i].Draw(_sprite_batch);
                     }
                 }
                 for (int i = 0; i < borders.Length; i++)
@@ -463,16 +482,32 @@ namespace PVegas2K25ProTour
             obstacle.LoadContent(Content);
             obstacle_list.Add(obstacle);
         }
+        public void addCoin(Coin coin)
+        {
+            coin.LoadContent(Content);
+            coinList.Add(coin);
+        }
+        public void removeCoin(Coin coin)
+        {
+            coinList.Remove(coin);
+        }
+        public void clearCoins()
+        {
+            coinList.Clear();
+        }
 
         public void loadLevelZero()
         {
             golf_ball.setPosition(new Vector2(600, 200));
             hole.setPosition(new Vector2(100, 200));
+            Coin coin1 = new Coin(new Vector2(350, 200),_sprite_batch);
+            addCoin(coin1);
         }
 
         public void loadLevelOne()
         {
             clearObstacles();
+            clearCoins();
             golf_ball.ballStop();
             golf_ball.setPosition(new Vector2(700, 350));
             hole.setPosition(new Vector2(25, 100));
@@ -482,11 +517,18 @@ namespace PVegas2K25ProTour
             SandPit pit2 = new SandPit(new Vector2(275, 250),
                 _sprite_batch, new Hitbox(), new Vector2(2f, 2f));
             addObstacle(pit2);
+            Coin coin1 = new Coin(new Vector2(350, 220), _sprite_batch);
+            addCoin(coin1);
+            Coin coin2 = new Coin(new Vector2(600, 100), _sprite_batch);
+            addCoin(coin2);
+            Coin coin3 = new Coin(new Vector2(150, 350), _sprite_batch);
+            addCoin(coin3);
         }
 
         public void loadLevelTwo()
         {
             clearObstacles();
+            clearCoins();
             golf_ball.ballStop();
             golf_ball.setPosition(new Vector2(700, 200));
             hole.setPosition(new Vector2(200, 200));
@@ -502,11 +544,18 @@ namespace PVegas2K25ProTour
             Obstacle wall1 = new Obstacle(new Vector2(300, 185),
                 _sprite_batch, new Hitbox(), new Vector2(25, 100));
             addObstacle(wall1);
+            Coin coin1 = new Coin(new Vector2(350, 220), _sprite_batch);
+            addCoin(coin1);
+            Coin coin2 = new Coin(new Vector2(600, 210), _sprite_batch);
+            addCoin(coin2);
+            Coin coin3 = new Coin(new Vector2(290, 10), _sprite_batch);
+            addCoin(coin3);
         }
 
         public void loadLevelThree()
         {
             clearObstacles();
+            clearCoins();
             golf_ball.ballStop();
             golf_ball.setPosition(new Vector2(700, 200));
             hole.setPosition(new Vector2(100, 200));
@@ -525,11 +574,18 @@ namespace PVegas2K25ProTour
             Mushroom mushroom5 = new Mushroom(new Vector2(600, 400),
                 _sprite_batch, new Hitbox(), new Vector2(1, 1));
             addObstacle(mushroom5);
+            Coin coin1 = new Coin(new Vector2(240, 10), _sprite_batch);
+            addCoin(coin1);
+            Coin coin2 = new Coin(new Vector2(460, 100), _sprite_batch);
+            addCoin(coin2);
+            Coin coin3 = new Coin(new Vector2(170, 150), _sprite_batch);
+            addCoin(coin3);
         }
 
         public void loadLevelFour()
         {
             clearObstacles();
+            clearCoins();
             golf_ball.ballStop();
             golf_ball.setPosition(new Vector2(700, 425));
             hole.setPosition(new Vector2(125, 275));
@@ -545,11 +601,18 @@ namespace PVegas2K25ProTour
             Lake lake2 = new Lake(new Vector2(200, 200),
                 _sprite_batch, new Hitbox(), new Vector2(2, 2));
             addObstacle(lake2);
+            Coin coin1 = new Coin(new Vector2(350, 140), _sprite_batch);
+            addCoin(coin1);
+            Coin coin2 = new Coin(new Vector2(600, 140), _sprite_batch);
+            addCoin(coin2);
+            Coin coin3 = new Coin(new Vector2(130, 230), _sprite_batch);
+            addCoin(coin3);
         }
 
         public void loadLevelFive()
         {
             clearObstacles();
+            clearCoins();
             golf_ball.ballStop();
             golf_ball.setPosition(new Vector2(700, 400));
             hole.setPosition(new Vector2(75, 350));
@@ -565,6 +628,14 @@ namespace PVegas2K25ProTour
             Obstacle wall2 = new Obstacle(new Vector2(575, 250),
                 _sprite_batch, new Hitbox(), new Vector2(100, 25));
             addObstacle(wall2);
+            Coin coin1 = new Coin(new Vector2(350, 190), _sprite_batch);
+            addCoin(coin1);
+            Coin coin2 = new Coin(new Vector2(610, 130), _sprite_batch);
+            addCoin(coin2);
+            Coin coin3 = new Coin(new Vector2(120, 300), _sprite_batch);
+            addCoin(coin3);
+            Coin coin4 = new Coin(new Vector2(320, 90), _sprite_batch);
+            addCoin(coin4);
         }
 
         public int calculateScore(int number_of_shots)
@@ -697,6 +768,11 @@ namespace PVegas2K25ProTour
         {
             playerRecord.Strokes = shot.getStrokeCount();
             SaveLoadSystem.Save(playerRecord);
+        }
+
+        public void addMoney(float amount)
+        {
+            coins += amount;
         }
     }
 }
