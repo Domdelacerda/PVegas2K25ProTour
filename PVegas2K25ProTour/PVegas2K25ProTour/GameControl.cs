@@ -51,6 +51,7 @@ namespace PVegas2K25ProTour
         private int totalHolesCompleted;
         private bool canIncrementHolesCompleted = true;
         private int totalStrokesLifetime;
+        private int current_level = 0;
 
         Texture2D line;
         private float angleOfLine;
@@ -312,12 +313,14 @@ namespace PVegas2K25ProTour
                 borders[i].Update(golf_ball);
             }
             if (hole.getCollision() == true)
-            {
+            {   
                 // uses a flag to ensure stats counters are only
                 // updated once per level
                 if (canIncrementHolesCompleted)
                 {
                     Debug.WriteLine("Updating stats counters...");
+                    current_level++;
+                    saveLevelScore(golf_ball.getStrokeCount(), current_level);
                     totalHolesCompleted++;
                     // Note, user's lifetime strokes only update after a
                     // level is completed
@@ -731,6 +734,7 @@ namespace PVegas2K25ProTour
             String score = "Score: " + calculateScore(number_of_shots).ToString();
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
+
             //Populates the victory screen
             _sprite_batch.DrawString(font, "You Won!", position1, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, score, position2 - new Vector2(100, -40), Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
@@ -747,6 +751,30 @@ namespace PVegas2K25ProTour
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateVictoryScreen(golf_ball.getStrokeCount());
         }
+
+        /**
+         * It would be nice to base this method on an abstraction that can
+         * have one instance per level but we simply do not have time to 
+         * implement that, thus, here is a concretion that functions. 
+         */
+        public void saveLevelScore(int number_of_shots, int currentLevel)
+        {
+            Debug.WriteLine("num of shots: " + number_of_shots);
+            
+            int current_score = calculateScore(number_of_shots);
+
+            if (current_score > playerRecord.playerScoreLevelOne && currentLevel == 1)
+                playerRecord.playerScoreLevelOne = current_score;
+            else if (current_score > playerRecord.playerScoreLevelTwo && currentLevel == 2)
+                playerRecord.playerScoreLevelTwo = current_score;
+            else if (current_score > playerRecord.playerScoreLevelThree && currentLevel == 3)
+                playerRecord.playerScoreLevelThree = current_score;
+            else if (current_score > playerRecord.playerScoreLevelFour && currentLevel == 4)
+                playerRecord.playerScoreLevelFour = current_score;
+            else if (current_score > playerRecord.playerScoreLevelFive && currentLevel == 5)
+                playerRecord.playerScoreLevelFive = current_score;
+        }
+
         public bool nextLevelCheck()
         {
             MouseState currentMouseState = Mouse.GetState();
