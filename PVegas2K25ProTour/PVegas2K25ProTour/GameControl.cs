@@ -61,6 +61,7 @@ namespace PVegas2K25ProTour
 
         private List<Component> _gameComponents;
         private String stateOfGame = "menu";
+        private String previousGameState = "";
         Vector2 strokeCounter;
 
         private int coins = 0;
@@ -142,6 +143,7 @@ namespace PVegas2K25ProTour
         {
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
+            /*
             Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
 
             coins = playerRecord.Coins;
@@ -151,7 +153,7 @@ namespace PVegas2K25ProTour
                 "\nThe Total number of Holes completed is: " + totalHolesCompleted + 
                 "\nThe Total Number of Strokes in the player's lifetime is: " + totalStrokesLifetime);
 
-
+            */
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
@@ -168,42 +170,112 @@ namespace PVegas2K25ProTour
                 (game_resolution, _graphics.PreferredBackBufferWidth, 
                 _graphics.PreferredBackBufferHeight);
 
-            var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+            if (stateOfGame == "menu")
             {
-                Position = new Vector2(0, 0),
-                Text = "Play",
-            };
-            playButton.Click += PlayButton_Click;
-            var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 390),
-                Text = "Quit",
-            };
-            // TODO: use this.Content to load your game content here
-            quitButton.Click += QuitButton_Click;
-            golf_ball = new Ball(_sprite_batch);
-            var settingsButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 130),
-                Text = "Settings",
-            };
-            settingsButton.Click += SettingsButton_Click;
-            var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 260),
-                Text = "Level",
-            };
-            LevelButton.Click += LevelButton_Click;
 
-            golf_ball.LoadContent(Content);
-            _gameComponents = new List<Component>()
+                var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "Play",
+                };
+                playButton.Click += PlayButton_Click;
+                var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 260),
+                    Text = "Quit",
+                };
+                // TODO: use this.Content to load your game content here
+                quitButton.Click += QuitButton_Click;
+                golf_ball = new Ball(_sprite_batch);
+                golf_ball = new Ball(_sprite_batch);
+                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("settings"))
+                {
+                    Position = new Vector2(730, 0 ),
+                    //Text = "Settings",
+                };
+                settingsButton.Click += SettingsButton_Click;
+
+                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("store"))
+                {
+                    Position = new Vector2(660, 0),
+                    //Text = "Settings",
+                };
+                shopingButton.Click += ShopingButton_Click;
+
+                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(0, 130),
+                    Text = "Level",
+                };
+                LevelButton.Click += LevelButton_Click;
+
+                golf_ball.LoadContent(Content);
+                _gameComponents = new List<Component>()
             {
                 playButton,
                 quitButton,
                 settingsButton,
+                shopingButton,
                 LevelButton
             };
+            }
+            if (stateOfGame == "levels")
+            {
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
 
+                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(0, 70),
+                    Text = "Level 1",
+
+                };
+                OneButton.Click += OneButton_Click;
+
+                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(260, 70),
+                    Text = "Level 2",
+
+                };
+                TwoButton.Click += TwoButton_Click;
+                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(520, 70),
+                    Text = "Level 3",
+
+                };
+                ThreeButton.Click += ThreeButton_Click;
+                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(0, 200),
+                    Text = "Level 4",
+
+                };
+                FourButton.Click += FourButton_Click;
+                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                {
+                    Position = new Vector2(260, 200),
+                    Text = "Level 5",
+
+                };
+                FiveButton.Click += FiveButton_Click;
+
+                golf_ball.LoadContent(Content);
+                _gameComponents = new List<Component>()
+                {
+                    BackButton,
+                    OneButton,
+                    TwoButton,
+                    ThreeButton,
+                    FourButton,
+                    FiveButton
+                };
+            }
             // TODO: use this.Content to load your game content here
             golf_ball = new Ball(_sprite_batch);
             golf_ball.LoadContent(Content);
@@ -246,15 +318,60 @@ namespace PVegas2K25ProTour
             levels_list.Add(loadLevelFive);
             levels_list[level].Invoke();
         }
+        private void ShopingButton_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void FiveButton_Click(object sender, EventArgs e)
+        {
+            level = 5;
+            stateOfGame = "play";
+            LoadContent();
+        }
+        private void FourButton_Click(object sender, EventArgs e)
+        {
+            level = 4;
+            stateOfGame = "play";
+            LoadContent();
+        }
+        private void ThreeButton_Click(object sender, EventArgs e)
+        {
+            level = 3;
+            stateOfGame = "play";
+            LoadContent();
+        }
+
+        private void TwoButton_Click(object sender, EventArgs e)
+        {
+            level = 2;
+            stateOfGame = "play";
+            LoadContent();
+        }
+
+        private void OneButton_Click(object sender, EventArgs e)
+        {
+            level = 1;
+            stateOfGame = "play";
+            LoadContent();
+        }
+
     private void SettingsButton_Click(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
+        {
+            throw new NotImplementedException();
+        }
     private void LevelButton_Click(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+            previousGameState = stateOfGame;
+            stateOfGame = "levels";
+            LoadContent();
     }
-    private void QuitButton_Click(object sender, System.EventArgs e)
+    private void BackButton_Click(object sender, EventArgs e)
+    {
+        stateOfGame = previousGameState;
+        LoadContent();
+    }
+        private void QuitButton_Click(object sender, System.EventArgs e)
     {
         Exit();
     }
@@ -281,7 +398,14 @@ namespace PVegas2K25ProTour
                     component.Update(gameTime);
                 }
             }
-         
+
+            if (stateOfGame == "levels")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
@@ -362,6 +486,18 @@ namespace PVegas2K25ProTour
             // Draw all obstacles in the obstacle list
             if (stateOfGame == "menu")
             {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                base.Draw(gameTime);
+            }
+            else if(stateOfGame == "levels")
+            {
+                
                 foreach (var component in _gameComponents)
                 {
                     {

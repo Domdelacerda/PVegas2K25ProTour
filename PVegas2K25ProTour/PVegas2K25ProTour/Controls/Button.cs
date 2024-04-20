@@ -22,6 +22,7 @@ namespace PVegas2K25ProTour.Controls
         private MouseState _previousMouse;
 
         private Texture2D _texture;
+        private Texture2D _texture2;
 
 
         public event EventHandler Click;
@@ -48,6 +49,12 @@ namespace PVegas2K25ProTour.Controls
             _font = font;
             PenColour = Color.Black;
         }
+        public Button(Texture2D texture, Texture2D texture2)
+        {
+            _texture = texture;
+            _texture2= texture2;
+            PenColour = Color.Black;
+        }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -66,6 +73,10 @@ namespace PVegas2K25ProTour.Controls
                 var y = (rectangle.Y + (rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
                 spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+            }
+            else
+            {
+                spriteBatch.Draw(_texture2, rectangle, color);
             }
 
         }
