@@ -145,11 +145,13 @@ namespace PVegas2K25ProTour
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
             // Load Saved Data
+            /*
             playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
  
+            */
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
