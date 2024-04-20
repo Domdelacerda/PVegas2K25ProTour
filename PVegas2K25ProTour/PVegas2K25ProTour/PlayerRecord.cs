@@ -8,17 +8,18 @@ namespace PVegas2K25ProTour
 {
     public class PlayerRecord
     {
+
         public string User { get; set; }
         // Strokes, if we choose to implement, should really be level-based data
         public int Strokes { get; set; }
         public int Coins { get; set; }
         public int TotalHolesCompleted { get; set; }
         public int TotalStrokesLifetime {  get; set; }
-        
+
 
         // Level Based Data
         // IMPLEMENT: Levels lock/unlock accessability
-        public bool isLevelOneUnlocked {  get; set; }
+        public bool isLevelOneUnlocked { get; set; }
         public int playerScoreLevelOne { get; set; }
 
         public bool isLevelTwoUnlocked { get; set; }

@@ -143,17 +143,13 @@ namespace PVegas2K25ProTour
         {
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
-            /*
-            Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
 
+            // Load Saved Data
+            playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
-            Debug.WriteLine("The number of coins is: " + coins + ". " +
-                "\nThe Total number of Holes completed is: " + totalHolesCompleted + 
-                "\nThe Total Number of Strokes in the player's lifetime is: " + totalStrokesLifetime);
-
-            */
+ 
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
@@ -325,35 +321,87 @@ namespace PVegas2K25ProTour
 
         private void FiveButton_Click(object sender, EventArgs e)
         {
-            level = 5;
-            stateOfGame = "play";
-            LoadContent();
+            if (playerRecord.isLevelFiveUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 4;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 5 is not unlocked
+                Debug.WriteLine("Level 5 not unlocked!!");
+            }
+
         }
         private void FourButton_Click(object sender, EventArgs e)
         {
-            level = 4;
-            stateOfGame = "play";
-            LoadContent();
+            if (playerRecord.isLevelFourUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 3;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 4 is not unlocked
+                Debug.WriteLine("Level 4 not unlocked!!");
+            }
+
         }
         private void ThreeButton_Click(object sender, EventArgs e)
         {
-            level = 3;
-            stateOfGame = "play";
-            LoadContent();
+            if (playerRecord.isLevelThreeUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 2;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 3 is not unlocked
+                Debug.WriteLine("Level 3 not unlocked!!");
+            }
         }
 
         private void TwoButton_Click(object sender, EventArgs e)
         {
-            level = 2;
-            stateOfGame = "play";
-            LoadContent();
+            if (playerRecord.isLevelTwoUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 1;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 2 is not unlocked
+                Debug.WriteLine("Level 2 not unlocked!!");
+            }
         }
 
         private void OneButton_Click(object sender, EventArgs e)
         {
-            level = 1;
-            stateOfGame = "play";
-            LoadContent();
+            if (playerRecord.isLevelOneUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 0;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 1 is not unlocked
+                Debug.WriteLine("Level 1 not unlocked!!");
+            }
         }
 
     private void SettingsButton_Click(object sender, EventArgs e)
@@ -446,6 +494,10 @@ namespace PVegas2K25ProTour
                     current_level++;
                     saveLevelScore(golf_ball.getStrokeCount(), current_level);
                     totalHolesCompleted++;
+
+                    //Unlock the next level
+                    unlockNextLevel(current_level);
+
                     // Note, user's lifetime strokes only update after a
                     // level is completed
                     totalStrokesLifetime += golf_ball.getStrokeCount();
@@ -909,6 +961,20 @@ namespace PVegas2K25ProTour
                 playerRecord.playerScoreLevelFour = current_score;
             else if (current_score > playerRecord.playerScoreLevelFive && currentLevel == 5)
                 playerRecord.playerScoreLevelFive = current_score;
+        }
+
+        public void unlockNextLevel(int currentLevel)
+        {
+            if (currentLevel == 1)
+                playerRecord.isLevelTwoUnlocked = true;
+            else if (currentLevel == 2)
+                playerRecord.isLevelThreeUnlocked = true;
+            else if (currentLevel == 3)
+                playerRecord.isLevelFourUnlocked = true;
+            else if (currentLevel == 4)
+                playerRecord.isLevelFiveUnlocked = true;
+            else
+                Debug.WriteLine("NO MORE LEVELS!");
         }
 
         public bool nextLevelCheck()
