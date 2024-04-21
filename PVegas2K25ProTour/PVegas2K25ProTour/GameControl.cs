@@ -144,6 +144,7 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
+
             // Load Saved Data
             playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
