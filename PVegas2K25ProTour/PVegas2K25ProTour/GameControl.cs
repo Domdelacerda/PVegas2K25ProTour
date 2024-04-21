@@ -481,14 +481,8 @@ namespace PVegas2K25ProTour
 
     private void DeleteButton_Click(object sender, System.EventArgs e)
     {
-        playerRecord.isLevelFiveUnlocked = false;
-        playerRecord.isLevelFourUnlocked = false;
-        playerRecord.isLevelThreeUnlocked = false;
-        playerRecord.isLevelTwoUnlocked = false;    
-        playerRecord.isLevelOneUnlocked = false;
-        saveGame();
-        
-        
+            //add delete progress conditions here
+            SaveLoadSystem.DeleteSaveFile();
     }
 
         protected override void Update(GameTime gameTime)
