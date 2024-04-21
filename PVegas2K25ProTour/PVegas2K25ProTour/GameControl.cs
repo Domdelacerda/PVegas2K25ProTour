@@ -201,7 +201,7 @@ namespace PVegas2K25ProTour
                 };
                 shopingButton.Click += ShopingButton_Click;
 
-                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 130),
                     Text = "Level",
@@ -228,14 +228,14 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "levels")
             {
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font/Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
 
-                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 70),
                     Text = "Level 1",
@@ -243,7 +243,7 @@ namespace PVegas2K25ProTour
                 };
                 OneButton.Click += OneButton_Click;
 
-                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 70),
                     Text = "Level 2",
@@ -255,7 +255,7 @@ namespace PVegas2K25ProTour
                     TwoButton.color = Color.Black;
                 }
                 TwoButton.Click += TwoButton_Click;
-                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 70),
                     Text = "Level 3",
@@ -267,7 +267,7 @@ namespace PVegas2K25ProTour
                     ThreeButton.color = Color.Black;
                 }
                 ThreeButton.Click += ThreeButton_Click;
-                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 200),
                     Text = "Level 4",
@@ -279,7 +279,7 @@ namespace PVegas2K25ProTour
                     FourButton.color = Color.Black;
                 }
                 FourButton.Click += FourButton_Click;
-                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
+                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 200),
                     Text = "Level 5",
@@ -305,7 +305,7 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "store")
             {
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font/Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",

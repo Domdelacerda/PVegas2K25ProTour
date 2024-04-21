@@ -33,14 +33,14 @@ namespace PVegas2K25ProTour
             coinTexture = content_.Load<Texture2D>("CoinPVegas");
         }
         public override Vector2 center()
-       {
+        {
             Vector2 center = new Vector2();
             center.X = pos.X;
             center.Y = pos.Y;
             center.X += radius();
             center.Y += radius();
             return center;
-       }
+        }
         public bool Update(Ball ball)
         {
             if(hitbox.collisionCircleToCircle(ball, this))
