@@ -61,7 +61,7 @@ namespace PVegas2K25ProTour
 
         private List<Component> _gameComponents;
         private String stateOfGame = "menu";
-        private String previousGameState = "";
+        private String previousGameState = "menu";
         Vector2 strokeCounter;
 
         private int coins = 0;
@@ -146,12 +146,12 @@ namespace PVegas2K25ProTour
 
 
             // Load Saved Data
-            /*
+            
             playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
- */
+ 
             
             // Load the graphics device
             _device = GraphicsDevice;
@@ -283,51 +283,69 @@ namespace PVegas2K25ProTour
                     FiveButton
                 };
             }
-            // TODO: use this.Content to load your game content here
-            golf_ball = new Ball(_sprite_batch);
-            golf_ball.LoadContent(Content);
-            // USE THESE METHODS TO ALTER BALL COSMETICS
-            golf_ball.setHat(Content, "Sunglasses");
-            golf_ball.setColor(Color.Aqua);
-            
-            shot = new Shot(_sprite_batch);
-            shot.LoadContent(Content);
-            hitbox = new Hitbox();
-            hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                hitbox, Vector2.One);
-            hole.LoadContent(Content);
-            loadBorders();
-            // Update all content in the obstacle list
-            for (int i = 0; i < obstacle_list.Count; i++)
+            if (stateOfGame == "store")
             {
-                if (obstacle_list[i] != null)
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font/Font"))
                 {
-                    obstacle_list[i].LoadContent(Content);
-                }
-            }
-            for (int i = 0; i < coinList.Count; i++)
-            {
-                if (coinList[i] != null)
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
+                golf_ball.LoadContent(Content);
+                _gameComponents = new List<Component>()
                 {
-                    coinList[i].LoadContent(Content);
-                }
+                    BackButton
+                };
             }
-            for (int i = 0; i < borders.Length; i++)
+            else
             {
-                borders[i].LoadContent(Content);
+                // TODO: use this.Content to load your game content here
+                golf_ball = new Ball(_sprite_batch);
+                golf_ball.LoadContent(Content);
+                // USE THESE METHODS TO ALTER BALL COSMETICS
+                golf_ball.setHat(Content, "Sunglasses");
+                golf_ball.setColor(Color.Aqua);
+
+                shot = new Shot(_sprite_batch);
+                shot.LoadContent(Content);
+                hitbox = new Hitbox();
+                hole = new Hole(new Vector2(100, 200), _sprite_batch,
+                    hitbox, Vector2.One);
+                hole.LoadContent(Content);
+                loadBorders();
+                // Update all content in the obstacle list
+                for (int i = 0; i < obstacle_list.Count; i++)
+                {
+                    if (obstacle_list[i] != null)
+                    {
+                        obstacle_list[i].LoadContent(Content);
+                    }
+                }
+                for (int i = 0; i < coinList.Count; i++)
+                {
+                    if (coinList[i] != null)
+                    {
+                        coinList[i].LoadContent(Content);
+                    }
+                }
+                for (int i = 0; i < borders.Length; i++)
+                {
+                    borders[i].LoadContent(Content);
+                }
+
+                levels_list.Add(loadLevelZero);
+                levels_list.Add(loadLevelOne);
+                levels_list.Add(loadLevelTwo);
+                levels_list.Add(loadLevelThree);
+                levels_list.Add(loadLevelFour);
+                levels_list.Add(loadLevelFive);
+                levels_list[level].Invoke();
             }
-           
-            levels_list.Add(loadLevelZero);
-            levels_list.Add(loadLevelOne);
-            levels_list.Add(loadLevelTwo);
-            levels_list.Add(loadLevelThree);
-            levels_list.Add(loadLevelFour);
-            levels_list.Add(loadLevelFive);
-            levels_list[level].Invoke();
         }
         private void ShopingButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            stateOfGame = "store";
+            LoadContent();
         }
 
         private void FiveButton_Click(object sender, EventArgs e)
@@ -470,6 +488,13 @@ namespace PVegas2K25ProTour
                     component.Update(gameTime);
                 }
             }
+            if(stateOfGame == "store")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
@@ -566,6 +591,17 @@ namespace PVegas2K25ProTour
             else if(stateOfGame == "levels")
             {
                 
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                base.Draw(gameTime);
+            }
+            else if(stateOfGame == "store")
+            {
                 foreach (var component in _gameComponents)
                 {
                     {
