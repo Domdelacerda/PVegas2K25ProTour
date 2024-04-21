@@ -32,6 +32,15 @@ namespace PVegas2K25ProTour
         private int MAX_COINS = 25;
         private bool clickedNext;
 
+        //Settings variables for now
+        Texture2D arrowTexture;
+        private const int MAX_SETTINGS_VAL = 9;
+        private const int MIN_SETTINGS_VAL = 2;
+        private float _holeSize = 5;
+        private float _sensitivity = 5;
+        private MouseState previousMouseState;
+        private MouseState currentMouseState;
+
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
@@ -144,9 +153,11 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
+            arrowTexture = Content.Load<Texture2D>("arrow");
+
 
             // Load Saved Data
-            
+
             playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
@@ -317,6 +328,20 @@ namespace PVegas2K25ProTour
                     BackButton
                 };
             }
+            if (stateOfGame == "Settings")
+            {
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
+                _gameComponents = new List<Component>()
+                {
+                    BackButton
+                };
+
+            }
             else
             {
                 // TODO: use this.Content to load your game content here
@@ -456,7 +481,9 @@ namespace PVegas2K25ProTour
 
     private void SettingsButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            previousGameState = stateOfGame;
+            stateOfGame = "Settings";
+            LoadContent();
         }
     private void LevelButton_Click(object sender, EventArgs e)
     {
@@ -511,6 +538,13 @@ namespace PVegas2K25ProTour
                 }
             }
             if(stateOfGame == "store")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            if (stateOfGame == "Settings")
             {
                 foreach (var component in _gameComponents)
                 {
@@ -624,6 +658,18 @@ namespace PVegas2K25ProTour
             }
             else if(stateOfGame == "store")
             {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                base.Draw(gameTime);
+            }
+            else if(stateOfGame == "Settings")
+            {
+                drawSettingsScreen();
                 foreach (var component in _gameComponents)
                 {
                     {
@@ -1013,6 +1059,142 @@ namespace PVegas2K25ProTour
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateVictoryScreen(golf_ball.getStrokeCount());
         }
+
+        //Settings class for now until we implement screen managment
+
+        public float AdjustHoleVal()
+        {
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && previousMouseState.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 6 + 95),
+                                            (Window.ClientBounds.Height / 2 + 100),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 6 - 35),
+                                     (Window.ClientBounds.Height / 2 + 100),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
+                {
+                    _holeSize += 1;
+                }
+                if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
+                {
+                    _holeSize -= 1;
+                }
+            }
+
+            // Update the previous mouse state for the next frame
+            previousMouseState = currentMouseState;
+
+            return _holeSize;
+        }
+
+        public float AdjustSensitivityVal()
+        {
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 240),
+                                     (Window.ClientBounds.Height / 2 + 100),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 115),
+                                            (Window.ClientBounds.Height / 2 + 100),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
+                {
+                    _sensitivity += 1;
+                }
+                if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
+                {
+                    _sensitivity -= 1;
+                }
+            }
+
+            // Update the previous mouse state for the next frame
+            prevMouseState = currentMouseState;
+
+            return _sensitivity;
+        }
+
+        public void populateSettingsScreen()
+        {
+            Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
+
+            String holeSize = AdjustHoleVal().ToString();
+
+            String sensitivity = AdjustSensitivityVal().ToString();
+
+            //Populate Settings screen
+            _sprite_batch.DrawString(font, "Settings", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 6),
+                Color.Black, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Hole Size", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 2 + 100),
+                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Swing Sensitivity", new Vector2(Window.ClientBounds.Width / 2 + 150, Window.ClientBounds.Height / 2 + 100),
+               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+
+            if (AdjustHoleVal() >= 1 && AdjustHoleVal() < 10)
+            {
+                _sprite_batch.DrawString(font, holeSize, new Vector2(Window.ClientBounds.Width / 4 + 55, Window.ClientBounds.Height / 2 + 150),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, holeSize, new Vector2(Window.ClientBounds.Width / 4 + 47, Window.ClientBounds.Height / 2 + 150),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+
+            if (AdjustSensitivityVal() >= 1 && AdjustSensitivityVal() < 10)
+            {
+                _sprite_batch.DrawString(font, sensitivity, new Vector2(Window.ClientBounds.Width / 2 + 270, Window.ClientBounds.Height / 2 + 150),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, sensitivity, new Vector2(Window.ClientBounds.Width / 2 + 265, Window.ClientBounds.Height / 2 + 150),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+
+            //Down arrow for hole size
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 6 + 25, Window.ClientBounds.Height / 2 + 150), null,
+                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+            //Up arrow for hole size
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 4 + 50, Window.ClientBounds.Height / 2 + 150), null,
+                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Down arrow for sensitivity
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 + 175, Window.ClientBounds.Height / 2 + 150), null,
+                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+            //Up arrow for sensitivity
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 + 265, Window.ClientBounds.Height / 2 + 150), null,
+                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+        }
+        public void drawSettingsScreen()
+        {
+            line.SetData(new[] { Color.DarkSlateGray });
+            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), null,
+                Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
+            populateSettingsScreen();
+        }
+
 
         /**
          * It would be nice to base this method on an abstraction that can
