@@ -460,7 +460,8 @@ namespace PVegas2K25ProTour
 
     private void DeleteButton_Click(object sender, System.EventArgs e)
     {
-        //add delete progress conditions here
+            //add delete progress conditions here
+            SaveLoadSystem.DeleteSaveFile();
     }
 
         protected override void Update(GameTime gameTime)

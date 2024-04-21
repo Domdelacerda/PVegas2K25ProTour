@@ -61,6 +61,29 @@ namespace PVegas2K25ProTour
             }
         }
 
+        public static void DeleteSaveFile()
+        {
+            try
+            {
+                // Check if the file exists before attempting to delete it
+                if (File.Exists(FILEPATH))
+                {
+                    // Delete the file
+                    File.Delete(FILEPATH);
+                    Debug.WriteLine("File deleted successfully.");
+                }
+                else
+                {
+                    Debug.WriteLine("File does not exist. No action taken.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that may occur during the file deletion process
+                Debug.WriteLine($"Error deleting file: {ex.Message}");
+            }
+        }
+
         //***********************************SPECIAL NOTE!*************************************
         // All code below this point was created by user: "Robert Harvey" On Stack Overflow
         // This code was posted on 08-18-14 at 17:42
