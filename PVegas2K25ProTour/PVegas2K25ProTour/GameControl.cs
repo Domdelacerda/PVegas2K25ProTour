@@ -249,6 +249,11 @@ namespace PVegas2K25ProTour
                     Text = "Level 2",
 
                 };
+                if (playerRecord.isLevelTwoUnlocked == false)
+                {
+                    TwoButton._isHoveringColour = Color.Black;
+                    TwoButton.color = Color.Black;
+                }
                 TwoButton.Click += TwoButton_Click;
                 var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
                 {
@@ -256,6 +261,11 @@ namespace PVegas2K25ProTour
                     Text = "Level 3",
 
                 };
+                if(playerRecord.isLevelThreeUnlocked == false)
+                {
+                    ThreeButton._isHoveringColour = Color.Black;
+                    ThreeButton.color = Color.Black;
+                }
                 ThreeButton.Click += ThreeButton_Click;
                 var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
                 {
@@ -263,6 +273,11 @@ namespace PVegas2K25ProTour
                     Text = "Level 4",
 
                 };
+                if (playerRecord.isLevelFourUnlocked == false)
+                {
+                    FourButton._isHoveringColour = Color.Black;
+                    FourButton.color = Color.Black;
+                }
                 FourButton.Click += FourButton_Click;
                 var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font/Font"))
                 {
@@ -270,6 +285,11 @@ namespace PVegas2K25ProTour
                     Text = "Level 5",
 
                 };
+                if (playerRecord.isLevelFiveUnlocked == false)
+                {
+                    FiveButton._isHoveringColour = Color.Black;
+                    FiveButton.color = Color.Black;
+                }
                 FiveButton.Click += FiveButton_Click;
 
                 golf_ball.LoadContent(Content);
@@ -393,6 +413,7 @@ namespace PVegas2K25ProTour
             }
             else
             {
+                
                 // Implement some code here for what happens if level
                 // 3 is not unlocked
                 Debug.WriteLine("Level 3 not unlocked!!");
@@ -460,7 +481,14 @@ namespace PVegas2K25ProTour
 
     private void DeleteButton_Click(object sender, System.EventArgs e)
     {
-        //add delete progress conditions here
+        playerRecord.isLevelFiveUnlocked = false;
+        playerRecord.isLevelFourUnlocked = false;
+        playerRecord.isLevelThreeUnlocked = false;
+        playerRecord.isLevelTwoUnlocked = false;    
+        playerRecord.isLevelOneUnlocked = false;
+        saveGame();
+        
+        
     }
 
         protected override void Update(GameTime gameTime)

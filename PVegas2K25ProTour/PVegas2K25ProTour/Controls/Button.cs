@@ -18,7 +18,8 @@ namespace PVegas2K25ProTour.Controls
         private SpriteFont _font;
 
         private bool _isHovering;
-
+        public Color _isHoveringColour {get; set;}
+        public Color color { get; set; }
         private MouseState _previousMouse;
 
         private Texture2D _texture;
@@ -32,6 +33,7 @@ namespace PVegas2K25ProTour.Controls
         public Color PenColour { get; set; }
 
         public Vector2 Position { get; set; }
+
 
         public Rectangle rectangle
         {
@@ -48,21 +50,26 @@ namespace PVegas2K25ProTour.Controls
             _texture = texture;
             _font = font;
             PenColour = Color.Black;
+            _isHoveringColour = Color.Red;
+            color = Color.White;
         }
         public Button(Texture2D texture, Texture2D texture2)
         {
             _texture = texture;
             _texture2= texture2;
             PenColour = Color.Black;
+            _isHoveringColour = Color.Red;
+            color= Color.White;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var color = Color.White;
-
+            var tempColor = color;
+            
             if(_isHovering) 
             {
-                color = Color.Red;            
+
+                color = _isHoveringColour;           
             }
 
             spriteBatch.Draw(_texture, rectangle, color);
@@ -78,7 +85,7 @@ namespace PVegas2K25ProTour.Controls
             {
                 spriteBatch.Draw(_texture2, rectangle, color);
             }
-
+            color = tempColor;
         }
 
         public override void Update(GameTime gameTime)
