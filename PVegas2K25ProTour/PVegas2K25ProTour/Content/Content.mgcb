@@ -159,6 +159,12 @@
 /processorParam:TextureFormat=Color
 /build:Lake.gif
 
+#begin MainMenu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:MainMenu.mp3
+
 #begin Mushroom.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -266,6 +272,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sunglasses.gif
+
+#begin Take a Swing.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Take a Swing.mp3
 
 #begin TopHat.gif
 /importer:TextureImporter

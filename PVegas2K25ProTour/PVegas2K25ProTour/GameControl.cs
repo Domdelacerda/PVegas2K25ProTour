@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
+using Microsoft.Xna.Framework.Media;
 
 namespace PVegas2K25ProTour
 {
@@ -31,6 +32,7 @@ namespace PVegas2K25ProTour
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 25;
         private bool clickedNext;
+        private bool songStart = false;
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -44,6 +46,8 @@ namespace PVegas2K25ProTour
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
+
+        List<Song> songs = new List<Song>();
 
         private Ball golf_ball;
         private Shot shot;
@@ -155,6 +159,8 @@ namespace PVegas2K25ProTour
 
             arrowTexture = Content.Load<Texture2D>("arrow");
 
+            songs.Add(Content.Load<Song>("MainMenu"));
+            songs.Add(Content.Load<Song>("Take a Swing"));
 
             // Load Saved Data
 
@@ -179,10 +185,19 @@ namespace PVegas2K25ProTour
             render_target_rect = GetRenderTargetDestination
                 (game_resolution, _graphics.PreferredBackBufferWidth, 
                 _graphics.PreferredBackBufferHeight);
+            if (stateOfGame == "menu" || stateOfGame == "settings" || stateOfGame == "levels")
+            {
+                if(songStart == false)
+                {
+                    playSong(0);
+                }
+
+                songStart = true;
+            }
 
             if (stateOfGame == "menu")
             {
-
+                
                 var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -239,6 +254,7 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "levels")
             {
+               
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -344,6 +360,7 @@ namespace PVegas2K25ProTour
             }
             else
             {
+                
                 // TODO: use this.Content to load your game content here
                 golf_ball = new Ball(_sprite_batch);
                 golf_ball.LoadContent(Content);
@@ -385,6 +402,7 @@ namespace PVegas2K25ProTour
                 levels_list.Add(loadLevelFour);
                 levels_list.Add(loadLevelFive);
                 levels_list[level].Invoke();
+                
             }
         }
         private void ShopingButton_Click(object sender, EventArgs e)
@@ -503,6 +521,8 @@ namespace PVegas2K25ProTour
     private void PlayButton_Click(object sender, System.EventArgs e)
     {
         stateOfGame = "play";
+        MediaPlayer.Stop();
+        playSong(1);
         LoadContent();
     }
 
@@ -524,6 +544,7 @@ namespace PVegas2K25ProTour
 
             if (stateOfGame == "menu")
             {
+                
                 foreach (var component in _gameComponents)
                 {
                     component.Update(gameTime);
@@ -635,6 +656,7 @@ namespace PVegas2K25ProTour
             // Draw all obstacles in the obstacle list
             if (stateOfGame == "menu")
             {
+                
                 foreach (var component in _gameComponents)
                 {
                     {
@@ -646,6 +668,7 @@ namespace PVegas2K25ProTour
             }
             else if(stateOfGame == "levels")
             {
+              
                 
                 foreach (var component in _gameComponents)
                 {
@@ -681,7 +704,8 @@ namespace PVegas2K25ProTour
             }
             else
             {
-            
+                
+
                 for (int i = 0; i < obstacle_list.Count; i++)
                 {
                     if (obstacle_list[i] != null)
@@ -1058,6 +1082,11 @@ namespace PVegas2K25ProTour
             _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 6 + 10, Window.ClientBounds.Height / 10, 500, 300), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateVictoryScreen(golf_ball.getStrokeCount());
+        }
+
+        public void playSong(int songChoice)
+        {
+            MediaPlayer.Play(songs[songChoice]);
         }
 
         //Settings class for now until we implement screen managment
