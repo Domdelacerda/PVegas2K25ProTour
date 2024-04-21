@@ -32,7 +32,7 @@ namespace PVegas2K25ProTour
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 25;
         private bool clickedNext;
-        private bool songStart = false;
+        
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -48,6 +48,8 @@ namespace PVegas2K25ProTour
         private bool game_paused = false;
 
         List<Song> songs = new List<Song>();
+        private bool songStart = false;
+        private bool songStartLevel = false;
 
         private Ball golf_ball;
         private Shot shot;
@@ -80,6 +82,7 @@ namespace PVegas2K25ProTour
         private int coins = 0;
         private List<Coin> coinList;
         private bool coinAddLevel=false;
+       
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -413,6 +416,12 @@ namespace PVegas2K25ProTour
 
         private void FiveButton_Click(object sender, EventArgs e)
         {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
             if (playerRecord.isLevelFiveUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
@@ -430,6 +439,12 @@ namespace PVegas2K25ProTour
         }
         private void FourButton_Click(object sender, EventArgs e)
         {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
             if (playerRecord.isLevelFourUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
@@ -447,6 +462,12 @@ namespace PVegas2K25ProTour
         }
         private void ThreeButton_Click(object sender, EventArgs e)
         {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
             if (playerRecord.isLevelThreeUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
@@ -465,6 +486,12 @@ namespace PVegas2K25ProTour
 
         private void TwoButton_Click(object sender, EventArgs e)
         {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
             if (playerRecord.isLevelTwoUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
@@ -482,6 +509,12 @@ namespace PVegas2K25ProTour
 
         private void OneButton_Click(object sender, EventArgs e)
         {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
             if (playerRecord.isLevelOneUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
