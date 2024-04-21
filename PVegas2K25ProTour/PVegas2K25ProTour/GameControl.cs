@@ -146,11 +146,13 @@ namespace PVegas2K25ProTour
 
 
             // Load Saved Data
+            /*
             playerRecord.isLevelOneUnlocked = true;
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
- 
+ */
+            
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
@@ -206,6 +208,13 @@ namespace PVegas2K25ProTour
                 };
                 LevelButton.Click += LevelButton_Click;
 
+                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("delete"))
+                {
+                    Position = new Vector2(730, 324),
+                    
+                };
+                DeleteButton.Click += DeleteButton_Click;
+
                 golf_ball.LoadContent(Content);
                 _gameComponents = new List<Component>()
             {
@@ -213,7 +222,8 @@ namespace PVegas2K25ProTour
                 quitButton,
                 settingsButton,
                 shopingButton,
-                LevelButton
+                LevelButton,
+                DeleteButton,
             };
             }
             if (stateOfGame == "levels")
@@ -429,8 +439,13 @@ namespace PVegas2K25ProTour
         stateOfGame = "play";
         LoadContent();
     }
-    
-    protected override void Update(GameTime gameTime)
+
+    private void DeleteButton_Click(object sender, System.EventArgs e)
+    {
+        //add delete progress conditions here
+    }
+
+        protected override void Update(GameTime gameTime)
         {
             // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
