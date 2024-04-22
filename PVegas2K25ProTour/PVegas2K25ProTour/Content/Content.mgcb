@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:Arrow (1).gif
 
+#begin arrow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:arrow.png
+
 #begin Background.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -84,6 +96,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Crown.gif
+
+#begin delete.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:delete.png
 
 #begin Cursor.gif
 /importer:TextureImporter
@@ -159,6 +183,12 @@
 /processorParam:TextureFormat=Color
 /build:Lake.gif
 
+#begin MainMenu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:MainMenu.mp3
+
 #begin Mushroom.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -207,6 +237,18 @@
 /processorParam:TextureFormat=Color
 /build:Sand.gif
 
+#begin settings.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:settings.png
+
 #begin Shot.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -219,6 +261,30 @@
 /processorParam:TextureFormat=Color
 /build:Shot.gif
 
+#begin smallbutton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:smallbutton.png
+
+#begin store.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:store.png
+
 #begin Sunglasses.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -230,6 +296,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sunglasses.gif
+
+#begin Take a Swing.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Take a Swing.mp3
 
 #begin TopHat.gif
 /importer:TextureImporter

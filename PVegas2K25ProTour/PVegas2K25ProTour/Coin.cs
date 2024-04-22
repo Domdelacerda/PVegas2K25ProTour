@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace PVegas2K25ProTour
 {
@@ -29,15 +30,15 @@ namespace PVegas2K25ProTour
         {
             coinTexture = content_.Load<Texture2D>("CoinPVegas");
         }
-       public virtual Vector2 center()
-       {
+        public override Vector2 center()
+        {
             Vector2 center = new Vector2();
             center.X = pos.X;
             center.Y = pos.Y;
             center.X += radius();
             center.Y += radius();
             return center;
-       }
+        }
         public bool Update(Ball ball)
         {
             if(hitbox.collisionCircleToCircle(ball, this))
@@ -54,7 +55,9 @@ namespace PVegas2K25ProTour
         }
         public float moneyAmount()
         {
-            return 15f;
+            Random rand = new Random();
+            float coinCost = (float)rand.NextInt64(1,16);
+            return coinCost;
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {

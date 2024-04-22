@@ -46,10 +46,41 @@ namespace PVegas2K25ProTour
 
                 return playerRecord;
             }
-            catch
+            catch (FileNotFoundException)
             {
-                Debug.WriteLine("Failed to load content from xml file");
-                return default(T);
+                // If the file doesn't exist, create a new instance of T and return it
+                Debug.WriteLine("File not found. Creating a new instance.");
+                return Activator.CreateInstance<T>();
+            }
+            catch (Exception ex)
+            {
+                // If there's any other error, handle it appropriately (e.g., log, throw, etc.)
+                Debug.WriteLine($"Error loading file: {ex.Message}");
+                // For now, returning a new instance of T
+                return Activator.CreateInstance<T>();
+            }
+        }
+
+        public static void DeleteSaveFile()
+        {
+            try
+            {
+                // Check if the file exists before attempting to delete it
+                if (File.Exists(FILEPATH))
+                {
+                    // Delete the file
+                    File.Delete(FILEPATH);
+                    Debug.WriteLine("File deleted successfully.");
+                }
+                else
+                {
+                    Debug.WriteLine("File does not exist. No action taken.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that may occur during the file deletion process
+                Debug.WriteLine($"Error deleting file: {ex.Message}");
             }
         }
 

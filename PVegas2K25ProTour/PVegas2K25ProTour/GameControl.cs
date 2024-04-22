@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
+using Microsoft.Xna.Framework.Media;
 
 namespace PVegas2K25ProTour
 {
@@ -32,12 +33,26 @@ namespace PVegas2K25ProTour
         private SpriteBatch _sprite_batch;
         private Renderer renderer;
         private int MAX_SCORE = 5000;
-        private int MAX_COINS = 50;
+        private int MAX_COINS = 25;
         private bool clickedNext;
+        
+
+        //Settings variables for now
+        Texture2D arrowTexture;
+        private const int MAX_SETTINGS_VAL = 9;
+        private const int MIN_SETTINGS_VAL = 2;
+        private float _holeSize = 5;
+        private float _sensitivity = 5;
+        private MouseState previousMouseState;
+        private MouseState currentMouseState;
 
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
+
+        List<Song> songs = new List<Song>();
+        private bool songStart = false;
+        private bool songStartLevel = false;
 
         private Ball golf_ball;
         private Shot shot;
@@ -53,6 +68,10 @@ namespace PVegas2K25ProTour
 
         private PlayerRecord playerRecord;
         private int level = 0;
+        private int totalHolesCompleted;
+        private bool canIncrementHolesCompleted = true;
+        private int totalStrokesLifetime;
+        private int current_level = 0;
 
         Texture2D line;
         private float angleOfLine;
@@ -61,10 +80,13 @@ namespace PVegas2K25ProTour
 
         private List<Button> _gameComponents;
         private String stateOfGame = "menu";
+        private String previousGameState = "menu";
         Vector2 strokeCounter;
 
-        private float coins=0;
+        private int coins = 0;
         private List<Coin> coinList;
+        private bool coinAddLevel=false;
+       
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -97,119 +119,402 @@ namespace PVegas2K25ProTour
             _graphics.PreferredBackBufferWidth = (int)game_resolution.X;
             _graphics.PreferredBackBufferHeight = (int)game_resolution.Y;
             _graphics.HardwareModeSwitch = false;
-            renderer.setDestination();
             _graphics.ApplyChanges();
+            renderer.setDestination();
 
+            Exiting += OnExiting;
             base.Initialize();
         }
+
+        private void OnExiting(object sender, EventArgs args)
+        {
+            // Handle window closing
+            // You can put your cleanup code here before the game exits
+            // Save upon exiting... 
+            saveGame();
+        }
+
 
         protected override void LoadContent()
         {
             // Load the current user name and stroke count
-            //playerRecord = SaveLoadSystem.Load<PlayerRecord>();
-            //Debug.WriteLine(playerRecord.Strokes + ", " + playerRecord.User);
+            playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
+            arrowTexture = Content.Load<Texture2D>("arrow");
+
+            songs.Add(Content.Load<Song>("MainMenu"));
+            songs.Add(Content.Load<Song>("Take a Swing"));
+
+            // Load Saved Data
+
+            playerRecord.isLevelOneUnlocked = true;
+            coins = playerRecord.Coins;
+            totalHolesCompleted = playerRecord.TotalHolesCompleted;
+            totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
+            
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
 
-            var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+            if (stateOfGame == "menu")
             {
-                Position = new Vector2(0, 0),
-                Text = "Play",
-            };
-            playButton.Click += PlayButton_Click;
-            var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 390),
-                Text = "Quit",
-            };
-            quitButton.Click += QuitButton_Click;
-            golf_ball = new Ball(_sprite_batch);
-            var settingsButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 130),
-                Text = "Settings",
-            };
-            settingsButton.Click += SettingsButton_Click;
-            var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
-            {
-                Position = new Vector2(0, 260),
-                Text = "Level",
-            };
-            LevelButton.Click += LevelButton_Click;
+                
+                var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "Play",
+                };
+                playButton.Click += PlayButton_Click;
+                var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 260),
+                    Text = "Quit",
+                };
+                // TODO: use this.Content to load your game content here
+                quitButton.Click += QuitButton_Click;
+                golf_ball = new Ball(_sprite_batch);
+                golf_ball = new Ball(_sprite_batch);
+                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("settings"))
+                {
+                    Position = new Vector2(730, 0 ),
+                    //Text = "Settings",
+                };
+                settingsButton.Click += SettingsButton_Click;
 
-            _gameComponents = new List<Button>()
+                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("store"))
+                {
+                    Position = new Vector2(660, 0),
+                    //Text = "Settings",
+                };
+                shopingButton.Click += ShopingButton_Click;
+
+                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 130),
+                    Text = "Level",
+                };
+                LevelButton.Click += LevelButton_Click;
+                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("delete"))
+                {
+                    Position = new Vector2(730, 324),     
+                };
+                DeleteButton.Click += DeleteButton_Click;
+                _gameComponents = new List<Button>()
+                {
+                    playButton,
+                    quitButton,
+                    settingsButton,
+                    shopingButton,
+                    LevelButton,
+                    DeleteButton,
+                };
+            }
+            if (stateOfGame == "levels")
             {
-                playButton,
-                quitButton,
-                settingsButton,
-                LevelButton
-            };
+               
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
+
+                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 70),
+                    Text = "Level 1",
+
+                };
+                OneButton.Click += OneButton_Click;
+
+                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 70),
+                    Text = "Level 2",
+
+                };
+                if (playerRecord.isLevelTwoUnlocked == false)
+                {
+                    TwoButton._isHoveringColour = Color.Black;
+                    TwoButton.color = Color.Black;
+                }
+                TwoButton.Click += TwoButton_Click;
+                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(520, 70),
+                    Text = "Level 3",
+
+                };
+                if(playerRecord.isLevelThreeUnlocked == false)
+                {
+                    ThreeButton._isHoveringColour = Color.Black;
+                    ThreeButton.color = Color.Black;
+                }
+                ThreeButton.Click += ThreeButton_Click;
+                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 200),
+                    Text = "Level 4",
+
+                };
+                if (playerRecord.isLevelFourUnlocked == false)
+                {
+                    FourButton._isHoveringColour = Color.Black;
+                    FourButton.color = Color.Black;
+                }
+                FourButton.Click += FourButton_Click;
+                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 200),
+                    Text = "Level 5",
+
+                };
+                if (playerRecord.isLevelFiveUnlocked == false)
+                {
+                    FiveButton._isHoveringColour = Color.Black;
+                    FiveButton.color = Color.Black;
+                }
+                FiveButton.Click += FiveButton_Click;
+
+                golf_ball.LoadContent(Content);
+                _gameComponents = new List<Button>()
+                {
+                    BackButton,
+                    OneButton,
+                    TwoButton,
+                    ThreeButton,
+                    FourButton,
+                    FiveButton
+                };
+            }
+            if (stateOfGame == "store")
+            {
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
+                golf_ball.LoadContent(Content);
+                _gameComponents = new List<Button>()
+                {
+                    BackButton
+                };
+            }
+            if (stateOfGame == "Settings")
+            {
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(0, 0),
+                    Text = "<",
+                };
+                BackButton.Click += BackButton_Click;
+                _gameComponents = new List<Button>()
+                {
+                    BackButton
+                };
+            }
+            else
+            {
+                // TODO: use this.Content to load your game content here
+                background = Content.Load<Texture2D>("background");
+                cursor = Content.Load<Texture2D>("cursor");
+                golf_ball = new Ball(_sprite_batch);
+                golf_ball.setVirtualScale(renderer.getScale());
+                golf_ball.setVirtualOffset(renderer.getOffset());
+                golf_ball.LoadContent(Content);
+                // USE THESE METHODS TO ALTER BALL COSMETICS
+                golf_ball.setHat(Content, "Sunglasses");
+                golf_ball.setColor(Color.Aqua);
+
+                shot = new Shot(_sprite_batch);
+                shot.LoadContent(Content);
+                hitbox = new Hitbox();
+                hole = new Hole(new Vector2(100, 200), _sprite_batch,
+                    hitbox, Vector2.One);
+                hole.LoadContent(Content);
+                loadBorders();
+
+                // Update all content in the obstacle list
+                for (int i = 0; i < obstacle_list.Count; i++)
+                {
+                    if (obstacle_list[i] != null)
+                    {
+                        obstacle_list[i].LoadContent(Content);
+                    }
+                }
+                for (int i = 0; i < coinList.Count; i++)
+                {
+                    if (coinList[i] != null)
+                    {
+                        coinList[i].LoadContent(Content);
+                    }
+                }
+
+                levels_list.Add(loadLevelZero);
+                levels_list.Add(loadLevelOne);
+                levels_list.Add(loadLevelTwo);
+                levels_list.Add(loadLevelThree);
+                levels_list.Add(loadLevelFour);
+                levels_list.Add(loadLevelFive);
+                levels_list[level].Invoke();
+            }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
+            }   
+        }
+
+        private void ShopingButton_Click(object sender, EventArgs e)
+        {
+            stateOfGame = "store";
+            LoadContent();
+        }
+
+        private void FiveButton_Click(object sender, EventArgs e)
+        {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelFiveUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 4;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 5 is not unlocked
+                Debug.WriteLine("Level 5 not unlocked!!");
             }
 
-            // TODO: use this.Content to load your game content here
-            background = Content.Load<Texture2D>("background");
-            cursor = Content.Load<Texture2D>("cursor");
-            golf_ball = new Ball(_sprite_batch);
-            golf_ball.setVirtualScale(renderer.getScale());
-            golf_ball.setVirtualOffset(renderer.getOffset());
-            golf_ball.LoadContent(Content);
-            // USE THESE METHODS TO ALTER BALL COSMETICS
-            golf_ball.setHat(Content, "Sunglasses");
-            golf_ball.setColor(Color.Aqua);
-            
-            shot = new Shot(_sprite_batch);
-            shot.LoadContent(Content);
-            hitbox = new Hitbox();
-            hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                hitbox, Vector2.One);
-            hole.LoadContent(Content);
-            loadBorders();
-            // Update all content in the obstacle list
-            for (int i = 0; i < obstacle_list.Count; i++)
-            {
-                if (obstacle_list[i] != null)
-                {
-                    obstacle_list[i].LoadContent(Content);
-                }
-            }
-            for (int i = 0; i < coinList.Count; i++)
-            {
-                if (coinList[i] != null)
-                {
-                    coinList[i].LoadContent(Content);
-                }
-            }
-           
-            levels_list.Add(loadLevelZero);
-            levels_list.Add(loadLevelOne);
-            levels_list.Add(loadLevelTwo);
-            levels_list.Add(loadLevelThree);
-            levels_list.Add(loadLevelFour);
-            levels_list.Add(loadLevelFive);
-            levels_list[level].Invoke();
         }
+        private void FourButton_Click(object sender, EventArgs e)
+        {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelFourUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 3;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 4 is not unlocked
+                Debug.WriteLine("Level 4 not unlocked!!");
+            }
+
+        }
+        private void ThreeButton_Click(object sender, EventArgs e)
+        {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelThreeUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 2;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                
+                // Implement some code here for what happens if level
+                // 3 is not unlocked
+                Debug.WriteLine("Level 3 not unlocked!!");
+            }
+        }
+
+        private void TwoButton_Click(object sender, EventArgs e)
+        {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelTwoUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 1;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 2 is not unlocked
+                Debug.WriteLine("Level 2 not unlocked!!");
+            }
+        }
+
+        private void OneButton_Click(object sender, EventArgs e)
+        {
+            if (songStartLevel == false)
+            {
+                playSong(1);
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelOneUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level = 0;
+                stateOfGame = "play";
+                LoadContent();
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 1 is not unlocked
+                Debug.WriteLine("Level 1 not unlocked!!");
+            }
+        }
+
     private void SettingsButton_Click(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
+        {
+            previousGameState = stateOfGame;
+            stateOfGame = "Settings";
+            LoadContent();
+        }
     private void LevelButton_Click(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+            previousGameState = stateOfGame;
+            stateOfGame = "levels";
+            LoadContent();
     }
-    private void QuitButton_Click(object sender, System.EventArgs e)
+    private void BackButton_Click(object sender, EventArgs e)
+    {
+        stateOfGame = previousGameState;
+        LoadContent();
+    }
+        private void QuitButton_Click(object sender, System.EventArgs e)
     {
         Exit();
     }
     private void PlayButton_Click(object sender, System.EventArgs e)
     {
         stateOfGame = "play";
+        MediaPlayer.Stop();
+        playSong(1);
         LoadContent();
     }
 
@@ -227,21 +532,47 @@ namespace PVegas2K25ProTour
              _gameComponents[i].setOffset(renderer.getOffset());
         }
     }
-    
-    protected override void Update(GameTime gameTime)
+
+    private void DeleteButton_Click(object sender, System.EventArgs e)
+    {
+            //add delete progress conditions here
+            SaveLoadSystem.DeleteSaveFile();
+    }
+
+        protected override void Update(GameTime gameTime)
         {
             // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
                 ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                // save and exit...
-                saveGame();
                 Exit();
             }
 
             Window.ClientSizeChanged += windowClientSizeChanged;
             if (stateOfGame == "menu")
+            {
+                
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            else if (stateOfGame == "levels")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            else if (stateOfGame == "store")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
+            else if (stateOfGame == "Settings")
             {
                 foreach (var component in _gameComponents)
                 {
@@ -279,9 +610,29 @@ namespace PVegas2K25ProTour
                 borders[i].Update(golf_ball);
             }
             if (hole.getCollision() == true)
-            {
+            {   
+                // uses a flag to ensure stats counters are only
+                // updated once per level
+                if (canIncrementHolesCompleted)
+                {
+                    Debug.WriteLine("Updating stats counters...");
+                    current_level++;
+                    saveLevelScore(golf_ball.getStrokeCount(), current_level);
+                    totalHolesCompleted++;
+
+                    //Unlock the next level
+                    unlockNextLevel(current_level);
+
+                    // Note, user's lifetime strokes only update after a
+                    // level is completed
+                    totalStrokesLifetime += golf_ball.getStrokeCount();
+                    canIncrementHolesCompleted = false;
+                }
+
                 if (nextLevelCheck())
                 {
+                    // reset flag back to true
+                    canIncrementHolesCompleted = true;
                     level += 1;
                     hole.setCollision(false);
                     if (level < levels_list.Count)
@@ -311,7 +662,44 @@ namespace PVegas2K25ProTour
             // Draw all obstacles in the obstacle list
             _sprite_batch.Draw(background, Vector2.Zero, Color.DarkOliveGreen);
             if (stateOfGame == "menu")
+            {   
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "levels")
             {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "store")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "Settings")
+            {
+                drawSettingsScreen();
                 foreach (var component in _gameComponents)
                 {
                     {
@@ -325,7 +713,6 @@ namespace PVegas2K25ProTour
             }
             else
             {
-            
                 for (int i = 0; i < obstacle_list.Count; i++)
                 {
                     if (obstacle_list[i] != null)
@@ -345,12 +732,22 @@ namespace PVegas2K25ProTour
                 golf_ball.Draw();
                 _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
-                if (hole.getCollision() == true)
+                if(hole.getCollision() == true&&!coinAddLevel)
+                {
+                    drawVictoryScreen(shot.getStrokeCount());
+                    golf_ball.setPosition(new Vector2(100000, 1000000));
+                    coins += addCoins(golf_ball.getStrokeCount());
+                    coinAddLevel = !coinAddLevel;
+                }
+                else if (hole.getCollision() == true)
                 {
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
-                //_sprite_batch.Draw(cursor, mouse_pos, Color.White);
+                else if (hole.getCollision() == false)
+                {
+                    coinAddLevel = false;
+                }
                 //drawBorder();
                 _sprite_batch.End();
                 renderer.Draw(_sprite_batch, Color.Black);
@@ -614,6 +1011,18 @@ namespace PVegas2K25ProTour
         {
             //scaling value to be determined
             int coins = MAX_COINS - number_of_shots * 10;
+            
+            if (coins < 0)
+            {
+                coins = 0;
+            }
+            //this.coins += coins;
+            return (int)this.coins;
+        }
+        public int addCoins(int number_of_shots)
+        {
+            //scaling value to be determined
+            int coins = MAX_COINS - number_of_shots * 10;
 
             if (coins < 0)
             {
@@ -639,6 +1048,7 @@ namespace PVegas2K25ProTour
             String score = "Score: " + calculateScore(number_of_shots).ToString();
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
+
             //Populates the victory screen
             _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
@@ -659,8 +1069,208 @@ namespace PVegas2K25ProTour
             _sprite_batch.Draw(line, new Rectangle((int)win_screen_pos.X, (int)win_screen_pos.Y, 
                 (int)win_screen_size.X, (int)win_screen_size.Y), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
-            populateVictoryScreen(number_of_shots);
+            populateVictoryScreen(golf_ball.getStrokeCount());
         }
+
+        public void playSong(int songChoice)
+        {
+            MediaPlayer.Play(songs[songChoice]);
+        }
+
+        //Settings class for now until we implement screen managment
+
+        public float AdjustHoleVal()
+        {
+            Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            Vector2 up_button_size = new Vector2(86 * renderer.getScale(), 
+                86 * renderer.getScale());
+            Vector2 up_button_pos = new Vector2(-43, 0) + screen_center;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && previousMouseState.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 6 + 95),
+                                            (Window.ClientBounds.Height / 2 + 100),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 6 - 35),
+                                     (Window.ClientBounds.Height / 2 + 100),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
+                {
+                    _holeSize += 1;
+                }
+                else if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
+                {
+                    _holeSize -= 1;
+                }
+            }
+
+            // Update the previous mouse state for the next frame
+            previousMouseState = currentMouseState;
+
+            return _holeSize;
+        }
+
+        public float AdjustSensitivityVal()
+        {
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 240),
+                                     (Window.ClientBounds.Height / 2 + 100),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 115),
+                                            (Window.ClientBounds.Height / 2 + 100),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
+                {
+                    _sensitivity += 1;
+                }
+                if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
+                {
+                    _sensitivity -= 1;
+                }
+            }
+
+            // Update the previous mouse state for the next frame
+            prevMouseState = currentMouseState;
+
+            return _sensitivity;
+        }
+
+        public void populateSettingsScreen()
+        {
+            Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
+            Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
+            Vector2 settings_text_pos = new Vector2(0, -100) + screen_center;
+
+            Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
+            Vector2 hole_value_pos = new Vector2(-145, 150) + screen_center;
+            Vector2 hole_down_arrow_pos = new Vector2(-240, 150) + screen_center;
+            Vector2 hole_up_arrow_pos = new Vector2(-150, 150) + screen_center;
+
+            Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
+            Vector2 sensitivity_value_pos = new Vector2(270, 150) + screen_center;
+            Vector2 sensitivity_down_arrow_pos = new Vector2(175, 150) + screen_center;
+            Vector2 sensitivity_up_arrow_pos = new Vector2(265, 150) + screen_center;
+
+            String holeSize = AdjustHoleVal().ToString();
+
+            String sensitivity = AdjustSensitivityVal().ToString();
+
+            //Populate Settings screen
+            _sprite_batch.DrawString(font, "Settings", settings_text_pos,
+                Color.Black, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Hole Size", hole_text_pos,
+                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
+               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+
+            if (AdjustHoleVal() >= 1 && AdjustHoleVal() < 10)
+            {
+                _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
+                    font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
+                    font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+
+            if (AdjustSensitivityVal() >= 1 && AdjustSensitivityVal() < 10)
+            {
+                _sprite_batch.DrawString(font, sensitivity, new Vector2(sensitivity_value_pos.X -
+                    font.MeasureString(sensitivity).X / 2, sensitivity_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, sensitivity, new Vector2(sensitivity_value_pos.X -
+                    font.MeasureString(sensitivity).X / 2, sensitivity_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+
+            //Down arrow for hole size
+            _sprite_batch.Draw(arrowTexture, hole_down_arrow_pos, null,
+                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+            //Up arrow for hole size
+            _sprite_batch.Draw(arrowTexture, hole_up_arrow_pos, null,
+                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Down arrow for sensitivity
+            _sprite_batch.Draw(arrowTexture, sensitivity_down_arrow_pos, null,
+                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+            //Up arrow for sensitivity
+            _sprite_batch.Draw(arrowTexture, sensitivity_up_arrow_pos, null,
+                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+        }
+        public void drawSettingsScreen()
+        {
+            line.SetData(new[] { Color.DarkSlateGray });
+            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), null,
+                Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
+            populateSettingsScreen();
+        }
+
+
+        /**
+         * It would be nice to base this method on an abstraction that can
+         * have one instance per level but we simply do not have time to 
+         * implement that, thus, here is a concretion that functions. 
+         */
+        public void saveLevelScore(int number_of_shots, int currentLevel)
+        {
+            Debug.WriteLine("num of shots: " + number_of_shots);
+            
+            int current_score = calculateScore(number_of_shots);
+
+            if (current_score > playerRecord.playerScoreLevelOne && currentLevel == 1)
+                playerRecord.playerScoreLevelOne = current_score;
+            else if (current_score > playerRecord.playerScoreLevelTwo && currentLevel == 2)
+                playerRecord.playerScoreLevelTwo = current_score;
+            else if (current_score > playerRecord.playerScoreLevelThree && currentLevel == 3)
+                playerRecord.playerScoreLevelThree = current_score;
+            else if (current_score > playerRecord.playerScoreLevelFour && currentLevel == 4)
+                playerRecord.playerScoreLevelFour = current_score;
+            else if (current_score > playerRecord.playerScoreLevelFive && currentLevel == 5)
+                playerRecord.playerScoreLevelFive = current_score;
+        }
+
+        public void unlockNextLevel(int currentLevel)
+        {
+            if (currentLevel == 1)
+                playerRecord.isLevelTwoUnlocked = true;
+            else if (currentLevel == 2)
+                playerRecord.isLevelThreeUnlocked = true;
+            else if (currentLevel == 3)
+                playerRecord.isLevelFourUnlocked = true;
+            else if (currentLevel == 4)
+                playerRecord.isLevelFiveUnlocked = true;
+            else
+                Debug.WriteLine("NO MORE LEVELS!");
+        }
+
         public bool nextLevelCheck()
         {
             Vector2 screen_center = new Vector2(game_resolution.X / 2 * renderer.getScale(), 
@@ -739,12 +1349,15 @@ namespace PVegas2K25ProTour
         public void saveGame()
         {
             playerRecord.Strokes = shot.getStrokeCount();
+            playerRecord.Coins = coins;
+            playerRecord.TotalHolesCompleted = totalHolesCompleted;
+            playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
             SaveLoadSystem.Save(playerRecord);
         }
 
         public void addMoney(float amount)
         {
-            coins += amount;
+            coins += (int)amount;
         }
     }
 }
