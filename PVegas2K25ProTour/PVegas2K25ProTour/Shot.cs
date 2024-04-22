@@ -65,7 +65,8 @@ namespace PVegas2K25ProTour
             {
                 draw_point = new Vector2(0, arrow_rect.Height / 2);
                 _sprite_batch.Draw(arrow_sprite, arrow_rect, null, Color.Red,
-                    vectorAngle(launch_speed), draw_point, SpriteEffects.None, 0f);
+                    vectorAngle(launch_speed), draw_point, SpriteEffects.None, 
+                    0f);
             }
         }
 
@@ -108,7 +109,7 @@ namespace PVegas2K25ProTour
 
             else if (ball.getSpeed().Length() == 0f)
             {
-                windupShot(mouse_pos, ball.center());
+                windupShot(mouse_pos, ball.virtualCenter());
                 draw_sprite = true;
                 shot_released_bool = false;
                 clampShotPower();

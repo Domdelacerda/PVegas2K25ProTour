@@ -37,6 +37,9 @@ namespace PVegas2K25ProTour
         private Texture2D hat_sprite;
         private Color ball_color;
 
+        private float virtual_scale = 1f;
+        private Vector2 virtual_offset;
+
         //---------------------------------------------------------------------
         // CONSTRUCTORS
         //---------------------------------------------------------------------
@@ -87,8 +90,9 @@ namespace PVegas2K25ProTour
         /// -------------------------------------------------------------------
         public bool isPointOverBall(Vector2 point)
         {
-            float pointToCenter = distance(point, center());
-            return pointToCenter <= radius();
+            float pointToCenter = distance(point, center() * virtual_scale + 
+                virtual_offset);
+            return pointToCenter <= radius() * virtual_scale;
         }
 
         /// <summary>----------------------------------------------------------
@@ -123,6 +127,18 @@ namespace PVegas2K25ProTour
             center.X += radius();
             center.Y += radius();
             return center;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the position where the center of the ball is on the screen
+        /// relative to the screen's current dimensions; only used for
+        /// detecting mouse interaction
+        /// </summary>
+        /// <returns>the position of the ball's center.</returns>
+        /// -------------------------------------------------------------------
+        public Vector2 virtualCenter()
+        {
+            return center() * virtual_scale + virtual_offset;
         }
 
         /// <summary>----------------------------------------------------------
@@ -335,6 +351,16 @@ namespace PVegas2K25ProTour
         public void setColor(Color new_color)
         {
             ball_color = new_color;
+        }
+
+        public void setVirtualScale(float scale)
+        {
+            virtual_scale = scale;
+        }
+
+        public void setVirtualOffset(Vector2 offset)
+        {
+            virtual_offset = offset;
         }
     }
 }   

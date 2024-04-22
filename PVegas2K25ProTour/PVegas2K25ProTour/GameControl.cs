@@ -24,10 +24,13 @@ namespace PVegas2K25ProTour
     /// </summary>-------------------------------------------------------------
     public class GameControl : Game
     {
+        private const int DEFAULT_RES_WIDTH = 800;
+        private const int DEFAULT_RES_HEIGHT = 480;
+
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
-        private RenderTarget2D _render_target;
+        private Renderer renderer;
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 50;
         private bool clickedNext;
@@ -43,6 +46,8 @@ namespace PVegas2K25ProTour
         private List<Obstacle> obstacle_list;
         private Obstacle[] borders;
         private List<Action> levels_list;
+        private Texture2D background;
+        private Texture2D cursor;
         SpriteFont font;
         MouseState prevMouseState;
 
@@ -51,11 +56,10 @@ namespace PVegas2K25ProTour
 
         Texture2D line;
         private float angleOfLine;
+        private Vector2 game_resolution = new Vector2(DEFAULT_RES_WIDTH, 
+            DEFAULT_RES_HEIGHT);
 
-        private Vector2 game_resolution = new Vector2(800, 480);
-        private Rectangle render_target_rect;
-
-        private List<Component> _gameComponents;
+        private List<Button> _gameComponents;
         private String stateOfGame = "menu";
         Vector2 strokeCounter;
 
@@ -83,45 +87,20 @@ namespace PVegas2K25ProTour
             obstacle_list = new List<Obstacle>();
             levels_list = new List<Action>();
             borders = new Obstacle[4];
-            coinList=new List<Coin>();
+            coinList = new List<Coin>();
 
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = true;
-            _render_target = new RenderTarget2D(_graphics.GraphicsDevice, 
-                160, 144);
+            renderer = new Renderer(_graphics.GraphicsDevice, 
+                DEFAULT_RES_WIDTH, DEFAULT_RES_HEIGHT);
+            IsMouseVisible = true;
+            _graphics.PreferredBackBufferWidth = (int)game_resolution.X;
+            _graphics.PreferredBackBufferHeight = (int)game_resolution.Y;
+            _graphics.HardwareModeSwitch = false;
+            renderer.setDestination();
+            _graphics.ApplyChanges();
 
             base.Initialize();
-        }
-
-        Rectangle GetRenderTargetDestination(Vector2 resolution, int preferredBackBufferWidth, int preferredBackBufferHeight)
-        {
-            float resolutionRatio = resolution.X / resolution.Y;
-            float screenRatio;
-            Vector2 bounds = new Vector2(preferredBackBufferWidth, preferredBackBufferHeight);
-            screenRatio = bounds.X / bounds.Y;
-            float scale;
-            Rectangle rectangle = new Rectangle();
-
-            if (resolutionRatio < screenRatio)
-                scale = bounds.Y / resolution.Y;
-            else if (resolutionRatio > screenRatio)
-                scale = bounds.X / resolution.X;
-            else
-            {
-                // Resolution and window/screen share aspect ratio
-                rectangle.Size = new Point((int)bounds.X, (int)bounds.Y);
-                return rectangle;
-            }
-            rectangle.Width = (int)(resolution.X * scale);
-            rectangle.Height = (int)(resolution.Y * scale);
-            return CenterRectangle(new Rectangle(0, 0, (int)bounds.X, (int)bounds.Y), rectangle);
-        }
-
-        static Rectangle CenterRectangle(Rectangle outerRectangle, Rectangle innerRectangle)
-        {
-            Point delta = outerRectangle.Center - innerRectangle.Center;
-            innerRectangle.Offset(delta);
-            return innerRectangle;
         }
 
         protected override void LoadContent()
@@ -135,17 +114,6 @@ namespace PVegas2K25ProTour
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
 
-            _graphics.PreferredBackBufferWidth = (int)game_resolution.X;
-            _graphics.PreferredBackBufferHeight = (int)game_resolution.Y;
-            _graphics.ApplyChanges();
-            _render_target = new RenderTarget2D(GraphicsDevice, 
-                (int)game_resolution.X, (int)game_resolution.Y, false, 
-                SurfaceFormat.Color, DepthFormat.None, 0, 
-                RenderTargetUsage.PreserveContents);
-            render_target_rect = GetRenderTargetDestination
-                (game_resolution, _graphics.PreferredBackBufferWidth, 
-                _graphics.PreferredBackBufferHeight);
-
             var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
             {
                 Position = new Vector2(0, 0),
@@ -157,7 +125,6 @@ namespace PVegas2K25ProTour
                 Position = new Vector2(0, 390),
                 Text = "Quit",
             };
-            // TODO: use this.Content to load your game content here
             quitButton.Click += QuitButton_Click;
             golf_ball = new Ball(_sprite_batch);
             var settingsButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
@@ -173,17 +140,25 @@ namespace PVegas2K25ProTour
             };
             LevelButton.Click += LevelButton_Click;
 
-            golf_ball.LoadContent(Content);
-            _gameComponents = new List<Component>()
+            _gameComponents = new List<Button>()
             {
                 playButton,
                 quitButton,
                 settingsButton,
                 LevelButton
             };
+            for (int i = 0; i < _gameComponents.Count; i++)
+            {
+                _gameComponents[i].setLocalScale(renderer.getScale());
+                _gameComponents[i].setOffset(renderer.getOffset());
+            }
 
             // TODO: use this.Content to load your game content here
+            background = Content.Load<Texture2D>("background");
+            cursor = Content.Load<Texture2D>("cursor");
             golf_ball = new Ball(_sprite_batch);
+            golf_ball.setVirtualScale(renderer.getScale());
+            golf_ball.setVirtualOffset(renderer.getOffset());
             golf_ball.LoadContent(Content);
             // USE THESE METHODS TO ALTER BALL COSMETICS
             golf_ball.setHat(Content, "Sunglasses");
@@ -211,10 +186,6 @@ namespace PVegas2K25ProTour
                     coinList[i].LoadContent(Content);
                 }
             }
-            for (int i = 0; i < borders.Length; i++)
-            {
-                borders[i].LoadContent(Content);
-            }
            
             levels_list.Add(loadLevelZero);
             levels_list.Add(loadLevelOne);
@@ -241,6 +212,21 @@ namespace PVegas2K25ProTour
         stateOfGame = "play";
         LoadContent();
     }
+
+    private void windowClientSizeChanged(object sender, System.EventArgs e)
+    {
+        _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+        _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+        _graphics.ApplyChanges();
+        renderer.setDestination();
+        golf_ball.setVirtualScale(renderer.getScale());
+        golf_ball.setVirtualOffset(renderer.getOffset());
+        for (int i = 0; i < _gameComponents.Count; i++)
+        {
+             _gameComponents[i].setLocalScale(renderer.getScale());
+             _gameComponents[i].setOffset(renderer.getOffset());
+        }
+    }
     
     protected override void Update(GameTime gameTime)
         {
@@ -254,6 +240,7 @@ namespace PVegas2K25ProTour
                 Exit();
             }
 
+            Window.ClientSizeChanged += windowClientSizeChanged;
             if (stateOfGame == "menu")
             {
                 foreach (var component in _gameComponents)
@@ -261,7 +248,6 @@ namespace PVegas2K25ProTour
                     component.Update(gameTime);
                 }
             }
-         
 
             // TODO: Add your update logic here
             MouseState mouse_state = Mouse.GetState();
@@ -318,12 +304,12 @@ namespace PVegas2K25ProTour
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.SetRenderTarget(_render_target);
-            GraphicsDevice.Clear(Color.DarkOliveGreen);
+            renderer.setActive(Color.Black);
 
             // TODO: Add your drawing code here
             _sprite_batch.Begin();
             // Draw all obstacles in the obstacle list
+            _sprite_batch.Draw(background, Vector2.Zero, Color.DarkOliveGreen);
             if (stateOfGame == "menu")
             {
                 foreach (var component in _gameComponents)
@@ -332,7 +318,9 @@ namespace PVegas2K25ProTour
                         component.Draw(gameTime, _sprite_batch);
                     }
                 }
+                //_sprite_batch.Draw(cursor, mouse_pos, Color.White);
                 _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
                 base.Draw(gameTime);
             }
             else
@@ -352,10 +340,6 @@ namespace PVegas2K25ProTour
                         coinList[i].Draw(_sprite_batch);
                     }
                 }
-                for (int i = 0; i < borders.Length; i++)
-                {
-                    borders[i].Draw();
-                }
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
@@ -366,18 +350,10 @@ namespace PVegas2K25ProTour
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
+                //_sprite_batch.Draw(cursor, mouse_pos, Color.White);
                 //drawBorder();
                 _sprite_batch.End();
-
-                //GraphicsDevice.SetRenderTarget(null);
-                //GraphicsDevice.Clear(Color.DarkOliveGreen);
-
-                /*
-                _sprite_batch.Begin();
-                _sprite_batch.Draw(_render_target, render_target_rect, Color.White);
-                _sprite_batch.End();
-                */
-
+                renderer.Draw(_sprite_batch, Color.Black);
                 base.Draw(gameTime);
             }
         }
@@ -385,21 +361,6 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
-        
-        public void drawBorder()
-        {
-            //Left border
-            _sprite_batch.Draw(line, new Rectangle(0, 0, 20, Window.ClientBounds.Height), null, Color.Black, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0f);
-
-            //Right border
-            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width - 20, 0, 20, 500), null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 0f);
-
-            //Top border
-            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
-
-            //Bottom border
-            _sprite_batch.Draw(line, new Rectangle(0, Window.ClientBounds.Height - 20, Window.ClientBounds.Width, 20), null, Color.Black, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0f);
-        }
 
         /// <summary>----------------------------------------------------------
         /// Determines if the mouse is being dragged from the ball or not
@@ -666,33 +627,47 @@ namespace PVegas2K25ProTour
             //Finds the  center of the text
             Vector2 textMiddlePoint = font.MeasureString("You Won!") / 2;
             // Finds were to place "You Won!")
-            Vector2 position1 = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 5);
-
-            //Used to position the score and coin amount on victory screen
-            Vector2 position2 = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 3);
+            Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
+            Vector2 win_text_pos = new Vector2(0, -100) + screen_center;
+            Vector2 score_text_pos = new Vector2(-100, -40) + screen_center;
+            Vector2 coins_text_pos = new Vector2(100, -40) + screen_center;
+            Vector2 next_text_pos = new Vector2(0, 40) + screen_center;
+            Vector2 next_button_size = new Vector2(150, 75);
+            Vector2 next_button_pos = new Vector2(-(next_button_size.X / 2f), 0) + screen_center;
 
             //Methods to format the text 
             String score = "Score: " + calculateScore(number_of_shots).ToString();
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
             //Populates the victory screen
-            _sprite_batch.DrawString(font, "You Won!", position1, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, score, position2 - new Vector2(100, -40), Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, coins, position2 + new Vector2(100, 40), Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 2 - 75, Window.ClientBounds.Height - 240, 150, 75), null, Color.White, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0);
+            _sprite_batch.Draw(line, new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y, 
+                (int)next_button_size.X, (int)next_button_size.Y), null, Color.White, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0);
 
-            _sprite_batch.DrawString(font, "Next Level", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height - 200), Color.Black, 0, textMiddlePoint, 1.5f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, "Next Level", new Vector2(next_text_pos.X, next_text_pos.Y), 
+                Color.Black, 0, textMiddlePoint, 1.5f, SpriteEffects.None, 0.5f);
         }
         public void drawVictoryScreen(int number_of_shots)
         {
+            Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
+            Vector2 win_screen_size = new Vector2(500, 300);
+            Vector2 win_screen_pos = new Vector2(-(win_screen_size.X / 2f), -200) + screen_center;
             line.SetData(new[] { Color.DarkSlateGray });
-            _sprite_batch.Draw(line, new Rectangle(Window.ClientBounds.Width / 6 + 10, Window.ClientBounds.Height / 10, 500, 300), null,
+            _sprite_batch.Draw(line, new Rectangle((int)win_screen_pos.X, (int)win_screen_pos.Y, 
+                (int)win_screen_size.X, (int)win_screen_size.Y), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateVictoryScreen(number_of_shots);
         }
         public bool nextLevelCheck()
         {
+            Vector2 screen_center = new Vector2(game_resolution.X / 2 * renderer.getScale(), 
+                game_resolution.Y / 2 * renderer.getScale());
+            Vector2 next_button_size = new Vector2(150 * renderer.getScale(), 75 * renderer.getScale());
+            Vector2 next_button_pos = new Vector2(-75, 0) + screen_center;
+
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
@@ -701,11 +676,10 @@ namespace PVegas2K25ProTour
 
             if (wasLeftButtonClickedAndReleased)
             {
-                Rectangle Rect = new Rectangle(Window.ClientBounds.Width / 2 - 75, Window.ClientBounds.Height - 240, 150, 75);
+                Rectangle Rect = new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y, 
+                    (int)next_button_size.X, (int)next_button_size.Y);
 
-                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-                if (Rect.Contains(mousePosition))
+                if (Rect.Contains(mouse_pos))
                 {
                     return true;
                 }
@@ -715,8 +689,6 @@ namespace PVegas2K25ProTour
             // Update the previous mouse state for the next frame
             prevMouseState = currentMouseState;
             return false;
-
-
         }
 
         //---------------------------------------------------------------------

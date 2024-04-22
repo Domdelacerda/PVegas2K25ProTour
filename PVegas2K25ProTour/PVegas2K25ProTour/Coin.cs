@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-
-
 namespace PVegas2K25ProTour
 {
     public class Coin : GameObject

@@ -23,6 +23,10 @@ namespace PVegas2K25ProTour.Controls
 
         private Texture2D _texture;
 
+        private float local_scale;
+
+        private Vector2 local_offset;
+
 
         public event EventHandler Click;
 
@@ -76,22 +80,31 @@ namespace PVegas2K25ProTour.Controls
             _mouseState = Mouse.GetState();
 
             var mouseRectangle = new Rectangle(_mouseState.X, _mouseState.Y, 1, 1);
+            var scaledRectangle = new Rectangle((int)(rectangle.X * local_scale + local_offset.X),
+                (int)(rectangle.Y * local_scale + local_offset.Y), (int)(rectangle.Width * local_scale),
+                (int)(rectangle.Height * local_scale));
             
             _isHovering= false;
 
-            if(mouseRectangle.Intersects(rectangle)) 
+            if(mouseRectangle.Intersects(scaledRectangle)) 
             { 
                 _isHovering= true;
 
                 if(_mouseState.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed) 
                 { 
                     Click?.Invoke(this, new EventArgs());
-
-
                 }
             }
-            
+        }
 
+        public void setLocalScale(float scale)
+        {
+            local_scale = scale;
+        }
+
+        public void setOffset(Vector2 offset)
+        {
+            local_offset = offset;
         }
     }
 }
