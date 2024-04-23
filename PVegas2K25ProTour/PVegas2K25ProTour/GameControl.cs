@@ -293,10 +293,131 @@ namespace PVegas2K25ProTour
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
+
+                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(660, 0),
+
+                    Text = playerRecord.Coins.ToString(),
+                };
+
+                
+
+                Button Cosmetic1Button = null;
+                Button Cosmetic2Button = null;
+                Button Cosmetic3Button = null;
+
+                if (playerRecord.isCosmeticOneUnlocked == false)
+                {
+
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 130),
+                        Text = "50",
+                    };
+                }
+                else
+                {
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 130),
+
+                    };
+                    Cosmetic1Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic1Button.Click += Cosmetic1Button_Click;
+
+                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 130),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "Sunglasses")
+                {
+                    Sunglasses.Text = "E";
+                }
+
+                if (playerRecord.isCosmeticTwoUnlocked == false)
+                {
+
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 260),
+                        Text = "50",
+                    };
+                }
+                else
+                {
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 260),
+
+                    };
+                    Cosmetic2Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic2Button.Click += Cosmetic2Button_Click;
+
+                var TopHat = new Button(Content.Load<Texture2D>("TopHat"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 260),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "TopHat")
+                {
+                    TopHat.Text = "E";
+                }
+
+                if (playerRecord.isCosmeticThreeUnlocked == false)
+                {
+
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 390),
+                        Text = "50",
+                    };
+                    
+                }
+                else
+                {
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 390),
+
+                    };
+                    Cosmetic3Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic3Button.Click += Cosmetic3Button_Click;
+
+                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 390),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text =  " "
+                };
+                if(playerRecord.currentCosmetic == "NoveltySodaDrinkHat")
+                {
+                    NoveltySodaDrinkHat.Text = "E";
+                }
+
+
                 golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
                 {
-                    BackButton
+                    BackButton,
+                    MoneyButton,
+                    Cosmetic1Button,
+                    Cosmetic2Button,
+                    Cosmetic3Button,
+                    NoveltySodaDrinkHat,
+                    TopHat,
+                    Sunglasses,
+                    
+
                 };
             }
             if (stateOfGame == "Settings")
@@ -323,7 +444,11 @@ namespace PVegas2K25ProTour
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
                 golf_ball.setColor(Color.White);
-
+                if(playerRecord.currentCosmetic != "null")
+                {
+                    golf_ball.setHat(Content, playerRecord.currentCosmetic);
+                }
+                
                 shot = new Shot(_sprite_batch);
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
@@ -335,12 +460,71 @@ namespace PVegas2K25ProTour
                 level_manager.loadBorders((int)game_resolution.X, (int)game_resolution.Y);
                 level_manager.generateLevelList();
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
+                
             }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
-            }   
+            }
+           
+        }
+
+        private void Cosmetic3Button_Click(object sender, EventArgs e)
+        {
+            if (playerRecord.Coins >= 50)
+            {
+                if (playerRecord.isCosmeticThreeUnlocked == false)
+                {
+                    playerRecord.Coins = playerRecord.Coins - 50;
+                }
+                golf_ball.setHat(Content, "NoveltySodaDrinkHat");
+                playerRecord.currentCosmetic = "NoveltySodaDrinkHat";
+                playerRecord.isCosmeticThreeUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        private void Cosmetic2Button_Click(object sender, EventArgs e)
+        {
+            if (playerRecord.Coins >= 50)
+            {
+                if (playerRecord.isCosmeticTwoUnlocked == false)
+                {
+                    playerRecord.Coins = playerRecord.Coins - 50;
+                }
+                golf_ball.setHat(Content, "TopHat");
+                playerRecord.currentCosmetic = "TopHat";
+                playerRecord.isCosmeticTwoUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        private void Cosmetic1Button_Click(object sender, EventArgs e)
+        {
+
+
+            //if(playerRecord.isCosmeticOneUnlocked == false)
+
+            //playerRecord.Coins -= 300;
+            if (playerRecord.Coins >= 50)
+            {
+                if(playerRecord.isCosmeticOneUnlocked == false)
+                {
+                    playerRecord.Coins = playerRecord.Coins -50;
+                }
+
+                golf_ball.setHat(Content, "Sunglasses");
+                playerRecord.currentCosmetic = "Sunglasses";
+                playerRecord.isCosmeticOneUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+            
+            
+            
         }
 
         private void ShopingButton_Click(object sender, EventArgs e)
@@ -1122,6 +1306,7 @@ namespace PVegas2K25ProTour
             playerRecord.Coins = coins;
             playerRecord.TotalHolesCompleted = totalHolesCompleted;
             playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
+            playerRecord.currentCosmetic = golf_ball.getHat(Content);
             SaveLoadSystem.Save(playerRecord);
         }
 

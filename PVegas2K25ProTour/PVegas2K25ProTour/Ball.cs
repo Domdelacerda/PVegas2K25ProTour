@@ -343,9 +343,31 @@ namespace PVegas2K25ProTour
             return strokeCount;
         }
 
+        public string getHat(ContentManager _content)
+        {
+            if(hat_sprite == _content.Load<Texture2D>("Sunglasses"))
+            {
+                return "Sunglasses";
+            }
+            else if(hat_sprite == _content.Load<Texture2D>("TopHat"))
+            {
+                return "TopHat";
+            }
+            else if(hat_sprite == _content.Load<Texture2D>("NoveltySodaDrinkHat"))
+            {
+                return "NoveltySodaDrinkHat";
+            }
+            else
+            {
+                return "null";
+            }
+        }
         public void setHat(ContentManager _content, string hatName)
         {
-            hat_sprite = _content.Load<Texture2D>(hatName);
+            if (hatName != null)
+            {
+                hat_sprite = _content.Load<Texture2D>(hatName);
+            }
         }
 
         public void setColor(Color new_color)

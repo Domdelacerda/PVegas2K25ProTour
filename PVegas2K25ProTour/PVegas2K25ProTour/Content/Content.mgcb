@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:button.png
 
+#begin check.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:check.png
+
 #begin CoinPVegas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -97,18 +109,6 @@
 /processorParam:TextureFormat=Color
 /build:Crown.gif
 
-#begin delete.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:delete.png
-
 #begin Cursor.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -120,6 +120,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Cursor.gif
+
+#begin delete.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:delete.png
 
 #begin Downslope.gif
 /importer:TextureImporter
@@ -212,6 +224,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:NoveltySodaDrinkHat.gif
+
+#begin price tag.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:price tag.png
 
 #begin Puddle.gif
 /importer:TextureImporter
