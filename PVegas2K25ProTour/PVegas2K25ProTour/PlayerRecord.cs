@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace PVegas2K25ProTour
     {
 
         public string User { get; set; }
+
         // Strokes, if we choose to implement, should really be level-based data
         public int Strokes { get; set; }
         public int Coins { get; set; }
@@ -39,6 +41,8 @@ namespace PVegas2K25ProTour
         public bool isCosmeticOneUnlocked { get; set; }
         public bool isCosmeticTwoUnlocked { get; set; }
         public bool isCosmeticThreeUnlocked { get; set; }
+
+        public string currentCosmetic {  get; set; }
 
         // Settings Based Data
         public int swingSensitivityPreference { get; set; }

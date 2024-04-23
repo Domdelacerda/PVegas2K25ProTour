@@ -355,6 +355,20 @@ namespace PVegas2K25ProTour
         }
 
         /// <summary>----------------------------------------------------------
+        /// Gets the current hat the ball is wearing
+        /// <returns>the current stroke count.</returns>
+        /// </summary>---------------------------------------------------------
+        public string getHat(ContentManager _content)
+        {
+            string name = "null";
+            if (hat_sprite != null)
+            {
+                name = hat_sprite.Name;
+            }
+            return name;
+        }
+
+        /// <summary>----------------------------------------------------------
         /// Sets the sprite for the hat that the ball is wearing
         /// <param name="_content">the content manager used to load the hat 
         /// sprite.</param>
@@ -362,7 +376,10 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void setHat(ContentManager _content, string hat_name)
         {
-            hat_sprite = _content.Load<Texture2D>(hat_name);
+            if (hat_name != null)
+            {
+                hat_sprite = _content.Load<Texture2D>(hat_name);
+            }
         }
 
         /// <summary>----------------------------------------------------------

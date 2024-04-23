@@ -42,8 +42,10 @@ namespace PVegas2K25ProTour
         private const int MIN_SETTINGS_VAL = 2;
         private float _holeSize = 5;
         private float _sensitivity = 5;
+        private float _volume = 5;
         private MouseState previousMouseState;
         private MouseState currentMouseState;
+
 
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
@@ -62,12 +64,14 @@ namespace PVegas2K25ProTour
         private Texture2D cursor;
         SpriteFont font;
         MouseState prevMouseState;
+        MouseState prevMouseStateVol;
 
         private PlayerRecord playerRecord;
         private int totalHolesCompleted;
         private bool canIncrementHolesCompleted = true;
         private int totalStrokesLifetime;
         private int current_level = 0;
+        bool isFirstContentLoad = true;
 
         Texture2D line;
         private float angleOfLine;
@@ -82,6 +86,7 @@ namespace PVegas2K25ProTour
         private int coins = 0;
         //private List<Coin> coinList;
         private bool coinAddLevel=false;
+        
        
 
         //---------------------------------------------------------------------
@@ -93,6 +98,7 @@ namespace PVegas2K25ProTour
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
         }
 
         protected override void Initialize()
@@ -113,6 +119,7 @@ namespace PVegas2K25ProTour
             _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             renderer.setDestination();
+            
 
             Exiting += OnExiting;
             base.Initialize();
@@ -132,6 +139,11 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
+            //Set volume based on settings
+            MediaPlayer.Volume = getVolumeVal() / 10;
+
+
+
             arrowTexture = Content.Load<Texture2D>("arrow");
 
             songs.Add(Content.Load<Song>("MainMenu"));
@@ -143,6 +155,8 @@ namespace PVegas2K25ProTour
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
+            _sensitivity = playerRecord.swingSensitivityPreference;
+            _holeSize = playerRecord.holeSize;
             
             // Load the graphics device
             _device = GraphicsDevice;
@@ -288,10 +302,129 @@ namespace PVegas2K25ProTour
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
+
+                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(660, 0),
+
+                    Text = playerRecord.Coins.ToString(),
+                };
+
+                
+
+                Button Cosmetic1Button = null;
+                Button Cosmetic2Button = null;
+                Button Cosmetic3Button = null;
+
+                if (playerRecord.isCosmeticOneUnlocked == false)
+                {
+
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 130),
+                        Text = "50",
+                    };
+                }
+                else
+                {
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 130),
+
+                    };
+                    Cosmetic1Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic1Button.Click += Cosmetic1Button_Click;
+
+                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 130),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "Sunglasses")
+                {
+                    Sunglasses.Text = "E";
+                }
+
+                if (playerRecord.isCosmeticTwoUnlocked == false)
+                {
+
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 260),
+                        Text = "50",
+                    };
+                }
+                else
+                {
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 260),
+
+                    };
+                    Cosmetic2Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic2Button.Click += Cosmetic2Button_Click;
+
+                var TopHat = new Button(Content.Load<Texture2D>("TopHat"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 260),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "TopHat")
+                {
+                    TopHat.Text = "E";
+                }
+
+                if (playerRecord.isCosmeticThreeUnlocked == false)
+                {
+
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    {
+                        Position = new Vector2(130, 390),
+                        Text = "50",
+                    };
+                    
+                }
+                else
+                {
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    {
+                        Position = new Vector2(130, 390),
+
+                    };
+                    Cosmetic3Button._isHoveringColour = Color.Green;
+                }
+                Cosmetic3Button.Click += Cosmetic3Button_Click;
+
+                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(65, 390),
+                    _isHoveringColour = Color.White,
+                    PenColour = Color.Red,
+                    Text =  " "
+                };
+                if(playerRecord.currentCosmetic == "NoveltySodaDrinkHat")
+                {
+                    NoveltySodaDrinkHat.Text = "E";
+                }
+
+
                 golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
                 {
-                    BackButton
+                    BackButton,
+                    MoneyButton,
+                    Cosmetic1Button,
+                    Cosmetic2Button,
+                    Cosmetic3Button,
+                    NoveltySodaDrinkHat,
+                    TopHat,
+                    Sunglasses,
                 };
             }
             if (stateOfGame == "Settings")
@@ -318,7 +451,11 @@ namespace PVegas2K25ProTour
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
                 golf_ball.setColor(Color.White);
-
+                if(playerRecord.currentCosmetic != "null")
+                {
+                    golf_ball.setHat(Content, playerRecord.currentCosmetic);
+                }
+                
                 shot = new Shot(_sprite_batch);
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
@@ -330,12 +467,82 @@ namespace PVegas2K25ProTour
                 level_manager.loadBorders((int)game_resolution.X, (int)game_resolution.Y);
                 level_manager.generateLevelList();
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
+                
             }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
-            }   
+            }
+           
+        }
+
+        /*
+         * This method subtracts the appropriate amount of coins for purchasing
+         * a new hat cosmetic and saves the new player coin total to the save file. 
+         */
+        private void purchaseHat()
+        {
+            coins -= 50;
+            playerRecord.Coins = coins;
+            SaveLoadSystem.Save(playerRecord);
+        }
+
+        private void Cosmetic3Button_Click(object sender, EventArgs e)
+        {
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticThreeUnlocked == true)
+            {
+                if (playerRecord.isCosmeticThreeUnlocked == false)
+                {
+                    purchaseHat();
+                }
+                golf_ball.setHat(Content, "NoveltySodaDrinkHat");
+                playerRecord.currentCosmetic = "NoveltySodaDrinkHat";
+                playerRecord.isCosmeticThreeUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        private void Cosmetic2Button_Click(object sender, EventArgs e)
+        {
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticTwoUnlocked == true)
+            {
+                if (playerRecord.isCosmeticTwoUnlocked == false)
+                {
+                    purchaseHat();
+                }
+                golf_ball.setHat(Content, "TopHat");
+                playerRecord.currentCosmetic = "TopHat";
+                playerRecord.isCosmeticTwoUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        private void Cosmetic1Button_Click(object sender, EventArgs e)
+        {
+
+
+            //if(playerRecord.isCosmeticOneUnlocked == false)
+
+            //playerRecord.Coins -= 300;
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
+            {
+                if(playerRecord.isCosmeticOneUnlocked == false)
+                {
+                    purchaseHat();
+                }
+
+                golf_ball.setHat(Content, "Sunglasses");
+                playerRecord.currentCosmetic = "Sunglasses";
+                playerRecord.isCosmeticOneUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+            
+            
+            
         }
 
         private void ShopingButton_Click(object sender, EventArgs e)
@@ -582,6 +789,7 @@ namespace PVegas2K25ProTour
                     // level is completed
                     totalStrokesLifetime += golf_ball.getStrokeCount();
                     canIncrementHolesCompleted = false;
+                    SaveLoadSystem.Save(playerRecord);
                 }
 
                 if (nextLevelCheck())
@@ -663,6 +871,7 @@ namespace PVegas2K25ProTour
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                     coins += addCoins(golf_ball.getStrokeCount());
+                    SaveLoadSystem.Save(playerRecord);
                     coinAddLevel = !coinAddLevel;
                 }
                 else if (hole.getCollision() == true)
@@ -822,6 +1031,7 @@ namespace PVegas2K25ProTour
 
         public float AdjustHoleVal()
         {
+            _holeSize = playerRecord.holeSize;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
@@ -852,6 +1062,9 @@ namespace PVegas2K25ProTour
                 {
                     _holeSize -= 1;
                 }
+                // Update the save data
+                playerRecord.holeSize = (int)_holeSize;
+                SaveLoadSystem.Save(playerRecord);
             }
 
             // Update the previous mouse state for the next frame
@@ -860,8 +1073,50 @@ namespace PVegas2K25ProTour
             return _holeSize;
         }
 
+        public float AdjustVolumeVal()
+        {
+            _volume = playerRecord.volumePreference;
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseStateVol.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 15),
+                                            (Window.ClientBounds.Height / 2 - 40),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 - 120),
+                                     (Window.ClientBounds.Height / 2 - 40),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _volume <= MAX_SETTINGS_VAL)
+                {
+                    _volume += 1;
+
+                }
+                if (downArrowRect.Contains(mousePosition) && _volume >= MIN_SETTINGS_VAL)
+                {
+                    _volume -= 1;
+                }
+            }
+
+            // Update the save data
+            playerRecord.volumePreference = (int)_volume;
+            SaveLoadSystem.Save(playerRecord);
+
+            // Update the previous mouse state for the next frame
+            prevMouseStateVol = currentMouseState;
+
+            return _volume;
+        }
+
         public float AdjustSensitivityVal()
         {
+            _sensitivity = playerRecord.swingSensitivityPreference;
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
@@ -887,6 +1142,9 @@ namespace PVegas2K25ProTour
                 {
                     _sensitivity -= 1;
                 }
+                // Update the save data
+                playerRecord.swingSensitivityPreference = (int)_sensitivity;
+                SaveLoadSystem.Save(playerRecord);
             }
 
             // Update the previous mouse state for the next frame
@@ -894,26 +1152,46 @@ namespace PVegas2K25ProTour
 
             return _sensitivity;
         }
+        public void checkFirstContentLoad()
+        {
+            if (isFirstContentLoad)
+            {
+                if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0
+                    && playerRecord.volumePreference == 0)
+                {
+                    Debug.WriteLine("No Previous Settings Save Data. Defaults set to 5.");
+                    playerRecord.holeSize = 5;
+                    playerRecord.swingSensitivityPreference = 5;
+                    playerRecord.volumePreference = 5;
+                }
+            }
+        }
 
         public void populateSettingsScreen()
         {
+            checkFirstContentLoad();
+
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
-            Vector2 settings_text_pos = new Vector2(0, -100) + screen_center;
+            Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
-            Vector2 hole_value_pos = new Vector2(-145, 150) + screen_center;
+            Vector2 hole_value_pos = new Vector2(-140, 150) + screen_center;
             Vector2 hole_down_arrow_pos = new Vector2(-240, 150) + screen_center;
             Vector2 hole_up_arrow_pos = new Vector2(-150, 150) + screen_center;
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
-            Vector2 sensitivity_value_pos = new Vector2(270, 150) + screen_center;
+            Vector2 sensitivity_value_pos = new Vector2(275, 150) + screen_center;
             Vector2 sensitivity_down_arrow_pos = new Vector2(175, 150) + screen_center;
             Vector2 sensitivity_up_arrow_pos = new Vector2(265, 150) + screen_center;
+
+
 
             String holeSize = AdjustHoleVal().ToString();
 
             String sensitivity = AdjustSensitivityVal().ToString();
+
+            String volume = AdjustVolumeVal().ToString();
 
             //Populate Settings screen
             _sprite_batch.DrawString(font, "Settings", settings_text_pos,
@@ -924,6 +1202,9 @@ namespace PVegas2K25ProTour
 
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Volume", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2 - 50),
+              Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
             if (AdjustHoleVal() >= 1 && AdjustHoleVal() < 10)
@@ -936,6 +1217,16 @@ namespace PVegas2K25ProTour
             {
                 _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
                     font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            if (AdjustVolumeVal() >= 1 && AdjustVolumeVal() < 10)
+            {
+                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 35, Window.ClientBounds.Height / 2),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
@@ -955,6 +1246,7 @@ namespace PVegas2K25ProTour
             //Down arrow for hole size
             _sprite_batch.Draw(arrowTexture, hole_down_arrow_pos, null,
                 Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
             //Up arrow for hole size
             _sprite_batch.Draw(arrowTexture, hole_up_arrow_pos, null,
                 Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
@@ -962,9 +1254,18 @@ namespace PVegas2K25ProTour
             //Down arrow for sensitivity
             _sprite_batch.Draw(arrowTexture, sensitivity_down_arrow_pos, null,
                 Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
             //Up arrow for sensitivity
             _sprite_batch.Draw(arrowTexture, sensitivity_up_arrow_pos, null,
                 Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Down arrow for Volume
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 - 60, Window.ClientBounds.Height / 2), null,
+               Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Up arrow for volume
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2), null,
+              Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
         }
         public void drawSettingsScreen()
         {
@@ -973,6 +1274,21 @@ namespace PVegas2K25ProTour
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateSettingsScreen();
         }
+
+        public float getHoleSize()
+        {
+            return _holeSize;
+        }
+
+        public float getSensitivityVal()
+        {
+            return _sensitivity;
+        }
+        public float getVolumeVal()
+        {
+            return _volume;
+        }
+        
 
 
         /**
@@ -1093,6 +1409,7 @@ namespace PVegas2K25ProTour
             playerRecord.Coins = coins;
             playerRecord.TotalHolesCompleted = totalHolesCompleted;
             playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
+            playerRecord.currentCosmetic = golf_ball.getHat(Content);
             SaveLoadSystem.Save(playerRecord);
         }
 
