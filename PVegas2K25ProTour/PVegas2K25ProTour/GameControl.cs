@@ -1160,12 +1160,12 @@ namespace PVegas2K25ProTour
             Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
-            Vector2 hole_value_pos = new Vector2(-145, 150) + screen_center;
+            Vector2 hole_value_pos = new Vector2(-140, 150) + screen_center;
             Vector2 hole_down_arrow_pos = new Vector2(-240, 150) + screen_center;
             Vector2 hole_up_arrow_pos = new Vector2(-150, 150) + screen_center;
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
-            Vector2 sensitivity_value_pos = new Vector2(270, 150) + screen_center;
+            Vector2 sensitivity_value_pos = new Vector2(275, 150) + screen_center;
             Vector2 sensitivity_down_arrow_pos = new Vector2(175, 150) + screen_center;
             Vector2 sensitivity_up_arrow_pos = new Vector2(265, 150) + screen_center;
 
