@@ -70,6 +70,7 @@ namespace PVegas2K25ProTour
         SpriteFont font;
         MouseState prevMouseState;
         MouseState prevMouseStateVol;
+        KeyboardState previousKeyState;
 
         private PlayerRecord playerRecord;
         private int totalHolesCompleted;
@@ -85,7 +86,7 @@ namespace PVegas2K25ProTour
 
         private List<Button> _gameComponents;
         private String stateOfGame = "menu";
-        private String previousGameState = "menu";
+        private String previousGameState = "";
         Vector2 strokeCounter;
 
         private int coins = 0;
@@ -742,6 +743,15 @@ namespace PVegas2K25ProTour
             {
                 Exit();
             }
+            if(IsKeyPressed())
+            {
+                
+                stateOfGame = "Settings";
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
 
             Window.ClientSizeChanged += windowClientSizeChanged;
             if (stateOfGame == "menu")
@@ -1324,7 +1334,21 @@ namespace PVegas2K25ProTour
         {
             return _volume;
         }
-        
+
+        public bool IsKeyPressed()
+        {
+            KeyboardState currentKeyState = Keyboard.GetState();
+            bool isKeyPressed = currentKeyState.IsKeyDown(Keys.P);
+
+            // Check if P was pressed and released
+            bool wasKeyPressedAndReleased = isKeyPressed && !previousKeyState.IsKeyDown(Keys.P);
+
+            // Update the previous key state for the next frame
+            previousKeyState = currentKeyState;
+
+            return wasKeyPressedAndReleased;
+        }
+
 
 
         /**
