@@ -68,6 +68,7 @@ namespace PVegas2K25ProTour
         private bool canIncrementHolesCompleted = true;
         private int totalStrokesLifetime;
         private int current_level = 0;
+        bool isFirstContentLoad = true;
 
         Texture2D line;
         private float angleOfLine;
@@ -132,12 +133,7 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
-            // Check to see if both 0, if so, player likely has 0 save data so set defaults to 5
-            if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0)
-            {
-                playerRecord.holeSize = 5;
-                playerRecord.swingSensitivityPreference = 5;
-            }
+
 
             arrowTexture = Content.Load<Texture2D>("arrow");
 
@@ -591,6 +587,7 @@ namespace PVegas2K25ProTour
                     // level is completed
                     totalStrokesLifetime += golf_ball.getStrokeCount();
                     canIncrementHolesCompleted = false;
+                    SaveLoadSystem.Save(playerRecord);
                 }
 
                 if (nextLevelCheck())
@@ -672,6 +669,7 @@ namespace PVegas2K25ProTour
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                     coins += addCoins(golf_ball.getStrokeCount());
+                    SaveLoadSystem.Save(playerRecord);
                     coinAddLevel = !coinAddLevel;
                 }
                 else if (hole.getCollision() == true)
@@ -831,6 +829,7 @@ namespace PVegas2K25ProTour
 
         public float AdjustHoleVal()
         {
+            _holeSize = playerRecord.holeSize;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
@@ -856,15 +855,14 @@ namespace PVegas2K25ProTour
                 if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
                 {
                     _holeSize += 1;
-                    // Update the save data
-                    playerRecord.holeSize = (int)_holeSize;
                 }
                 else if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
                 {
                     _holeSize -= 1;
-                    // Update the save data
-                    playerRecord.holeSize = (int)_holeSize;
                 }
+                // Update the save data
+                playerRecord.holeSize = (int)_holeSize;
+                SaveLoadSystem.Save(playerRecord);
             }
 
             // Update the previous mouse state for the next frame
@@ -875,6 +873,7 @@ namespace PVegas2K25ProTour
 
         public float AdjustSensitivityVal()
         {
+            _sensitivity = playerRecord.swingSensitivityPreference;
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
@@ -895,15 +894,14 @@ namespace PVegas2K25ProTour
                 if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
                 {
                     _sensitivity += 1;
-                    // Update the save data
-                    playerRecord.swingSensitivityPreference = (int)_sensitivity;
                 }
                 if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
                 {
                     _sensitivity -= 1;
-                    // Update the save data
-                    playerRecord.swingSensitivityPreference = (int)_sensitivity;
                 }
+                // Update the save data
+                playerRecord.swingSensitivityPreference = (int)_sensitivity;
+                SaveLoadSystem.Save(playerRecord);
             }
 
             // Update the previous mouse state for the next frame
@@ -911,9 +909,23 @@ namespace PVegas2K25ProTour
 
             return _sensitivity;
         }
+        public void checkFirstContentLoad()
+        {
+            if (isFirstContentLoad)
+            {
+                if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0)
+                {
+                    Debug.WriteLine("No Previous Settings Save Data. Defaults set to 5.");
+                    playerRecord.holeSize = 5;
+                    playerRecord.swingSensitivityPreference = 5;
+                }
+            }
+        }
 
         public void populateSettingsScreen()
         {
+            checkFirstContentLoad();
+
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
             Vector2 settings_text_pos = new Vector2(0, -100) + screen_center;
