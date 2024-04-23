@@ -42,8 +42,10 @@ namespace PVegas2K25ProTour
         private const int MIN_SETTINGS_VAL = 2;
         private float _holeSize = 5;
         private float _sensitivity = 5;
+        private float _volume = 5;
         private MouseState previousMouseState;
         private MouseState currentMouseState;
+
 
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
@@ -62,6 +64,7 @@ namespace PVegas2K25ProTour
         private Texture2D cursor;
         SpriteFont font;
         MouseState prevMouseState;
+        MouseState prevMouseStateVol;
 
         private PlayerRecord playerRecord;
         private int totalHolesCompleted;
@@ -1055,6 +1058,42 @@ namespace PVegas2K25ProTour
             return _holeSize;
         }
 
+        public float AdjustVolumeVal()
+        {
+            MouseState currentMouseState = Mouse.GetState();
+            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+
+            // Check if left button was clicked and released
+            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseStateVol.LeftButton == ButtonState.Released;
+
+            if (wasLeftButtonClickedAndReleased)
+            {
+                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 15),
+                                            (Window.ClientBounds.Height / 2 - 40),
+                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
+                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 - 120),
+                                     (Window.ClientBounds.Height / 2 - 40),
+                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
+
+                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+                if (upArrowRect.Contains(mousePosition) && _volume <= MAX_SETTINGS_VAL)
+                {
+                    _volume += 1;
+
+                }
+                if (downArrowRect.Contains(mousePosition) && _volume >= MIN_SETTINGS_VAL)
+                {
+                    _volume -= 1;
+                }
+            }
+
+            // Update the previous mouse state for the next frame
+            prevMouseStateVol = currentMouseState;
+
+            return _volume;
+        }
+
         public float AdjustSensitivityVal()
         {
             _sensitivity = playerRecord.swingSensitivityPreference;
@@ -1124,9 +1163,13 @@ namespace PVegas2K25ProTour
             Vector2 sensitivity_down_arrow_pos = new Vector2(175, 150) + screen_center;
             Vector2 sensitivity_up_arrow_pos = new Vector2(265, 150) + screen_center;
 
+
+
             String holeSize = AdjustHoleVal().ToString();
 
             String sensitivity = AdjustSensitivityVal().ToString();
+
+            String volume = AdjustVolumeVal().ToString();
 
             //Populate Settings screen
             _sprite_batch.DrawString(font, "Settings", settings_text_pos,
@@ -1137,6 +1180,9 @@ namespace PVegas2K25ProTour
 
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+
+            _sprite_batch.DrawString(font, "Volume", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2 - 50),
+              Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
             if (AdjustHoleVal() >= 1 && AdjustHoleVal() < 10)
@@ -1149,6 +1195,16 @@ namespace PVegas2K25ProTour
             {
                 _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
                     font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            if (AdjustVolumeVal() >= 1 && AdjustVolumeVal() < 10)
+            {
+                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2),
+              Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 35, Window.ClientBounds.Height / 2),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
@@ -1168,6 +1224,7 @@ namespace PVegas2K25ProTour
             //Down arrow for hole size
             _sprite_batch.Draw(arrowTexture, hole_down_arrow_pos, null,
                 Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
             //Up arrow for hole size
             _sprite_batch.Draw(arrowTexture, hole_up_arrow_pos, null,
                 Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
@@ -1175,9 +1232,18 @@ namespace PVegas2K25ProTour
             //Down arrow for sensitivity
             _sprite_batch.Draw(arrowTexture, sensitivity_down_arrow_pos, null,
                 Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
             //Up arrow for sensitivity
             _sprite_batch.Draw(arrowTexture, sensitivity_up_arrow_pos, null,
                 Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Down arrow for Volume
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 - 60, Window.ClientBounds.Height / 2), null,
+               Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
+
+            //Up arrow for volume
+            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2), null,
+              Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
         }
         public void drawSettingsScreen()
         {
@@ -1186,6 +1252,21 @@ namespace PVegas2K25ProTour
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateSettingsScreen();
         }
+
+        public float getHoleSize()
+        {
+            return _holeSize;
+        }
+
+        public float getSensitivityVal()
+        {
+            return _sensitivity;
+        }
+        public float getVolumeVal()
+        {
+            return _volume;
+        }
+        
 
 
         /**
