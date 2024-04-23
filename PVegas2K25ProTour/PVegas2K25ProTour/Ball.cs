@@ -32,7 +32,7 @@ namespace PVegas2K25ProTour
 
         private Texture2D ball_sprite;
         private Hitbox hitbox;
-        private int strokeCount = 0;
+        private int stroke_count = 0;
 
         private Texture2D hat_sprite;
         private Color ball_color;
@@ -216,7 +216,7 @@ namespace PVegas2K25ProTour
                 ball_speed = launch_speed * SHOT_POWER_MULTIPLIER;
 
                 // update the ball position with power according to launch power
-                strokeCount += 1;
+                stroke_count += 1;
             }
         }
 
@@ -327,40 +327,98 @@ namespace PVegas2K25ProTour
         /// Sets the rolling state for the ball, which is used when on a
         /// downslope so that the ball's speed isn't truncated when it
         /// approaches zero and still rolls down even if it has no speed
+        /// <param name="new_roll_state">the new rolling state of the ball.
+        /// </param>
         /// </summary>---------------------------------------------------------
         public void setRolling(bool new_roll_state)
         {
             rolling = new_roll_state;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the stroke count for the ball
+        /// <param name="count">the new stroke count for the ball.</param>
+        /// </summary>---------------------------------------------------------
         public void setStrokeCount(int count)
         {
-            strokeCount = count;
+            stroke_count = count;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Gets the current number of strokes that have been applied to the
+        /// ball
+        /// <returns>the current stroke count.</returns>
+        /// </summary>---------------------------------------------------------
         internal int getStrokeCount()
         {
-            return strokeCount;
+            return stroke_count;
         }
 
-        public void setHat(ContentManager _content, string hatName)
+        /// <summary>----------------------------------------------------------
+        /// Sets the sprite for the hat that the ball is wearing
+        /// <param name="_content">the content manager used to load the hat 
+        /// sprite.</param>
+        /// <param name="hat_name">the name of the hat to be loaded.</param>
+        /// </summary>---------------------------------------------------------
+        public void setHat(ContentManager _content, string hat_name)
         {
-            hat_sprite = _content.Load<Texture2D>(hatName);
+            hat_sprite = _content.Load<Texture2D>(hat_name);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the color that the ball will be drawn with
+        /// <param name="new_color">the new color that the ball will be drawn
+        /// with.</param>
+        /// </summary>---------------------------------------------------------
         public void setColor(Color new_color)
         {
             ball_color = new_color;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the virtual scale of the ball, which is used when the screen
+        /// is resized and the ball needs separate bounds for detecting mouse
+        /// input
+        /// <param name="scale">the new virtual scale where mouse input will be
+        /// accepted.</param>
+        /// </summary>---------------------------------------------------------
         public void setVirtualScale(float scale)
         {
             virtual_scale = scale;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the virtual offset of the ball, which is used when the screen
+        /// is resized and the ball needs separate bounds for detecting mouse
+        /// input
+        /// <param name="offset">the new virtual offset where mouse input will 
+        /// be accepted.</param>
+        /// </summary>---------------------------------------------------------
         public void setVirtualOffset(Vector2 offset)
         {
             virtual_offset = offset;
+        }
+
+        //---------------------------------------------------------------------
+        // FOR TESTING PURPOSES ONLY
+        //---------------------------------------------------------------------
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the maximum speed the ball can move at
+        /// <returns>the maximum ball speed.</returns>
+        /// </summary>---------------------------------------------------------
+        public float getMaxSpeed()
+        {
+            return MAX_BALL_SPEED;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Gets the minimum speed the ball can move at
+        /// <returns>the minimum ball speed.</returns>
+        /// </summary>---------------------------------------------------------
+        public float getMinSpeed()
+        {
+            return MIN_BALL_SPEED;
         }
     }
 }   
