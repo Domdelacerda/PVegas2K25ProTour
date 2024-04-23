@@ -90,15 +90,11 @@ namespace PVegas2K25ProTour
         Vector2 strokeCounter;
 
         private int coins = 0;
-        //private List<Coin> coinList;
         private bool coinAddLevel=false;
         
-       
-
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
-
         public GameControl()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -534,11 +530,6 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic1Button_Click(object sender, EventArgs e)
         {
-
-
-            //if(playerRecord.isCosmeticOneUnlocked == false)
-
-            //playerRecord.Coins -= 300;
             if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
             {
                 if(playerRecord.isCosmeticOneUnlocked == false)
@@ -552,11 +543,7 @@ namespace PVegas2K25ProTour
                 saveGame();
                 LoadContent();
             }
-            
-            
-            
         }
-
         private void ShopingButton_Click(object sender, EventArgs e)
         {
             stateOfGame = "store";
@@ -1027,6 +1014,14 @@ namespace PVegas2K25ProTour
             return coins;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Adds the parameter "amount" of coins to the local variable coins
+        /// </summary>---------------------------------------------------------
+        public void addMoney(float amount)
+        {
+            coins += (int)amount;
+        }
+
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
@@ -1349,13 +1344,11 @@ namespace PVegas2K25ProTour
             return wasKeyPressedAndReleased;
         }
 
-
-
-        /**
-         * It would be nice to base this method on an abstraction that can
-         * have one instance per level but we simply do not have time to 
-         * implement that, thus, here is a concretion that functions. 
-         */
+        /// <summary>----------------------------------------------------------
+        /// This method takes the score that the player earned for the current 
+        /// level and if it is larger than the current high score for that level,
+        /// updates the current high score to the newly earned high score. 
+        /// </summary>---------------------------------------------------------
         public void saveLevelScore(int number_of_shots, int currentLevel)
         {
             Debug.WriteLine("num of shots: " + number_of_shots);
@@ -1374,6 +1367,12 @@ namespace PVegas2K25ProTour
                 playerRecord.playerScoreLevelFive = current_score;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// This method checks to see which level the user is currently on
+        /// and then unlocks the level that comes immediately after that level. 
+        /// This method is designed to be called when the player scores a hole
+        /// and is viewing the victory screen. 
+        /// </summary>---------------------------------------------------------
         public void unlockNextLevel(int currentLevel)
         {
             if (currentLevel == 1)
@@ -1463,6 +1462,10 @@ namespace PVegas2K25ProTour
             Exit();
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Saves all of the local data to the player record and then calls 
+        /// the saveLoadSystem to save the player record to the xml file. 
+        /// </summary>---------------------------------------------------------
         public void saveGame()
         {
             playerRecord.Strokes = shot.getStrokeCount();
@@ -1471,11 +1474,6 @@ namespace PVegas2K25ProTour
             playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
             playerRecord.currentCosmetic = golf_ball.getHat(Content);
             SaveLoadSystem.Save(playerRecord);
-        }
-
-        public void addMoney(float amount)
-        {
-            coins += (int)amount;
         }
     }
 }

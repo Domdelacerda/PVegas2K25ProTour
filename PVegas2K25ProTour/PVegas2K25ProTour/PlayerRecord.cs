@@ -9,7 +9,6 @@ namespace PVegas2K25ProTour
 {
     public class PlayerRecord
     {
-
         public string User { get; set; }
 
         // Strokes, if we choose to implement, should really be level-based data
