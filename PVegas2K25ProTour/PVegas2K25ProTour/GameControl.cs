@@ -1069,6 +1069,19 @@ namespace PVegas2K25ProTour
             populateSettingsScreen();
         }
 
+        public float getHoleSize()
+        {
+            return _holeSize;
+        }
+
+        public float getSensitivityVal()
+        {
+            return _sensitivity;
+        }
+        public float getVolumeVal()
+        {
+            return _volume;
+        }
         
 
 
