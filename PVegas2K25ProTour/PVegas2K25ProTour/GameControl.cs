@@ -35,7 +35,6 @@ namespace PVegas2K25ProTour
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 25;
         private bool clickedNext;
-        
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -58,16 +57,13 @@ namespace PVegas2K25ProTour
         private Shot shot;
         private Hole hole;
         private Hitbox hitbox;
-        private List<Obstacle> obstacle_list;
-        private Obstacle[] borders;
-        private List<Action> levels_list;
+        private LevelManager level_manager;
         private Texture2D background;
         private Texture2D cursor;
         SpriteFont font;
         MouseState prevMouseState;
 
         private PlayerRecord playerRecord;
-        private int level = 0;
         private int totalHolesCompleted;
         private bool canIncrementHolesCompleted = true;
         private int totalStrokesLifetime;
@@ -84,7 +80,7 @@ namespace PVegas2K25ProTour
         Vector2 strokeCounter;
 
         private int coins = 0;
-        private List<Coin> coinList;
+        //private List<Coin> coinList;
         private bool coinAddLevel=false;
        
 
@@ -106,10 +102,6 @@ namespace PVegas2K25ProTour
                 SurfaceFormat.Color);
             line.SetData(new[] { Color.Black });
             angleOfLine = (float)0;
-            obstacle_list = new List<Obstacle>();
-            levels_list = new List<Action>();
-            borders = new Obstacle[4];
-            coinList = new List<Coin>();
 
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = true;
@@ -328,14 +320,13 @@ namespace PVegas2K25ProTour
             {
                 // TODO: use this.Content to load your game content here
                 background = Content.Load<Texture2D>("background");
-                cursor = Content.Load<Texture2D>("cursor");
                 golf_ball = new Ball(_sprite_batch);
                 golf_ball.setVirtualScale(renderer.getScale());
                 golf_ball.setVirtualOffset(renderer.getOffset());
                 golf_ball.LoadContent(Content);
                 // USE THESE METHODS TO ALTER BALL COSMETICS
-                golf_ball.setHat(Content, "Sunglasses");
-                golf_ball.setColor(Color.Aqua);
+                //golf_ball.setHat(Content, null);
+                golf_ball.setColor(Color.White);
 
                 shot = new Shot(_sprite_batch);
                 shot.LoadContent(Content);
@@ -343,31 +334,11 @@ namespace PVegas2K25ProTour
                 hole = new Hole(new Vector2(100, 200), _sprite_batch,
                     hitbox, Vector2.One);
                 hole.LoadContent(Content);
-                loadBorders();
 
-                // Update all content in the obstacle list
-                for (int i = 0; i < obstacle_list.Count; i++)
-                {
-                    if (obstacle_list[i] != null)
-                    {
-                        obstacle_list[i].LoadContent(Content);
-                    }
-                }
-                for (int i = 0; i < coinList.Count; i++)
-                {
-                    if (coinList[i] != null)
-                    {
-                        coinList[i].LoadContent(Content);
-                    }
-                }
-
-                levels_list.Add(loadLevelZero);
-                levels_list.Add(loadLevelOne);
-                levels_list.Add(loadLevelTwo);
-                levels_list.Add(loadLevelThree);
-                levels_list.Add(loadLevelFour);
-                levels_list.Add(loadLevelFive);
-                levels_list[level].Invoke();
+                level_manager = new LevelManager(golf_ball, hole, hitbox);
+                level_manager.loadBorders((int)game_resolution.X, (int)game_resolution.Y);
+                level_manager.generateLevelList();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
@@ -393,9 +364,10 @@ namespace PVegas2K25ProTour
             if (playerRecord.isLevelFiveUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
-                level = 4;
+                level_manager.setLevel(4);
+                current_level = 4;
                 stateOfGame = "play";
-                LoadContent();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
             {
@@ -416,9 +388,10 @@ namespace PVegas2K25ProTour
             if (playerRecord.isLevelFourUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
-                level = 3;
+                level_manager.setLevel(3);
+                current_level = 3;
                 stateOfGame = "play";
-                LoadContent();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
             {
@@ -439,9 +412,10 @@ namespace PVegas2K25ProTour
             if (playerRecord.isLevelThreeUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
-                level = 2;
+                level_manager.setLevel(2);
+                current_level = 2;
                 stateOfGame = "play";
-                LoadContent();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
             {
@@ -463,9 +437,10 @@ namespace PVegas2K25ProTour
             if (playerRecord.isLevelTwoUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
-                level = 1;
+                level_manager.setLevel(1);
+                current_level = 1;
                 stateOfGame = "play";
-                LoadContent();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
             {
@@ -486,9 +461,10 @@ namespace PVegas2K25ProTour
             if (playerRecord.isLevelOneUnlocked)
             {
                 // Yes, this is correct because level 1 has value: level = 0
-                level = 0;
+                level_manager.setLevel(0);
+                current_level = 0;
                 stateOfGame = "play";
-                LoadContent();
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
             {
@@ -596,28 +572,7 @@ namespace PVegas2K25ProTour
             shot.Update(dragging_mouse, mouse_pos, golf_ball);
             hole.Update(golf_ball.center());
             golf_ball.Update(gameTime);
-            for (int i = 0; i < obstacle_list.Count; i++)
-            {
-                if (obstacle_list[i] != null)
-                {
-                    obstacle_list[i].Update(golf_ball);
-                }
-            }
-            for (int i = 0; i < coinList.Count; i++)
-            {
-                if (coinList[i] != null)
-                {
-                    if (coinList[i].Update(golf_ball))
-                    {
-                        addMoney(coinList[i].moneyAmount());
-                        removeCoin(coinList[i]);
-                    }
-                }
-            }
-            for (int i = 0; i < borders.Length; i++)
-            {
-                borders[i].Update(golf_ball);
-            }
+            addMoney(level_manager.Update());
             if (hole.getCollision() == true)
             {   
                 // uses a flag to ensure stats counters are only
@@ -640,24 +595,9 @@ namespace PVegas2K25ProTour
 
                 if (nextLevelCheck())
                 {
-                    // reset flag back to true
                     canIncrementHolesCompleted = true;
-                    level += 1;
-                    hole.setCollision(false);
-                    if (level < levels_list.Count)
-                    {
-
-                        golf_ball.setStrokeCount(0);
-                        levels_list[level].Invoke();
-                    }
-                    else
-                    {
-                        // Display win screen
-                        Exit();
-                    }
-                    
+                    level_manager.loadNextLevel(_sprite_batch, Content);
                 }
-                   
             }
             base.Update(gameTime);
         }
@@ -715,27 +655,13 @@ namespace PVegas2K25ProTour
                         component.Draw(gameTime, _sprite_batch);
                     }
                 }
-                //_sprite_batch.Draw(cursor, mouse_pos, Color.White);
                 _sprite_batch.End();
                 renderer.Draw(_sprite_batch, Color.Black);
                 base.Draw(gameTime);
             }
             else
             {
-                for (int i = 0; i < obstacle_list.Count; i++)
-                {
-                    if (obstacle_list[i] != null)
-                    {
-                        obstacle_list[i].Draw();
-                    }
-                }
-                for (int i = 0; i < coinList.Count; i++)
-                {
-                    if (coinList[i] != null)
-                    {
-                        coinList[i].Draw(_sprite_batch);
-                    }
-                }
+                level_manager.Draw(_sprite_batch);
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
@@ -757,7 +683,6 @@ namespace PVegas2K25ProTour
                 {
                     coinAddLevel = false;
                 }
-                //drawBorder();
                 _sprite_batch.End();
                 renderer.Draw(_sprite_batch, Color.Black);
                 base.Draw(gameTime);
@@ -819,190 +744,6 @@ namespace PVegas2K25ProTour
         public bool isGamePaused()
         {
             return game_paused;
-        }
-
-        public void loadBorders()
-        {
-            Obstacle left_border = new Obstacle(Vector2.Zero, _sprite_batch,
-                hitbox, new Vector2(1, Window.ClientBounds.Height));
-            borders[0] = left_border;
-            Obstacle right_border = new Obstacle(new Vector2
-                (Window.ClientBounds.Width, 0), _sprite_batch,
-                hitbox, new Vector2(1, Window.ClientBounds.Height));
-            borders[1] = right_border;
-            Obstacle top_border = new Obstacle(Vector2.Zero, _sprite_batch, 
-                hitbox, new Vector2(Window.ClientBounds.Width, 1));
-            borders[2] = top_border;
-            Obstacle bottom_border = new Obstacle(new Vector2
-                (0, Window.ClientBounds.Height), _sprite_batch,
-                hitbox, new Vector2(Window.ClientBounds.Width, 1));
-            borders[3] = bottom_border;
-        }
-
-        public void clearObstacles()
-        {
-            obstacle_list.Clear();
-        }
-
-        public void addObstacle(Obstacle obstacle)
-        {
-            obstacle.LoadContent(Content);
-            obstacle_list.Add(obstacle);
-        }
-        public void addCoin(Coin coin)
-        {
-            coin.LoadContent(Content);
-            coinList.Add(coin);
-        }
-        public void removeCoin(Coin coin)
-        {
-            coinList.Remove(coin);
-        }
-        public void clearCoins()
-        {
-            coinList.Clear();
-        }
-
-        public void loadLevelZero()
-        {
-            golf_ball.setPosition(new Vector2(600, 200));
-            hole.setPosition(new Vector2(100, 200));
-            Coin coin1 = new Coin(new Vector2(350, 200),_sprite_batch);
-            addCoin(coin1);
-        }
-
-        public void loadLevelOne()
-        {
-            clearObstacles();
-            clearCoins();
-            golf_ball.ballStop();
-            golf_ball.setPosition(new Vector2(700, 350));
-            hole.setPosition(new Vector2(25, 100));
-            SandPit pit1 = new SandPit(new Vector2(100, -175),
-                _sprite_batch, new Hitbox(), new Vector2(2f, 2f));
-            addObstacle(pit1);
-            SandPit pit2 = new SandPit(new Vector2(275, 250),
-                _sprite_batch, new Hitbox(), new Vector2(2f, 2f));
-            addObstacle(pit2);
-            Coin coin1 = new Coin(new Vector2(350, 220), _sprite_batch);
-            addCoin(coin1);
-            Coin coin2 = new Coin(new Vector2(600, 100), _sprite_batch);
-            addCoin(coin2);
-            Coin coin3 = new Coin(new Vector2(150, 350), _sprite_batch);
-            addCoin(coin3);
-        }
-
-        public void loadLevelTwo()
-        {
-            clearObstacles();
-            clearCoins();
-            golf_ball.ballStop();
-            golf_ball.setPosition(new Vector2(700, 200));
-            hole.setPosition(new Vector2(200, 200));
-            Lake lake1 = new Lake(new Vector2(-50, 0),
-                _sprite_batch, new Hitbox(), new Vector2(1f, 2.4f));
-            addObstacle(lake1);
-            Puddle puddle1 = new Puddle(new Vector2(400, -100),
-                _sprite_batch, new Hitbox(), new Vector2(1.5f, 1.5f));
-            addObstacle(puddle1);
-            Puddle puddle2 = new Puddle(new Vector2(350, 300),
-                _sprite_batch, new Hitbox(), new Vector2(1f, 1f));
-            addObstacle(puddle2);
-            Obstacle wall1 = new Obstacle(new Vector2(300, 185),
-                _sprite_batch, new Hitbox(), new Vector2(25, 100));
-            addObstacle(wall1);
-            Coin coin1 = new Coin(new Vector2(350, 220), _sprite_batch);
-            addCoin(coin1);
-            Coin coin2 = new Coin(new Vector2(600, 210), _sprite_batch);
-            addCoin(coin2);
-            Coin coin3 = new Coin(new Vector2(290, 10), _sprite_batch);
-            addCoin(coin3);
-        }
-
-        public void loadLevelThree()
-        {
-            clearObstacles();
-            clearCoins();
-            golf_ball.ballStop();
-            golf_ball.setPosition(new Vector2(700, 200));
-            hole.setPosition(new Vector2(100, 200));
-            Mushroom mushroom1 = new Mushroom(new Vector2(200, 175),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(mushroom1);
-            Mushroom mushroom2 = new Mushroom(new Vector2(100, 275),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(mushroom2);
-            Mushroom mushroom3 = new Mushroom(new Vector2(100, 75),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(mushroom3);
-            Mushroom mushroom4 = new Mushroom(new Vector2(450, 0),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(mushroom4);
-            Mushroom mushroom5 = new Mushroom(new Vector2(600, 400),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(mushroom5);
-            Coin coin1 = new Coin(new Vector2(240, 10), _sprite_batch);
-            addCoin(coin1);
-            Coin coin2 = new Coin(new Vector2(460, 100), _sprite_batch);
-            addCoin(coin2);
-            Coin coin3 = new Coin(new Vector2(170, 150), _sprite_batch);
-            addCoin(coin3);
-        }
-
-        public void loadLevelFour()
-        {
-            clearObstacles();
-            clearCoins();
-            golf_ball.ballStop();
-            golf_ball.setPosition(new Vector2(700, 425));
-            hole.setPosition(new Vector2(125, 275));
-            Downslope slope1 = new Downslope(new Vector2(0, 200),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(slope1);
-            Downslope slope2 = new Downslope(new Vector2(600, 200),
-                _sprite_batch, new Hitbox(), new Vector2(1, 1));
-            addObstacle(slope2);
-            Lake lake1 = new Lake(new Vector2(0, 0),
-                _sprite_batch, new Hitbox(), new Vector2(4, 0.5f));
-            addObstacle(lake1);
-            Lake lake2 = new Lake(new Vector2(200, 200),
-                _sprite_batch, new Hitbox(), new Vector2(2, 2));
-            addObstacle(lake2);
-            Coin coin1 = new Coin(new Vector2(350, 140), _sprite_batch);
-            addCoin(coin1);
-            Coin coin2 = new Coin(new Vector2(600, 140), _sprite_batch);
-            addCoin(coin2);
-            Coin coin3 = new Coin(new Vector2(130, 230), _sprite_batch);
-            addCoin(coin3);
-        }
-
-        public void loadLevelFive()
-        {
-            clearObstacles();
-            clearCoins();
-            golf_ball.ballStop();
-            golf_ball.setPosition(new Vector2(700, 400));
-            hole.setPosition(new Vector2(75, 350));
-            Downslope slope1 = new Downslope(new Vector2(0, 0),
-                _sprite_batch, new Hitbox(), new Vector2(4, 1.5f));
-            addObstacle(slope1);
-            Lake lake1 = new Lake(new Vector2(200, 310),
-                _sprite_batch, new Hitbox(), new Vector2(2, 2f));
-            addObstacle(lake1);
-            Obstacle wall1 = new Obstacle(new Vector2(300, 150),
-                _sprite_batch, new Hitbox(), new Vector2(100, 25));
-            addObstacle(wall1);
-            Obstacle wall2 = new Obstacle(new Vector2(575, 250),
-                _sprite_batch, new Hitbox(), new Vector2(100, 25));
-            addObstacle(wall2);
-            Coin coin1 = new Coin(new Vector2(350, 190), _sprite_batch);
-            addCoin(coin1);
-            Coin coin2 = new Coin(new Vector2(610, 130), _sprite_batch);
-            addCoin(coin2);
-            Coin coin3 = new Coin(new Vector2(120, 300), _sprite_batch);
-            addCoin(coin3);
-            Coin coin4 = new Coin(new Vector2(320, 90), _sprite_batch);
-            addCoin(coin4);
         }
 
         public int calculateScore(int number_of_shots)

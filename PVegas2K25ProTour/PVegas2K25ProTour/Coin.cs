@@ -53,10 +53,10 @@ namespace PVegas2K25ProTour
             pos.X = 100000000.0f;
             pos.Y = 100000000.0f;
         }
-        public float moneyAmount()
+        public int moneyAmount()
         {
             Random rand = new Random();
-            float coinCost = (float)rand.NextInt64(1,16);
+            int coinCost = (int)rand.NextInt64(1,16);
             return coinCost;
         }
         public virtual void Draw(SpriteBatch spriteBatch)
