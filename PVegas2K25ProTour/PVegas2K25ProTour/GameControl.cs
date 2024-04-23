@@ -425,8 +425,6 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat,
                     TopHat,
                     Sunglasses,
-                    
-
                 };
             }
             if (stateOfGame == "Settings")
@@ -479,13 +477,24 @@ namespace PVegas2K25ProTour
            
         }
 
+        /*
+         * This method subtracts the appropriate amount of coins for purchasing
+         * a new hat cosmetic and saves the new player coin total to the save file. 
+         */
+        private void purchaseHat()
+        {
+            coins -= 50;
+            playerRecord.Coins = coins;
+            SaveLoadSystem.Save(playerRecord);
+        }
+
         private void Cosmetic3Button_Click(object sender, EventArgs e)
         {
             if (playerRecord.Coins >= 50)
             {
                 if (playerRecord.isCosmeticThreeUnlocked == false)
                 {
-                    playerRecord.Coins = playerRecord.Coins - 50;
+                    purchaseHat();
                 }
                 golf_ball.setHat(Content, "NoveltySodaDrinkHat");
                 playerRecord.currentCosmetic = "NoveltySodaDrinkHat";
@@ -501,7 +510,7 @@ namespace PVegas2K25ProTour
             {
                 if (playerRecord.isCosmeticTwoUnlocked == false)
                 {
-                    playerRecord.Coins = playerRecord.Coins - 50;
+                    purchaseHat();
                 }
                 golf_ball.setHat(Content, "TopHat");
                 playerRecord.currentCosmetic = "TopHat";
@@ -522,7 +531,7 @@ namespace PVegas2K25ProTour
             {
                 if(playerRecord.isCosmeticOneUnlocked == false)
                 {
-                    playerRecord.Coins = playerRecord.Coins -50;
+                    purchaseHat();
                 }
 
                 golf_ball.setHat(Content, "Sunglasses");
