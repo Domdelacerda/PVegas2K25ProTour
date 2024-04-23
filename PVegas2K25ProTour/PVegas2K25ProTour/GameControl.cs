@@ -86,7 +86,7 @@ namespace PVegas2K25ProTour
 
         private List<Button> _gameComponents;
         private String stateOfGame = "menu";
-        private String previousGameState = "";
+        private String previousGameState = "menu";
         Vector2 strokeCounter;
 
         private int coins = 0;
