@@ -86,6 +86,7 @@ namespace PVegas2K25ProTour
         private int coins = 0;
         //private List<Coin> coinList;
         private bool coinAddLevel=false;
+        
        
 
         //---------------------------------------------------------------------
@@ -97,6 +98,7 @@ namespace PVegas2K25ProTour
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
         }
 
         protected override void Initialize()
@@ -117,6 +119,7 @@ namespace PVegas2K25ProTour
             _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             renderer.setDestination();
+            
 
             Exiting += OnExiting;
             base.Initialize();
@@ -135,6 +138,9 @@ namespace PVegas2K25ProTour
         {
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
+
+            //Set volume based on settings
+            MediaPlayer.Volume = getVolumeVal() / 10;
 
 
 
