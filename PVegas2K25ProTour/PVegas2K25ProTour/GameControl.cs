@@ -1157,7 +1157,7 @@ namespace PVegas2K25ProTour
 
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
-            Vector2 settings_text_pos = new Vector2(0, -100) + screen_center;
+            Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
             Vector2 hole_value_pos = new Vector2(-145, 150) + screen_center;
