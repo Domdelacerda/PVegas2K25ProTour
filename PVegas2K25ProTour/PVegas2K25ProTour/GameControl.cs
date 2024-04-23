@@ -140,6 +140,13 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
+            // Check to see if both 0, if so, player likely has 0 save data so set defaults to 5
+            if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0)
+            {
+                playerRecord.holeSize = 5;
+                playerRecord.swingSensitivityPreference = 5;
+            }
+
             arrowTexture = Content.Load<Texture2D>("arrow");
 
             songs.Add(Content.Load<Song>("MainMenu"));
@@ -151,6 +158,8 @@ namespace PVegas2K25ProTour
             coins = playerRecord.Coins;
             totalHolesCompleted = playerRecord.TotalHolesCompleted;
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
+            _sensitivity = playerRecord.swingSensitivityPreference;
+            _holeSize = playerRecord.holeSize;
             
             // Load the graphics device
             _device = GraphicsDevice;
@@ -1106,10 +1115,14 @@ namespace PVegas2K25ProTour
                 if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
                 {
                     _holeSize += 1;
+                    // Update the save data
+                    playerRecord.holeSize = (int)_holeSize;
                 }
                 else if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
                 {
                     _holeSize -= 1;
+                    // Update the save data
+                    playerRecord.holeSize = (int)_holeSize;
                 }
             }
 
@@ -1141,10 +1154,14 @@ namespace PVegas2K25ProTour
                 if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
                 {
                     _sensitivity += 1;
+                    // Update the save data
+                    playerRecord.swingSensitivityPreference = (int)_sensitivity;
                 }
                 if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
                 {
                     _sensitivity -= 1;
+                    // Update the save data
+                    playerRecord.swingSensitivityPreference = (int)_sensitivity;
                 }
             }
 
