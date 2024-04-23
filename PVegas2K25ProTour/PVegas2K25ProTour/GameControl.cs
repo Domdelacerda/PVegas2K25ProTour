@@ -490,7 +490,7 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic3Button_Click(object sender, EventArgs e)
         {
-            if (playerRecord.Coins >= 50)
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticThreeUnlocked == true)
             {
                 if (playerRecord.isCosmeticThreeUnlocked == false)
                 {
@@ -506,7 +506,7 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic2Button_Click(object sender, EventArgs e)
         {
-            if (playerRecord.Coins >= 50)
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticTwoUnlocked == true)
             {
                 if (playerRecord.isCosmeticTwoUnlocked == false)
                 {
@@ -527,7 +527,7 @@ namespace PVegas2K25ProTour
             //if(playerRecord.isCosmeticOneUnlocked == false)
 
             //playerRecord.Coins -= 300;
-            if (playerRecord.Coins >= 50)
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
             {
                 if(playerRecord.isCosmeticOneUnlocked == false)
                 {
@@ -1075,6 +1075,7 @@ namespace PVegas2K25ProTour
 
         public float AdjustVolumeVal()
         {
+            _volume = playerRecord.volumePreference;
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
@@ -1102,6 +1103,10 @@ namespace PVegas2K25ProTour
                     _volume -= 1;
                 }
             }
+
+            // Update the save data
+            playerRecord.volumePreference = (int)_volume;
+            SaveLoadSystem.Save(playerRecord);
 
             // Update the previous mouse state for the next frame
             prevMouseStateVol = currentMouseState;
@@ -1151,11 +1156,13 @@ namespace PVegas2K25ProTour
         {
             if (isFirstContentLoad)
             {
-                if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0)
+                if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0
+                    && playerRecord.volumePreference == 0)
                 {
                     Debug.WriteLine("No Previous Settings Save Data. Defaults set to 5.");
                     playerRecord.holeSize = 5;
                     playerRecord.swingSensitivityPreference = 5;
+                    playerRecord.volumePreference = 5;
                 }
             }
         }
