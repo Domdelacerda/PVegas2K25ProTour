@@ -183,6 +183,12 @@
 /processorParam:TextureFormat=Color
 /build:Hole.gif
 
+#begin holeSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:holeSound.wav
+
 #begin Lake.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -320,6 +326,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sunglasses.gif
+
+#begin swing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:swing.wav
 
 #begin Take a Swing.mp3
 /importer:Mp3Importer

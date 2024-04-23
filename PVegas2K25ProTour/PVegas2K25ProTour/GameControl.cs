@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace PVegas2K25ProTour
 {
@@ -52,8 +53,12 @@ namespace PVegas2K25ProTour
         private bool game_paused = false;
 
         List<Song> songs = new List<Song>();
+        private List<SoundEffect> soundEffects;
         private bool songStart = false;
         private bool songStartLevel = false;
+        private bool playedHole = false;
+        private bool playedSwing = false;
+        private int counter;
 
         private Ball golf_ball;
         private Shot shot;
@@ -145,6 +150,12 @@ namespace PVegas2K25ProTour
 
 
             arrowTexture = Content.Load<Texture2D>("arrow");
+
+            //Loading sounds used in game
+            soundEffects = new List<SoundEffect>();
+            soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
+            soundEffects.Add(Content.Load<SoundEffect>("swing"));
+
 
             songs.Add(Content.Load<Song>("MainMenu"));
             songs.Add(Content.Load<Song>("Take a Swing"));
@@ -794,11 +805,26 @@ namespace PVegas2K25ProTour
 
                 if (nextLevelCheck())
                 {
+                    playedHole = false;
                     canIncrementHolesCompleted = true;
                     level_manager.loadNextLevel(_sprite_batch, Content);
                 }
             }
+            swingCounter();
             base.Update(gameTime);
+        }
+        private void swingCounter()
+        {
+            
+            if(golf_ball.getStrokeCount() > counter)
+            {
+                counter++;
+                soundEffects[1].Play();
+            }
+            else if (golf_ball.getStrokeCount() == 0)
+            {
+                counter = 0;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -868,6 +894,11 @@ namespace PVegas2K25ProTour
                    , strokeCounter, Color.Black);
                 if(hole.getCollision() == true&&!coinAddLevel)
                 {
+                    if(playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                     coins += addCoins(golf_ball.getStrokeCount());
@@ -876,6 +907,11 @@ namespace PVegas2K25ProTour
                 }
                 else if (hole.getCollision() == true)
                 {
+                    if (playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
