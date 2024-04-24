@@ -124,7 +124,7 @@ namespace PVegas2K25ProTour
         /// -------------------------------------------------------------------
         public override float radius()
         {
-            return hole_sprite.Width / 2 * scale.X;
+            return hole_sprite.Width / 2 * scale_of_hole;
         }
 
         /// <summary>----------------------------------------------------------
