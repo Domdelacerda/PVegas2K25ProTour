@@ -527,7 +527,7 @@ namespace PVegas2K25ProTour
                 BackButton.Click += BackButton_Click;
                 var menuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
                 {
-                    Position = new Vector2(730, 0),
+                    Position = new Vector2(737, 0),
                     Text = "",
                 };
                 menuButton.Click += menuButton_Click;
