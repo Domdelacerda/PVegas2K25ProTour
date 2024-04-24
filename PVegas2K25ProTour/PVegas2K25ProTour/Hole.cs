@@ -23,6 +23,7 @@ namespace PVegas2K25ProTour
         private Vector2 hole_pos;
         private Vector2 scale;
         private bool collision = false;
+        private float scale_of_hole;
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -43,13 +44,14 @@ namespace PVegas2K25ProTour
         /// control).</param>
         /// -------------------------------------------------------------------
         public Hole(Vector2 hole_pos, SpriteBatch _sprite_batch, 
-            Hitbox hitbox, Vector2 scale) : base(hole_pos, _sprite_batch, 
+            Hitbox hitbox, Vector2 scale, float scale_of_hole) : base(hole_pos, _sprite_batch, 
                 hitbox, scale)
         {
             this.hole_pos = hole_pos;
             this._sprite_batch = _sprite_batch;
             this.hitbox = hitbox;
             this.scale = scale;
+            this.scale_of_hole = scale_of_hole;
         }
 
         //---------------------------------------------------------------------
@@ -63,7 +65,7 @@ namespace PVegas2K25ProTour
 
         public void Draw()
         {
-            _sprite_batch.Draw(hole_sprite, hole_pos, Color.White);
+            _sprite_batch.Draw(hole_sprite, hole_pos, null, Color.White, 0.0f, scale, scale_of_hole,SpriteEffects.None, 1.0f);
         }
 
         //---------------------------------------------------------------------
