@@ -1,14 +1,22 @@
-﻿using Microsoft.Xna.Framework;
+﻿//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Manage the levels in our game, including code for generating each
+// level and the collision borders for the edge of the screen
+//-----------------------------------------------------------------------------
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Net.Mime;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
 
 namespace PVegas2K25ProTour
 {
+    /// <summary>--------------------------------------------------------------
+    /// LevelManager keeps track of the current level being played and contains
+    /// code for loading, drawing, and updating each of the levels in the game
+    /// </summary>-------------------------------------------------------------
     public class LevelManager
     {
         private Ball golf_ball;
@@ -90,6 +98,12 @@ namespace PVegas2K25ProTour
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
 
+        /// <summary>----------------------------------------------------------
+        /// Loads each of the borders at the edge of the screen
+        /// </summary>
+        /// <param name="window_width">the width of the window.</param>
+        /// <param name="window_height">the height of the window.</param>
+        /// -------------------------------------------------------------------
         public void loadBorders(int window_width, int window_height)
         {
             Obstacle left_border = new Obstacle(Vector2.Zero, null,
@@ -108,18 +122,41 @@ namespace PVegas2K25ProTour
             borders[3] = bottom_border;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Clears all of the obstacles currently in the obstacle list, meaning
+        /// that they will no longer receive updates or be drawn on screen
+        /// </summary>---------------------------------------------------------
         public void clearObstacles()
         {
             obstacle_list.Clear();
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Loads a preexisting obstacle's content and adds it to the obstacle
+        /// list so that it can be updated and drawn each frame
+        /// </summary>
+        /// <param name="obstacle">the obstacle to be loaded.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void addObstacle(Obstacle obstacle, ContentManager content)
         {
             obstacle.LoadContent(content);
             obstacle_list.Add(obstacle);
         }
 
-        private void instantiateCoin(Vector2 position, SpriteBatch _sprite_batch,
+        /// <summary>----------------------------------------------------------
+        /// Creates a brand new coin, loads its content, and adds it to the
+        /// coin list so that it can be updated and drawn each frame
+        /// </summary>
+        /// <param name="position">the position to instantiate the coin at.
+        /// </param>
+        /// <param name="_sprite_batch">the sprite batch where the coin will
+        /// be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
+        private void addCoin(Vector2 position, SpriteBatch _sprite_batch,
             ContentManager content)
         {
             Coin new_coin = new Coin(position, _sprite_batch);
@@ -127,16 +164,28 @@ namespace PVegas2K25ProTour
             coin_list.Add(new_coin);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Removes a specified coin object from the coin list
+        /// </summary>
+        /// <param name="coin">the coin to be removed from the list.</param>
+        /// -------------------------------------------------------------------
         public void removeCoin(Coin coin)
         {
             coin_list.Remove(coin);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Clears all of the coins currently in the coin list, meaning
+        /// that they will no longer receive updates or be drawn on screen
+        /// </summary>---------------------------------------------------------
         public void clearCoins()
         {
             coin_list.Clear();
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Generates a list of all the levels currently playable in the game
+        /// </summary>---------------------------------------------------------
         public void generateLevelList()
         {
             level_list.Add(loadLevelZero);
@@ -147,7 +196,18 @@ namespace PVegas2K25ProTour
             level_list.Add(loadLevelFive);
         }
 
-        public void loadNextLevel(SpriteBatch _sprite_batch, ContentManager content)
+        /// <summary>----------------------------------------------------------
+        /// Load the next level in the sequence defined by the level list,
+        /// inlcuding resetting the ball's stroke count and the hole's
+        /// collision
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
+        public void loadNextLevel(SpriteBatch _sprite_batch, 
+            ContentManager content)
         {
             level += 1;
             hole.setCollision(false);
@@ -155,12 +215,26 @@ namespace PVegas2K25ProTour
             loadCurrentLevel(_sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Sets the level count to a specified value
+        /// </summary>
+        /// <param name="new_level">the index of the level to be set.</param>
+        /// -------------------------------------------------------------------
         public void setLevel(int new_level)
         {
             level = new_level;
         }
 
-        public void loadCurrentLevel(SpriteBatch _sprite_batch, ContentManager content)
+        /// <summary>----------------------------------------------------------
+        /// Load the current level specified by the level index
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
+        public void loadCurrentLevel(SpriteBatch _sprite_batch, 
+            ContentManager content)
         {
             if (level < level_list.Count)
             {
@@ -168,14 +242,32 @@ namespace PVegas2K25ProTour
             }
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level zero (tutorial) by placing the ball, hole, and all
+        /// obstacles and coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelZero(SpriteBatch _sprite_batch, 
             ContentManager content)
         {
             golf_ball.setPosition(new Vector2(600, 200));
             hole.setPosition(new Vector2(100, 200));
-            instantiateCoin(new Vector2(350, 200), _sprite_batch, content);
+            addCoin(new Vector2(350, 200), _sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level one by placing the ball, hole, and all obstacles and
+        /// coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelOne(SpriteBatch _sprite_batch, ContentManager content)
         {
             clearObstacles();
@@ -189,11 +281,20 @@ namespace PVegas2K25ProTour
             SandPit pit2 = new SandPit(new Vector2(275, 250),
                 _sprite_batch, hitbox, new Vector2(2f, 2f));
             addObstacle(pit2, content);
-            instantiateCoin(new Vector2(350, 220), _sprite_batch, content);
-            instantiateCoin(new Vector2(600, 100), _sprite_batch, content);
-            instantiateCoin(new Vector2(150, 350), _sprite_batch, content);
+            addCoin(new Vector2(350, 220), _sprite_batch, content);
+            addCoin(new Vector2(600, 100), _sprite_batch, content);
+            addCoin(new Vector2(150, 350), _sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level two by placing the ball, hole, and all obstacles and
+        /// coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelTwo(SpriteBatch _sprite_batch, ContentManager content)
         {
             clearObstacles();
@@ -213,11 +314,20 @@ namespace PVegas2K25ProTour
             Obstacle wall1 = new Obstacle(new Vector2(300, 185),
                 _sprite_batch, hitbox, new Vector2(25, 100));
             addObstacle(wall1, content);
-            instantiateCoin(new Vector2(350, 220), _sprite_batch, content);
-            instantiateCoin(new Vector2(600, 210), _sprite_batch, content);
-            instantiateCoin(new Vector2(290, 10), _sprite_batch, content);
+            addCoin(new Vector2(350, 220), _sprite_batch, content);
+            addCoin(new Vector2(600, 210), _sprite_batch, content);
+            addCoin(new Vector2(290, 10), _sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level three by placing the ball, hole, and all obstacles 
+        /// and coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelThree(SpriteBatch _sprite_batch, ContentManager content)
         {
             clearObstacles();
@@ -240,11 +350,20 @@ namespace PVegas2K25ProTour
             Mushroom mushroom5 = new Mushroom(new Vector2(600, 400),
                 _sprite_batch, hitbox, new Vector2(1, 1));
             addObstacle(mushroom5, content);
-            instantiateCoin(new Vector2(240, 10), _sprite_batch, content);
-            instantiateCoin(new Vector2(460, 100), _sprite_batch, content);
-            instantiateCoin(new Vector2(170, 150), _sprite_batch, content);
+            addCoin(new Vector2(240, 10), _sprite_batch, content);
+            addCoin(new Vector2(460, 100), _sprite_batch, content);
+            addCoin(new Vector2(170, 150), _sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level four by placing the ball, hole, and all obstacles 
+        /// and coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelFour(SpriteBatch _sprite_batch, ContentManager content)
         {
             clearObstacles();
@@ -264,11 +383,20 @@ namespace PVegas2K25ProTour
             Lake lake2 = new Lake(new Vector2(200, 200),
                 _sprite_batch, hitbox, new Vector2(2, 2));
             addObstacle(lake2, content);
-            instantiateCoin(new Vector2(350, 140), _sprite_batch, content);
-            instantiateCoin(new Vector2(600, 140), _sprite_batch, content);
-            instantiateCoin(new Vector2(130, 230), _sprite_batch, content);
+            addCoin(new Vector2(350, 140), _sprite_batch, content);
+            addCoin(new Vector2(600, 140), _sprite_batch, content);
+            addCoin(new Vector2(130, 230), _sprite_batch, content);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Assemble level five by placing the ball, hole, and all obstacles 
+        /// and coins in their place
+        /// </summary>
+        /// <param name="_sprite_batch">the sprite batch where the objects in 
+        /// the level will be drawn on.</param>
+        /// <param name="content">the content manager where sprite data is
+        /// loaded from.</param>
+        /// -------------------------------------------------------------------
         public void loadLevelFive(SpriteBatch _sprite_batch, ContentManager content)
         {
             clearObstacles();
@@ -288,10 +416,10 @@ namespace PVegas2K25ProTour
             Obstacle wall2 = new Obstacle(new Vector2(575, 250),
                 _sprite_batch, hitbox, new Vector2(100, 25));
             addObstacle(wall2, content);
-            instantiateCoin(new Vector2(350, 190), _sprite_batch, content);
-            instantiateCoin(new Vector2(610, 130), _sprite_batch, content);
-            instantiateCoin(new Vector2(120, 300), _sprite_batch, content);
-            instantiateCoin(new Vector2(320, 90), _sprite_batch, content);
+            addCoin(new Vector2(350, 190), _sprite_batch, content);
+            addCoin(new Vector2(610, 130), _sprite_batch, content);
+            addCoin(new Vector2(120, 300), _sprite_batch, content);
+            addCoin(new Vector2(320, 90), _sprite_batch, content);
         }
     }
 }

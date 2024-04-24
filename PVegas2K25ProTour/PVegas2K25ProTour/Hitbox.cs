@@ -25,7 +25,7 @@ namespace PVegas2K25ProTour
         public Hitbox() { }
 
         //---------------------------------------------------------------------
-        // COLLISION METHODS
+        // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
 
         /// <summary>----------------------------------------------------------
@@ -143,10 +143,6 @@ namespace PVegas2K25ProTour
                 || ballPos.Y <= 0 || ballPos.Y + ballCircumference >=
                 gdm.PreferredBackBufferHeight);
         }
-
-        //---------------------------------------------------------------------
-        // OTHER METHODS
-        //---------------------------------------------------------------------
 
         //***************************SPECIAL NOTE!*****************************
         // The method below, "rectCollisionNormal," was created by user:

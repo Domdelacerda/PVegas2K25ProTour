@@ -898,6 +898,8 @@ namespace PVegas2K25ProTour
         /// </summary>
         /// <param name="mouse"> the mouse state that input data is pulled
         /// from.</param>
+        /// <param name="ball"> the ball collider used for determining
+        /// whether the mouse is interacting with it or not.</param>
         /// <returns> if the mouse is dragging the ball.</returns>
         /// -------------------------------------------------------------------
         public bool isDraggingBall(MouseState mouse, Ball ball)
