@@ -1389,7 +1389,7 @@ namespace PVegas2K25ProTour
             Vector2 sensitivity_value_pos = new Vector2(275, 155) + screen_center;
 
             Vector2 volume_text_pos = new Vector2(50, 200) + screen_center;
-            Vector2 volume_value_pos = new Vector2(50, 200) + screen_center;
+            Vector2 volume_value_pos = new Vector2(155, 200) + screen_center;
 
 
 
@@ -1409,7 +1409,7 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X - font.MeasureString(volume).X / 2 - 45, hole_value_pos.Y - game_resolution.Y / 2 + 20),
+            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X - game_resolution.X / 5, volume_value_pos.Y - game_resolution.Y / 2 - 20),
               Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
