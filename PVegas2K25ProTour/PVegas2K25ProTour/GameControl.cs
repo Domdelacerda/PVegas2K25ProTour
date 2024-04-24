@@ -425,6 +425,75 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat.Text = "E";
                 }
 
+                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 0),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.White)
+                {
+                    BlankButton.Text = "E";
+                    BlankButton._isHoveringColour = Color.Green;
+                }
+                else
+                {
+                    BlankButton.Text = " ";
+                    BlankButton._isHoveringColour = Color.Red;
+                }
+                BlankButton.Click += BlankButton_Click;
+                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(130, 0),
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "blank")
+                {
+                    NoHat.Text = "E";
+                    NoHat._isHoveringColour = Color.Green;
+                }
+                else
+                {
+                    NoHat.Text = " ";
+                    NoHat._isHoveringColour = Color.Red;
+                }
+                NoHat.Click += NoHat_Click;
+
+                
+                var RedButton = new Button(Content.Load<Texture2D>("red"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 390),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Red)
+                {
+                    RedButton._isHoveringColour = Color.Green;
+                    RedButton.Text = "E";
+                }
+                RedButton.Click += RedButton_Click;
+                var BlueButton = new Button(Content.Load<Texture2D>("blue"), Content.Load<SpriteFont>("Font"))
+                {
+
+                    Position = new Vector2(260, 260),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Blue)
+                {
+                    BlueButton.Text = "E";
+                    BlueButton._isHoveringColour = Color.Green;
+                }
+                BlueButton.Click += BlueButton_Click;
+                var GreenButton = new Button(Content.Load<Texture2D>("green"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 130),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Green)
+                {
+                    GreenButton.Text = "E";
+                    GreenButton._isHoveringColour = Color.Green;
+                }
+                GreenButton.Click += GreenButton_Click;
+
 
                 golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
@@ -437,6 +506,11 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat,
                     TopHat,
                     Sunglasses,
+                    RedButton,
+                    BlueButton,
+                    GreenButton,
+                    BlankButton,
+                    NoHat
                 };
             }
             if (stateOfGame == "Settings")
@@ -463,8 +537,8 @@ namespace PVegas2K25ProTour
                 golf_ball.LoadContent(Content);
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
-                golf_ball.setColor(Color.White);
-                if(playerRecord.currentCosmetic != "null")
+                golf_ball.setColor(playerRecord.currentColor);
+                if (playerRecord.currentCosmetic != "null")
                 {
                     golf_ball.setHat(Content, playerRecord.currentCosmetic);
                 }
@@ -494,6 +568,40 @@ namespace PVegas2K25ProTour
          * This method subtracts the appropriate amount of coins for purchasing
          * a new hat cosmetic and saves the new player coin total to the save file. 
          */
+
+        private void BlankButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.White);
+            saveGame();
+            LoadContent();
+        }
+        private void NoHat_Click(object sender, EventArgs e)
+        {
+
+            golf_ball.setHat(Content, "blank");
+            playerRecord.currentCosmetic = "blank";
+            saveGame();
+            LoadContent();
+        }
+        private void RedButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Red);
+            saveGame();
+            LoadContent();
+        }
+        private void GreenButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Green);
+            saveGame();
+            LoadContent();
+        }
+        private void BlueButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Blue);
+            saveGame();
+            LoadContent();
+        }
+
         private void purchaseHat()
         {
             coins -= 50;
@@ -1496,6 +1604,7 @@ namespace PVegas2K25ProTour
             playerRecord.TotalHolesCompleted = totalHolesCompleted;
             playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
             playerRecord.currentCosmetic = golf_ball.getHat(Content);
+            playerRecord.currentColor = golf_ball.getColor();
             SaveLoadSystem.Save(playerRecord);
         }
     }

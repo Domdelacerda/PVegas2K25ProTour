@@ -392,6 +392,11 @@ namespace PVegas2K25ProTour
             ball_color = new_color;
         }
 
+        public Color getColor()
+        {
+            return ball_color;
+        }
+
         /// <summary>----------------------------------------------------------
         /// Sets the virtual scale of the ball, which is used when the screen
         /// is resized and the ball needs separate bounds for detecting mouse

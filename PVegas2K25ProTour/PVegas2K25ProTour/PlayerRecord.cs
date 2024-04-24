@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace PVegas2K25ProTour
         public bool isCosmeticThreeUnlocked { get; set; }
 
         public string currentCosmetic {  get; set; }
+        public Color currentColor { get; set; }
 
         // Settings Based Data
         public int swingSensitivityPreference { get; set; }
