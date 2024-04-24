@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace PVegas2K25ProTour
 {
@@ -52,8 +53,12 @@ namespace PVegas2K25ProTour
         private bool game_paused = false;
 
         List<Song> songs = new List<Song>();
+        private List<SoundEffect> soundEffects;
         private bool songStart = false;
         private bool songStartLevel = false;
+        private bool playedHole = false;
+        private bool playedSwing = false;
+        private int counter;
 
         private Ball golf_ball;
         private Shot shot;
@@ -65,6 +70,7 @@ namespace PVegas2K25ProTour
         SpriteFont font;
         MouseState prevMouseState;
         MouseState prevMouseStateVol;
+        KeyboardState previousKeyState;
 
         private PlayerRecord playerRecord;
         private int totalHolesCompleted;
@@ -84,15 +90,11 @@ namespace PVegas2K25ProTour
         Vector2 strokeCounter;
 
         private int coins = 0;
-        //private List<Coin> coinList;
         private bool coinAddLevel=false;
         
-       
-
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
-
         public GameControl()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -146,6 +148,12 @@ namespace PVegas2K25ProTour
 
             arrowTexture = Content.Load<Texture2D>("arrow");
 
+            //Loading sounds used in game
+            soundEffects = new List<SoundEffect>();
+            soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
+            soundEffects.Add(Content.Load<SoundEffect>("swing"));
+
+
             songs.Add(Content.Load<Song>("MainMenu"));
             songs.Add(Content.Load<Song>("Take a Swing"));
 
@@ -162,10 +170,13 @@ namespace PVegas2K25ProTour
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
-
+            
+            
             if (stateOfGame == "menu")
             {
-                
+                mainMusicCheck();
+
+
                 var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -218,7 +229,8 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "levels")
             {
-               
+                mainMusicCheck();
+
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -296,6 +308,7 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "store")
             {
+                mainMusicCheck();
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -413,6 +426,75 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat.Text = "E";
                 }
 
+                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 0),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.White)
+                {
+                    BlankButton.Text = "E";
+                    BlankButton._isHoveringColour = Color.Green;
+                }
+                else
+                {
+                    BlankButton.Text = " ";
+                    BlankButton._isHoveringColour = Color.Red;
+                }
+                BlankButton.Click += BlankButton_Click;
+                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(130, 0),
+                    Text = " "
+                };
+                if (playerRecord.currentCosmetic == "blank")
+                {
+                    NoHat.Text = "E";
+                    NoHat._isHoveringColour = Color.Green;
+                }
+                else
+                {
+                    NoHat.Text = " ";
+                    NoHat._isHoveringColour = Color.Red;
+                }
+                NoHat.Click += NoHat_Click;
+
+                
+                var RedButton = new Button(Content.Load<Texture2D>("red"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 390),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Red)
+                {
+                    RedButton._isHoveringColour = Color.Green;
+                    RedButton.Text = "E";
+                }
+                RedButton.Click += RedButton_Click;
+                var BlueButton = new Button(Content.Load<Texture2D>("blue"), Content.Load<SpriteFont>("Font"))
+                {
+
+                    Position = new Vector2(260, 260),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Blue)
+                {
+                    BlueButton.Text = "E";
+                    BlueButton._isHoveringColour = Color.Green;
+                }
+                BlueButton.Click += BlueButton_Click;
+                var GreenButton = new Button(Content.Load<Texture2D>("green"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(260, 130),
+                    Text = " "
+                };
+                if (playerRecord.currentColor == Color.Green)
+                {
+                    GreenButton.Text = "E";
+                    GreenButton._isHoveringColour = Color.Green;
+                }
+                GreenButton.Click += GreenButton_Click;
+
 
                 golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
@@ -425,10 +507,16 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat,
                     TopHat,
                     Sunglasses,
+                    RedButton,
+                    BlueButton,
+                    GreenButton,
+                    BlankButton,
+                    NoHat
                 };
             }
             if (stateOfGame == "Settings")
             {
+                mainMusicCheck();
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -450,8 +538,12 @@ namespace PVegas2K25ProTour
                 golf_ball.LoadContent(Content);
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
-                golf_ball.setColor(Color.White);
-                if(playerRecord.currentCosmetic != "null")
+                if(playerRecord.currentColor == Color.Transparent)
+                {
+                    playerRecord.currentColor = Color.White;
+                }
+                golf_ball.setColor(playerRecord.currentColor);
+                if (playerRecord.currentCosmetic != "null")
                 {
                     golf_ball.setHat(Content, playerRecord.currentCosmetic);
                 }
@@ -481,6 +573,40 @@ namespace PVegas2K25ProTour
          * This method subtracts the appropriate amount of coins for purchasing
          * a new hat cosmetic and saves the new player coin total to the save file. 
          */
+
+        private void BlankButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.White);
+            saveGame();
+            LoadContent();
+        }
+        private void NoHat_Click(object sender, EventArgs e)
+        {
+
+            golf_ball.setHat(Content, "blank");
+            playerRecord.currentCosmetic = "blank";
+            saveGame();
+            LoadContent();
+        }
+        private void RedButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Red);
+            saveGame();
+            LoadContent();
+        }
+        private void GreenButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Green);
+            saveGame();
+            LoadContent();
+        }
+        private void BlueButton_Click(object sender, EventArgs e)
+        {
+            golf_ball.setColor(Color.Blue);
+            saveGame();
+            LoadContent();
+        }
+
         private void purchaseHat()
         {
             coins -= 50;
@@ -522,11 +648,6 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic1Button_Click(object sender, EventArgs e)
         {
-
-
-            //if(playerRecord.isCosmeticOneUnlocked == false)
-
-            //playerRecord.Coins -= 300;
             if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
             {
                 if(playerRecord.isCosmeticOneUnlocked == false)
@@ -540,11 +661,7 @@ namespace PVegas2K25ProTour
                 saveGame();
                 LoadContent();
             }
-            
-            
-            
         }
-
         private void ShopingButton_Click(object sender, EventArgs e)
         {
             stateOfGame = "store";
@@ -556,6 +673,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -580,6 +698,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -604,6 +723,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -629,6 +749,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -653,6 +774,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -696,6 +818,7 @@ namespace PVegas2K25ProTour
     private void PlayButton_Click(object sender, System.EventArgs e)
     {
         stateOfGame = "play";
+        songStart = false;
         MediaPlayer.Stop();
         playSong(1);
         LoadContent();
@@ -724,6 +847,7 @@ namespace PVegas2K25ProTour
 
         protected override void Update(GameTime gameTime)
         {
+            
             // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
                 ButtonState.Pressed || 
@@ -731,11 +855,21 @@ namespace PVegas2K25ProTour
             {
                 Exit();
             }
+            if(IsKeyPressed())
+            {
+                
+                stateOfGame = "Settings";
+                foreach (var component in _gameComponents)
+                {
+                    component.Update(gameTime);
+                }
+            }
 
             Window.ClientSizeChanged += windowClientSizeChanged;
             if (stateOfGame == "menu")
             {
                 
+
                 foreach (var component in _gameComponents)
                 {
                     component.Update(gameTime);
@@ -794,11 +928,26 @@ namespace PVegas2K25ProTour
 
                 if (nextLevelCheck())
                 {
+                    playedHole = false;
                     canIncrementHolesCompleted = true;
                     level_manager.loadNextLevel(_sprite_batch, Content);
                 }
             }
+            swingCounter();
             base.Update(gameTime);
+        }
+        private void swingCounter()
+        {
+            
+            if(golf_ball.getStrokeCount() > counter)
+            {
+                counter++;
+                soundEffects[1].Play();
+            }
+            else if (golf_ball.getStrokeCount() == 0)
+            {
+                counter = 0;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -868,6 +1017,11 @@ namespace PVegas2K25ProTour
                    , strokeCounter, Color.Black);
                 if(hole.getCollision() == true&&!coinAddLevel)
                 {
+                    if(playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                     coins += addCoins(golf_ball.getStrokeCount());
@@ -876,6 +1030,11 @@ namespace PVegas2K25ProTour
                 }
                 else if (hole.getCollision() == true)
                 {
+                    if (playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
                     drawVictoryScreen(shot.getStrokeCount());
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
@@ -981,6 +1140,14 @@ namespace PVegas2K25ProTour
                 coins = 0;
             }
             return coins;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Adds the parameter "amount" of coins to the local variable coins
+        /// </summary>---------------------------------------------------------
+        public void addMoney(float amount)
+        {
+            coins += (int)amount;
         }
 
         public void populateVictoryScreen(int number_of_shots)
@@ -1290,14 +1457,36 @@ namespace PVegas2K25ProTour
         {
             return _volume;
         }
-        
 
+        public bool IsKeyPressed()
+        {
+            KeyboardState currentKeyState = Keyboard.GetState();
+            bool isKeyPressed = currentKeyState.IsKeyDown(Keys.P);
 
-        /**
-         * It would be nice to base this method on an abstraction that can
-         * have one instance per level but we simply do not have time to 
-         * implement that, thus, here is a concretion that functions. 
-         */
+            // Check if P was pressed and released
+            bool wasKeyPressedAndReleased = isKeyPressed && !previousKeyState.IsKeyDown(Keys.P);
+
+            // Update the previous key state for the next frame
+            previousKeyState = currentKeyState;
+
+            return wasKeyPressedAndReleased;
+        }
+
+        public void mainMusicCheck()
+        {
+            if((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
+            {
+                playSong(0);
+                 
+            }
+            songStart = true;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// This method takes the score that the player earned for the current 
+        /// level and if it is larger than the current high score for that level,
+        /// updates the current high score to the newly earned high score. 
+        /// </summary>---------------------------------------------------------
         public void saveLevelScore(int number_of_shots, int currentLevel)
         {
             Debug.WriteLine("num of shots: " + number_of_shots);
@@ -1316,6 +1505,12 @@ namespace PVegas2K25ProTour
                 playerRecord.playerScoreLevelFive = current_score;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// This method checks to see which level the user is currently on
+        /// and then unlocks the level that comes immediately after that level. 
+        /// This method is designed to be called when the player scores a hole
+        /// and is viewing the victory screen. 
+        /// </summary>---------------------------------------------------------
         public void unlockNextLevel(int currentLevel)
         {
             if (currentLevel == 1)
@@ -1405,6 +1600,10 @@ namespace PVegas2K25ProTour
             Exit();
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Saves all of the local data to the player record and then calls 
+        /// the saveLoadSystem to save the player record to the xml file. 
+        /// </summary>---------------------------------------------------------
         public void saveGame()
         {
             playerRecord.Strokes = shot.getStrokeCount();
@@ -1412,12 +1611,8 @@ namespace PVegas2K25ProTour
             playerRecord.TotalHolesCompleted = totalHolesCompleted;
             playerRecord.TotalStrokesLifetime = totalStrokesLifetime;
             playerRecord.currentCosmetic = golf_ball.getHat(Content);
+            playerRecord.currentColor = golf_ball.getColor();
             SaveLoadSystem.Save(playerRecord);
-        }
-
-        public void addMoney(float amount)
-        {
-            coins += (int)amount;
         }
     }
 }
