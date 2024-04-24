@@ -170,10 +170,12 @@ namespace PVegas2K25ProTour
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
-
+            
             if (stateOfGame == "menu")
             {
-                
+                mainMusicCheck();
+
+
                 var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -226,7 +228,8 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "levels")
             {
-               
+                mainMusicCheck();
+
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -304,6 +307,7 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "store")
             {
+                mainMusicCheck();
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -437,6 +441,7 @@ namespace PVegas2K25ProTour
             }
             if (stateOfGame == "Settings")
             {
+                mainMusicCheck();
                 var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
@@ -555,6 +560,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -579,6 +585,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -603,6 +610,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -628,6 +636,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -652,6 +661,7 @@ namespace PVegas2K25ProTour
             if (songStartLevel == false)
             {
                 playSong(1);
+                songStart = false;
             }
             songStartLevel = true;
 
@@ -695,6 +705,7 @@ namespace PVegas2K25ProTour
     private void PlayButton_Click(object sender, System.EventArgs e)
     {
         stateOfGame = "play";
+        songStart = false;
         MediaPlayer.Stop();
         playSong(1);
         LoadContent();
@@ -723,6 +734,7 @@ namespace PVegas2K25ProTour
 
         protected override void Update(GameTime gameTime)
         {
+            
             // See if the user pressed Quit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
                 ButtonState.Pressed || 
@@ -744,6 +756,7 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "menu")
             {
                 
+
                 foreach (var component in _gameComponents)
                 {
                     component.Update(gameTime);
@@ -1342,6 +1355,16 @@ namespace PVegas2K25ProTour
             previousKeyState = currentKeyState;
 
             return wasKeyPressedAndReleased;
+        }
+
+        public void mainMusicCheck()
+        {
+            if((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
+            {
+                playSong(0);
+                 
+            }
+            songStart = true;
         }
 
         /// <summary>----------------------------------------------------------
