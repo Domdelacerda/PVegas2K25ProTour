@@ -16,6 +16,7 @@ using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PVegas2K25ProTour
 {
@@ -531,10 +532,54 @@ namespace PVegas2K25ProTour
                     Text = "",
                 };
                 menuButton.Click += menuButton_Click;
+                var upVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(420, 210),
+                    Text = ">",
+                };
+                upVolume.Click += upVolume_Click;
+                var downVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(300, 210),
+                    Text = "<",
+                };
+                downVolume.Click += downVolume_Click;
+                var upSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(647, 365),
+                    Text = ">",
+                };
+                upSensClick.Click += upSens_Click;
+                var downSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(527, 365),
+                    Text = "<",
+                };
+                downSensClick.Click += downSens_Click;
+                var upHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(235, 365),
+                    Text = ">",
+                };
+                upHoleClick.Click += upHole_Click;
+                var downHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(115, 365),
+                    Text = "<",
+                };
+                downHoleClick.Click += downHole_Click;
+
+
                 _gameComponents = new List<Button>()
                 {
                     BackButton,
-                    menuButton
+                    menuButton,
+                    upVolume,
+                    downVolume,
+                    upSensClick,
+                    downSensClick,
+                    upHoleClick,
+                    downHoleClick
                 };
             }
             else
@@ -625,6 +670,42 @@ namespace PVegas2K25ProTour
             coins -= 50;
             playerRecord.Coins = coins;
             SaveLoadSystem.Save(playerRecord);
+        }
+        private void upVolume_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
+            _volume = volume;
+           
+
+        }
+        private void downVolume_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
+            _volume = volume;
+        }
+        private void upSens_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
+            _sensitivity = sensitivity;
+
+
+        }
+        private void downSens_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
+            _sensitivity = sensitivity;
+        }
+        private void upHole_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
+            _holeSize = holeSize;
+
+
+        }
+        private void downHole_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
+            _holeSize = holeSize;
         }
 
         private void Cosmetic3Button_Click(object sender, EventArgs e)
@@ -1230,135 +1311,53 @@ namespace PVegas2K25ProTour
 
         //Settings class for now until we implement screen managment
 
-        public float AdjustHoleVal()
+
+        public (int volume, int sensitivity, int holeSize) AdjustSettingVal(int choice)
         {
-            _holeSize = playerRecord.holeSize;
-            Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
-            MouseState currentMouseState = Mouse.GetState();
-            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
+            int volume = playerRecord.volumePreference;
+            int sensitivity = playerRecord.swingSensitivityPreference;
+            int holeSize = playerRecord.holeSize;
 
-            Vector2 up_button_size = new Vector2(86 * renderer.getScale(),
-                86 * renderer.getScale());
-            Vector2 up_button_pos = new Vector2(-43, 0) + screen_center;
-
-            // Check if left button was clicked and released
-            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && previousMouseState.LeftButton == ButtonState.Released;
-
-            if (wasLeftButtonClickedAndReleased)
+            if (choice == 1 && volume <= MAX_SETTINGS_VAL)
             {
-                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 6 + 95),
-                                            (Window.ClientBounds.Height / 2 + 100),
-                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
-                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 6 - 35),
-                                     (Window.ClientBounds.Height / 2 + 100),
-                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
-
-                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-                if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _holeSize += 1;
-                }
-                else if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _holeSize -= 1;
-                }
-                // Update the save data
-                playerRecord.holeSize = (int)_holeSize;
-                SaveLoadSystem.Save(playerRecord);
+                soundEffects[2].Play();
+                volume += 1;
             }
-
-            // Update the previous mouse state for the next frame
-            previousMouseState = currentMouseState;
-
-            return _holeSize;
-        }
-
-        public float AdjustVolumeVal()
-        {
-            _volume = playerRecord.volumePreference;
-            MouseState currentMouseState = Mouse.GetState();
-            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
-
-            // Check if left button was clicked and released
-            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseStateVol.LeftButton == ButtonState.Released;
-
-            if (wasLeftButtonClickedAndReleased)
+            if (choice == 2 && volume >= MIN_SETTINGS_VAL)
             {
-                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 15),
-                                            (Window.ClientBounds.Height / 2 - 40),
-                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
-                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 - 120),
-                                     (Window.ClientBounds.Height / 2 - 40),
-                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
-
-                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-                if (upArrowRect.Contains(mousePosition) && _volume <= MAX_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _volume += 1;
-
-                }
-                if (downArrowRect.Contains(mousePosition) && _volume >= MIN_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _volume -= 1;
-                }
+                soundEffects[2].Play();
+                volume -= 1;
+            }
+            if (choice == 3 && sensitivity <= MAX_SETTINGS_VAL)
+            {
+                soundEffects[2].Play();
+                sensitivity += 1;
+            }
+            if (choice == 4 && sensitivity >= MIN_SETTINGS_VAL)
+            {
+                soundEffects[2].Play();
+                sensitivity -= 1;
+            }
+            if (choice == 5 && holeSize <= MAX_SETTINGS_VAL)
+            {
+                soundEffects[2].Play();
+                holeSize += 1;
+            }
+            if (choice == 6 && holeSize >= MIN_SETTINGS_VAL)
+            {
+                soundEffects[2].Play();
+                holeSize -= 1;
             }
 
             // Update the save data
-            playerRecord.volumePreference = (int)_volume;
+            playerRecord.volumePreference = volume;
+            playerRecord.holeSize = holeSize;
+            playerRecord.swingSensitivityPreference = sensitivity;
             SaveLoadSystem.Save(playerRecord);
 
-            // Update the previous mouse state for the next frame
-            prevMouseStateVol = currentMouseState;
-
-            return _volume;
+            return (volume, sensitivity, holeSize);
         }
 
-        public float AdjustSensitivityVal()
-        {
-            _sensitivity = playerRecord.swingSensitivityPreference;
-            MouseState currentMouseState = Mouse.GetState();
-            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
-
-            // Check if left button was clicked and released
-            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == ButtonState.Released;
-
-            if (wasLeftButtonClickedAndReleased)
-            {
-                Rectangle upArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 240),
-                                     (Window.ClientBounds.Height / 2 + 100),
-                                     arrowTexture.Width / 15, arrowTexture.Height / 15);
-                Rectangle downArrowRect = new Rectangle((Window.ClientBounds.Width / 2 + 115),
-                                            (Window.ClientBounds.Height / 2 + 100),
-                                            arrowTexture.Width / 15, arrowTexture.Height / 15);
-
-                Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-                if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _sensitivity += 1;
-                }
-                if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
-                {
-                    soundEffects[2].Play();
-                    _sensitivity -= 1;
-                }
-                // Update the save data
-                playerRecord.swingSensitivityPreference = (int)_sensitivity;
-                SaveLoadSystem.Save(playerRecord);
-            }
-
-            // Update the previous mouse state for the next frame
-            prevMouseState = currentMouseState;
-
-            return _sensitivity;
-        }
         public void checkFirstContentLoad()
         {
             if (isFirstContentLoad)
@@ -1383,22 +1382,22 @@ namespace PVegas2K25ProTour
             Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
-            Vector2 hole_value_pos = new Vector2(-140, 150) + screen_center;
-            Vector2 hole_down_arrow_pos = new Vector2(-240, 150) + screen_center;
-            Vector2 hole_up_arrow_pos = new Vector2(-150, 150) + screen_center;
+            Vector2 hole_value_pos = new Vector2(-140, 155) + screen_center;
+        
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
-            Vector2 sensitivity_value_pos = new Vector2(275, 150) + screen_center;
-            Vector2 sensitivity_down_arrow_pos = new Vector2(175, 150) + screen_center;
-            Vector2 sensitivity_up_arrow_pos = new Vector2(265, 150) + screen_center;
+            Vector2 sensitivity_value_pos = new Vector2(275, 155) + screen_center;
+
+            Vector2 volume_text_pos = new Vector2(50, 200) + screen_center;
+            Vector2 volume_value_pos = new Vector2(50, 200) + screen_center;
 
 
 
-            String holeSize = AdjustHoleVal().ToString();
+            String holeSize = getHoleSize().ToString();
 
-            String sensitivity = AdjustSensitivityVal().ToString();
+            String sensitivity = getSensitivityVal().ToString();
 
-            String volume = AdjustVolumeVal().ToString();
+            String volume = getVolumeVal().ToString();
 
             //Populate Settings screen
             _sprite_batch.DrawString(font, "Settings", settings_text_pos,
@@ -1410,11 +1409,11 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.DrawString(font, "Volume", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2 - 50),
+            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X - font.MeasureString(volume).X / 2 - 45, hole_value_pos.Y - game_resolution.Y / 2 + 20),
               Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
-            if (AdjustHoleVal() >= 1 && AdjustHoleVal() < 10)
+            if (getHoleSize() >= 1 && getHoleSize() < 10)
             {
                 _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
                     font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
@@ -1423,21 +1422,21 @@ namespace PVegas2K25ProTour
             else
             {
                 _sprite_batch.DrawString(font, holeSize, new Vector2(hole_value_pos.X -
-                    font.MeasureString(holeSize).X / 2, hole_value_pos.Y),
+                    font.MeasureString(holeSize).X / 2 - 5, hole_value_pos.Y),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
-            if (AdjustVolumeVal() >= 1 && AdjustVolumeVal() < 10)
+            if (getVolumeVal() >= 1 && getVolumeVal() < 10)
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2, hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
             else
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(Window.ClientBounds.Width / 2 + 35, Window.ClientBounds.Height / 2),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2 - 10, hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
-            if (AdjustSensitivityVal() >= 1 && AdjustSensitivityVal() < 10)
+            if (getSensitivityVal() >= 1 && getSensitivityVal() < 10)
             {
                 _sprite_batch.DrawString(font, sensitivity, new Vector2(sensitivity_value_pos.X -
                     font.MeasureString(sensitivity).X / 2, sensitivity_value_pos.Y),
@@ -1446,33 +1445,10 @@ namespace PVegas2K25ProTour
             else
             {
                 _sprite_batch.DrawString(font, sensitivity, new Vector2(sensitivity_value_pos.X -
-                    font.MeasureString(sensitivity).X / 2, sensitivity_value_pos.Y),
+                    font.MeasureString(sensitivity).X / 2 - 5, sensitivity_value_pos.Y),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
-            //Down arrow for hole size
-            _sprite_batch.Draw(arrowTexture, hole_down_arrow_pos, null,
-                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
-
-            //Up arrow for hole size
-            _sprite_batch.Draw(arrowTexture, hole_up_arrow_pos, null,
-                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
-
-            //Down arrow for sensitivity
-            _sprite_batch.Draw(arrowTexture, sensitivity_down_arrow_pos, null,
-                Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
-
-            //Up arrow for sensitivity
-            _sprite_batch.Draw(arrowTexture, sensitivity_up_arrow_pos, null,
-                Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
-
-            //Down arrow for Volume
-            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 - 60, Window.ClientBounds.Height / 2), null,
-               Color.White, 0f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
-
-            //Up arrow for volume
-            _sprite_batch.Draw(arrowTexture, new Vector2(Window.ClientBounds.Width / 2 + 40, Window.ClientBounds.Height / 2), null,
-              Color.White, 3.14f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height / 2), 0.04f, SpriteEffects.None, 0f);
         }
         public void drawSettingsScreen()
         {
