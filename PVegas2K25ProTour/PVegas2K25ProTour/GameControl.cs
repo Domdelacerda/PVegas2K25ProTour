@@ -81,7 +81,7 @@ namespace PVegas2K25ProTour
 
         Texture2D line;
         private float angleOfLine;
-        private Vector2 game_resolution = new Vector2(DEFAULT_RES_WIDTH, 
+        private Vector2 game_resolution = new Vector2(DEFAULT_RES_WIDTH,
             DEFAULT_RES_HEIGHT);
 
         private List<Button> _gameComponents;
@@ -90,8 +90,8 @@ namespace PVegas2K25ProTour
         Vector2 strokeCounter;
 
         private int coins = 0;
-        private bool coinAddLevel=false;
-        
+        private bool coinAddLevel = false;
+
         //---------------------------------------------------------------------
         // GENERATED METHODS
         //---------------------------------------------------------------------
@@ -100,20 +100,20 @@ namespace PVegas2K25ProTour
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            
+
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            line = new Texture2D(GraphicsDevice, 1, 1, false, 
+            line = new Texture2D(GraphicsDevice, 1, 1, false,
                 SurfaceFormat.Color);
             line.SetData(new[] { Color.Black });
             angleOfLine = (float)0;
 
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = true;
-            renderer = new Renderer(_graphics.GraphicsDevice, 
+            renderer = new Renderer(_graphics.GraphicsDevice,
                 DEFAULT_RES_WIDTH, DEFAULT_RES_HEIGHT);
             IsMouseVisible = true;
             _graphics.PreferredBackBufferWidth = (int)game_resolution.X;
@@ -121,7 +121,7 @@ namespace PVegas2K25ProTour
             _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             renderer.setDestination();
-            
+
 
             Exiting += OnExiting;
             base.Initialize();
@@ -152,6 +152,7 @@ namespace PVegas2K25ProTour
             soundEffects = new List<SoundEffect>();
             soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
             soundEffects.Add(Content.Load<SoundEffect>("swing"));
+            soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
 
 
             songs.Add(Content.Load<Song>("MainMenu"));
@@ -165,13 +166,13 @@ namespace PVegas2K25ProTour
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
             _sensitivity = playerRecord.swingSensitivityPreference;
             _holeSize = playerRecord.holeSize;
-            
+
             // Load the graphics device
             _device = GraphicsDevice;
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
-            
-            
+
+
             if (stateOfGame == "menu")
             {
                 mainMusicCheck();
@@ -194,7 +195,7 @@ namespace PVegas2K25ProTour
                 golf_ball = new Ball(_sprite_batch);
                 var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("settings"))
                 {
-                    Position = new Vector2(730, 0 ),
+                    Position = new Vector2(730, 0),
                     //Text = "Settings",
                 };
                 settingsButton.Click += SettingsButton_Click;
@@ -214,7 +215,7 @@ namespace PVegas2K25ProTour
                 LevelButton.Click += LevelButton_Click;
                 var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("delete"))
                 {
-                    Position = new Vector2(730, 324),     
+                    Position = new Vector2(730, 324),
                 };
                 DeleteButton.Click += DeleteButton_Click;
                 _gameComponents = new List<Button>()
@@ -264,7 +265,7 @@ namespace PVegas2K25ProTour
                     Text = "Level 3",
 
                 };
-                if(playerRecord.isLevelThreeUnlocked == false)
+                if (playerRecord.isLevelThreeUnlocked == false)
                 {
                     ThreeButton._isHoveringColour = Color.Black;
                     ThreeButton.color = Color.Black;
@@ -323,7 +324,7 @@ namespace PVegas2K25ProTour
                     Text = playerRecord.Coins.ToString(),
                 };
 
-                
+
 
                 Button Cosmetic1Button = null;
                 Button Cosmetic2Button = null;
@@ -401,7 +402,7 @@ namespace PVegas2K25ProTour
                         Position = new Vector2(130, 390),
                         Text = "50",
                     };
-                    
+
                 }
                 else
                 {
@@ -419,9 +420,9 @@ namespace PVegas2K25ProTour
                     Position = new Vector2(65, 390),
                     _isHoveringColour = Color.White,
                     PenColour = Color.Red,
-                    Text =  " "
+                    Text = " "
                 };
-                if(playerRecord.currentCosmetic == "NoveltySodaDrinkHat")
+                if (playerRecord.currentCosmetic == "NoveltySodaDrinkHat")
                 {
                     NoveltySodaDrinkHat.Text = "E";
                 }
@@ -459,7 +460,7 @@ namespace PVegas2K25ProTour
                 }
                 NoHat.Click += NoHat_Click;
 
-                
+
                 var RedButton = new Button(Content.Load<Texture2D>("red"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 390),
@@ -538,7 +539,7 @@ namespace PVegas2K25ProTour
                 golf_ball.LoadContent(Content);
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
-                if(playerRecord.currentColor == Color.Transparent)
+                if (playerRecord.currentColor == Color.Transparent)
                 {
                     playerRecord.currentColor = Color.White;
                 }
@@ -547,7 +548,7 @@ namespace PVegas2K25ProTour
                 {
                     golf_ball.setHat(Content, playerRecord.currentCosmetic);
                 }
-                
+
                 shot = new Shot(_sprite_batch);
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
@@ -559,14 +560,14 @@ namespace PVegas2K25ProTour
                 level_manager.loadBorders((int)game_resolution.X, (int)game_resolution.Y);
                 level_manager.generateLevelList();
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
-                
+
             }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
             }
-           
+
         }
 
         /*
@@ -576,13 +577,14 @@ namespace PVegas2K25ProTour
 
         private void BlankButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             golf_ball.setColor(Color.White);
             saveGame();
             LoadContent();
         }
         private void NoHat_Click(object sender, EventArgs e)
         {
-
+            soundEffects[2].Play();
             golf_ball.setHat(Content, "blank");
             playerRecord.currentCosmetic = "blank";
             saveGame();
@@ -590,18 +592,21 @@ namespace PVegas2K25ProTour
         }
         private void RedButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             golf_ball.setColor(Color.Red);
             saveGame();
             LoadContent();
         }
         private void GreenButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             golf_ball.setColor(Color.Green);
             saveGame();
             LoadContent();
         }
         private void BlueButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             golf_ball.setColor(Color.Blue);
             saveGame();
             LoadContent();
@@ -616,6 +621,7 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic3Button_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (playerRecord.Coins >= 50 || playerRecord.isCosmeticThreeUnlocked == true)
             {
                 if (playerRecord.isCosmeticThreeUnlocked == false)
@@ -632,6 +638,7 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic2Button_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (playerRecord.Coins >= 50 || playerRecord.isCosmeticTwoUnlocked == true)
             {
                 if (playerRecord.isCosmeticTwoUnlocked == false)
@@ -648,9 +655,10 @@ namespace PVegas2K25ProTour
 
         private void Cosmetic1Button_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
             {
-                if(playerRecord.isCosmeticOneUnlocked == false)
+                if (playerRecord.isCosmeticOneUnlocked == false)
                 {
                     purchaseHat();
                 }
@@ -664,12 +672,14 @@ namespace PVegas2K25ProTour
         }
         private void ShopingButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             stateOfGame = "store";
             LoadContent();
         }
 
         private void FiveButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (songStartLevel == false)
             {
                 playSong(1);
@@ -695,6 +705,7 @@ namespace PVegas2K25ProTour
         }
         private void FourButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (songStartLevel == false)
             {
                 playSong(1);
@@ -720,6 +731,7 @@ namespace PVegas2K25ProTour
         }
         private void ThreeButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (songStartLevel == false)
             {
                 playSong(1);
@@ -737,7 +749,7 @@ namespace PVegas2K25ProTour
             }
             else
             {
-                
+
                 // Implement some code here for what happens if level
                 // 3 is not unlocked
                 Debug.WriteLine("Level 3 not unlocked!!");
@@ -746,6 +758,7 @@ namespace PVegas2K25ProTour
 
         private void TwoButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (songStartLevel == false)
             {
                 playSong(1);
@@ -771,6 +784,7 @@ namespace PVegas2K25ProTour
 
         private void OneButton_Click(object sender, EventArgs e)
         {
+            soundEffects[2].Play();
             if (songStartLevel == false)
             {
                 playSong(1);
@@ -794,70 +808,75 @@ namespace PVegas2K25ProTour
             }
         }
 
-    private void SettingsButton_Click(object sender, EventArgs e)
+        private void SettingsButton_Click(object sender, EventArgs e)
         {
             previousGameState = stateOfGame;
             stateOfGame = "Settings";
+            soundEffects[2].Play();
             LoadContent();
         }
-    private void LevelButton_Click(object sender, EventArgs e)
-    {
+        private void LevelButton_Click(object sender, EventArgs e)
+        {
             previousGameState = stateOfGame;
             stateOfGame = "levels";
+            soundEffects[2].Play();
             LoadContent();
-    }
-    private void BackButton_Click(object sender, EventArgs e)
-    {
-        stateOfGame = previousGameState;
-        LoadContent();
-    }
-        private void QuitButton_Click(object sender, System.EventArgs e)
-    {
-        Exit();
-    }
-    private void PlayButton_Click(object sender, System.EventArgs e)
-    {
-        stateOfGame = "play";
-        songStart = false;
-        MediaPlayer.Stop();
-        playSong(1);
-        LoadContent();
-    }
-
-    private void windowClientSizeChanged(object sender, System.EventArgs e)
-    {
-        _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-        _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-        _graphics.ApplyChanges();
-        renderer.setDestination();
-        golf_ball.setVirtualScale(renderer.getScale());
-        golf_ball.setVirtualOffset(renderer.getOffset());
-        for (int i = 0; i < _gameComponents.Count; i++)
-        {
-             _gameComponents[i].setLocalScale(renderer.getScale());
-             _gameComponents[i].setOffset(renderer.getOffset());
         }
-    }
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            stateOfGame = previousGameState;
+            soundEffects[2].Play();
+            LoadContent();
+        }
+        private void QuitButton_Click(object sender, System.EventArgs e)
+        {
+            soundEffects[2].Play();
+            Exit();
+        }
+        private void PlayButton_Click(object sender, System.EventArgs e)
+        {
+            stateOfGame = "play";
+            songStart = false;
+            soundEffects[2].Play();
+            MediaPlayer.Stop();
+            playSong(1);
+            LoadContent();
+        }
 
-    private void DeleteButton_Click(object sender, System.EventArgs e)
-    {
+        private void windowClientSizeChanged(object sender, System.EventArgs e)
+        {
+            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            _graphics.ApplyChanges();
+            renderer.setDestination();
+            golf_ball.setVirtualScale(renderer.getScale());
+            golf_ball.setVirtualOffset(renderer.getOffset());
+            for (int i = 0; i < _gameComponents.Count; i++)
+            {
+                _gameComponents[i].setLocalScale(renderer.getScale());
+                _gameComponents[i].setOffset(renderer.getOffset());
+            }
+        }
+
+        private void DeleteButton_Click(object sender, System.EventArgs e)
+        {
             //add delete progress conditions here
             SaveLoadSystem.DeleteSaveFile();
-    }
+        }
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             // See if the user pressed Quit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == 
-                ButtonState.Pressed || 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
+                ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
             }
-            if(IsKeyPressed())
+            if (IsKeyPressed())
             {
-                
+
                 stateOfGame = "Settings";
                 foreach (var component in _gameComponents)
                 {
@@ -868,7 +887,7 @@ namespace PVegas2K25ProTour
             Window.ClientSizeChanged += windowClientSizeChanged;
             if (stateOfGame == "menu")
             {
-                
+
 
                 foreach (var component in _gameComponents)
                 {
@@ -906,7 +925,7 @@ namespace PVegas2K25ProTour
             golf_ball.Update(gameTime);
             addMoney(level_manager.Update());
             if (hole.getCollision() == true)
-            {   
+            {
                 // uses a flag to ensure stats counters are only
                 // updated once per level
                 if (canIncrementHolesCompleted)
@@ -938,8 +957,8 @@ namespace PVegas2K25ProTour
         }
         private void swingCounter()
         {
-            
-            if(golf_ball.getStrokeCount() > counter)
+
+            if (golf_ball.getStrokeCount() > counter)
             {
                 counter++;
                 soundEffects[1].Play();
@@ -959,7 +978,7 @@ namespace PVegas2K25ProTour
             // Draw all obstacles in the obstacle list
             _sprite_batch.Draw(background, Vector2.Zero, Color.DarkOliveGreen);
             if (stateOfGame == "menu")
-            {   
+            {
                 foreach (var component in _gameComponents)
                 {
                     {
@@ -1015,9 +1034,9 @@ namespace PVegas2K25ProTour
                 golf_ball.Draw();
                 _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
-                if(hole.getCollision() == true&&!coinAddLevel)
+                if (hole.getCollision() == true && !coinAddLevel)
                 {
-                    if(playedHole == false)
+                    if (playedHole == false)
                     {
                         soundEffects[0].Play();
                         playedHole = true;
@@ -1057,8 +1076,6 @@ namespace PVegas2K25ProTour
         /// </summary>
         /// <param name="mouse"> the mouse state that input data is pulled
         /// from.</param>
-        /// <param name="ball"> the ball collider used for determining
-        /// whether the mouse is interacting with it or not.</param>
         /// <returns> if the mouse is dragging the ball.</returns>
         /// -------------------------------------------------------------------
         public bool isDraggingBall(MouseState mouse, Ball ball)
@@ -1122,7 +1139,7 @@ namespace PVegas2K25ProTour
         {
             //scaling value to be determined
             int coins = MAX_COINS - number_of_shots * 10;
-            
+
             if (coins < 0)
             {
                 coins = 0;
@@ -1173,10 +1190,10 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.Draw(line, new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y, 
+            _sprite_batch.Draw(line, new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y,
                 (int)next_button_size.X, (int)next_button_size.Y), null, Color.White, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0);
 
-            _sprite_batch.DrawString(font, "Next Level", new Vector2(next_text_pos.X, next_text_pos.Y), 
+            _sprite_batch.DrawString(font, "Next Level", new Vector2(next_text_pos.X, next_text_pos.Y),
                 Color.Black, 0, textMiddlePoint, 1.5f, SpriteEffects.None, 0.5f);
         }
         public void drawVictoryScreen(int number_of_shots)
@@ -1185,7 +1202,7 @@ namespace PVegas2K25ProTour
             Vector2 win_screen_size = new Vector2(500, 300);
             Vector2 win_screen_pos = new Vector2(-(win_screen_size.X / 2f), -200) + screen_center;
             line.SetData(new[] { Color.DarkSlateGray });
-            _sprite_batch.Draw(line, new Rectangle((int)win_screen_pos.X, (int)win_screen_pos.Y, 
+            _sprite_batch.Draw(line, new Rectangle((int)win_screen_pos.X, (int)win_screen_pos.Y,
                 (int)win_screen_size.X, (int)win_screen_size.Y), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateVictoryScreen(golf_ball.getStrokeCount());
@@ -1205,7 +1222,7 @@ namespace PVegas2K25ProTour
             MouseState currentMouseState = Mouse.GetState();
             bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
 
-            Vector2 up_button_size = new Vector2(86 * renderer.getScale(), 
+            Vector2 up_button_size = new Vector2(86 * renderer.getScale(),
                 86 * renderer.getScale());
             Vector2 up_button_pos = new Vector2(-43, 0) + screen_center;
 
@@ -1225,10 +1242,12 @@ namespace PVegas2K25ProTour
 
                 if (upArrowRect.Contains(mousePosition) && _holeSize <= MAX_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _holeSize += 1;
                 }
                 else if (downArrowRect.Contains(mousePosition) && _holeSize >= MIN_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _holeSize -= 1;
                 }
                 // Update the save data
@@ -1264,11 +1283,13 @@ namespace PVegas2K25ProTour
 
                 if (upArrowRect.Contains(mousePosition) && _volume <= MAX_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _volume += 1;
 
                 }
                 if (downArrowRect.Contains(mousePosition) && _volume >= MIN_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _volume -= 1;
                 }
             }
@@ -1305,10 +1326,12 @@ namespace PVegas2K25ProTour
 
                 if (upArrowRect.Contains(mousePosition) && _sensitivity <= MAX_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _sensitivity += 1;
                 }
                 if (downArrowRect.Contains(mousePosition) && _sensitivity >= MIN_SETTINGS_VAL)
                 {
+                    soundEffects[2].Play();
                     _sensitivity -= 1;
                 }
                 // Update the save data
@@ -1474,10 +1497,10 @@ namespace PVegas2K25ProTour
 
         public void mainMusicCheck()
         {
-            if((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
+            if ((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
             {
                 playSong(0);
-                 
+
             }
             songStart = true;
         }
@@ -1490,7 +1513,7 @@ namespace PVegas2K25ProTour
         public void saveLevelScore(int number_of_shots, int currentLevel)
         {
             Debug.WriteLine("num of shots: " + number_of_shots);
-            
+
             int current_score = calculateScore(number_of_shots);
 
             if (current_score > playerRecord.playerScoreLevelOne && currentLevel == 1)
@@ -1527,7 +1550,7 @@ namespace PVegas2K25ProTour
 
         public bool nextLevelCheck()
         {
-            Vector2 screen_center = new Vector2(game_resolution.X / 2 * renderer.getScale(), 
+            Vector2 screen_center = new Vector2(game_resolution.X / 2 * renderer.getScale(),
                 game_resolution.Y / 2 * renderer.getScale());
             Vector2 next_button_size = new Vector2(150 * renderer.getScale(), 75 * renderer.getScale());
             Vector2 next_button_pos = new Vector2(-75, 0) + screen_center;
@@ -1540,11 +1563,12 @@ namespace PVegas2K25ProTour
 
             if (wasLeftButtonClickedAndReleased)
             {
-                Rectangle Rect = new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y, 
+                Rectangle Rect = new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y,
                     (int)next_button_size.X, (int)next_button_size.Y);
 
                 if (Rect.Contains(mouse_pos))
                 {
+                    soundEffects[2].Play();
                     return true;
                 }
 

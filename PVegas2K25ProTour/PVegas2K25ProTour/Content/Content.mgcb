@@ -97,6 +97,12 @@
 /processorParam:TextureFormat=Color
 /build:button.png
 
+#begin buttonNoise.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:buttonNoise.wav
+
 #begin check.png
 /importer:TextureImporter
 /processor:TextureProcessor
