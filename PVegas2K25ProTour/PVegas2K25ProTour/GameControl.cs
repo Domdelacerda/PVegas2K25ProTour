@@ -153,8 +153,6 @@ namespace PVegas2K25ProTour
             soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
             soundEffects.Add(Content.Load<SoundEffect>("swing"));
             soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
-
-
             songs.Add(Content.Load<Song>("MainMenu"));
             songs.Add(Content.Load<Song>("Take a Swing"));
 
@@ -316,6 +314,9 @@ namespace PVegas2K25ProTour
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
+
+         
+
 
                 var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
                 {
@@ -524,9 +525,16 @@ namespace PVegas2K25ProTour
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
+                var menuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                {
+                    Position = new Vector2(730, 0),
+                    Text = "",
+                };
+                menuButton.Click += menuButton_Click;
                 _gameComponents = new List<Button>()
                 {
-                    BackButton
+                    BackButton,
+                    menuButton
                 };
             }
             else
@@ -812,6 +820,13 @@ namespace PVegas2K25ProTour
         {
             previousGameState = stateOfGame;
             stateOfGame = "Settings";
+            soundEffects[2].Play();
+            LoadContent();
+        }
+        private void menuButton_Click(Object sender, EventArgs e)
+        {
+            previousGameState = stateOfGame;
+            stateOfGame = "menu";
             soundEffects[2].Play();
             LoadContent();
         }
