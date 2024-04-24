@@ -171,6 +171,7 @@ namespace PVegas2K25ProTour
             _sprite_batch = new SpriteBatch(_device);
             font = Content.Load<SpriteFont>("File");
             
+            
             if (stateOfGame == "menu")
             {
                 mainMusicCheck();
@@ -537,6 +538,10 @@ namespace PVegas2K25ProTour
                 golf_ball.LoadContent(Content);
                 // USE THESE METHODS TO ALTER BALL COSMETICS
                 //golf_ball.setHat(Content, null);
+                if(playerRecord.currentColor == Color.Transparent)
+                {
+                    playerRecord.currentColor = Color.White;
+                }
                 golf_ball.setColor(playerRecord.currentColor);
                 if (playerRecord.currentCosmetic != "null")
                 {

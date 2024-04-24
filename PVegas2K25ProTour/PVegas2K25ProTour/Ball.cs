@@ -389,6 +389,7 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void setColor(Color new_color)
         {
+            
             ball_color = new_color;
         }
 
