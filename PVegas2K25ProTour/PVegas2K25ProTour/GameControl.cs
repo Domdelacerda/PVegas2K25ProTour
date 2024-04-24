@@ -1058,6 +1058,7 @@ namespace PVegas2K25ProTour
                 level_manager.removeCoinCheckChange(false);
             }
             swingCounter();
+            golf_ball.setSpeedSettings(getSensitivityVal()/5);
 
             base.Update(gameTime);
         }

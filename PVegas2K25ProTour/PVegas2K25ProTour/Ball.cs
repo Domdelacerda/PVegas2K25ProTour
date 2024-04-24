@@ -29,6 +29,7 @@ namespace PVegas2K25ProTour
         private Vector2 ball_speed;
         private Vector2 previous_ball_pos;
         private bool rolling = false;
+        private float speedSetting;
 
         private Texture2D ball_sprite;
         private Hitbox hitbox;
@@ -162,7 +163,7 @@ namespace PVegas2K25ProTour
             // Make sure that neither X or Y in speed Vector is already 0
             if (ball_speed.Length() != 0)
             {
-                ball_speed *= DRAG_REDUCTION_FACTOR;
+                ball_speed *= DRAG_REDUCTION_FACTOR * speedSetting;
                 truncateSpeedLower();
                 truncateSpeedUpper();
             }
@@ -442,6 +443,11 @@ namespace PVegas2K25ProTour
         public float getMinSpeed()
         {
             return MIN_BALL_SPEED;
+        }
+
+        public void setSpeedSettings(float speed)
+        {
+            speedSetting = speed;
         }
     }
 }   
