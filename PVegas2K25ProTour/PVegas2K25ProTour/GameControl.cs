@@ -606,7 +606,7 @@ namespace PVegas2K25ProTour
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
                 hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                    hitbox, Vector2.One, _holeSize/5);
+                    hitbox, Vector2.One, _holeSize/4);
                 hole.LoadContent(Content);
 
                 level_manager = new LevelManager(golf_ball, hole, hitbox);
