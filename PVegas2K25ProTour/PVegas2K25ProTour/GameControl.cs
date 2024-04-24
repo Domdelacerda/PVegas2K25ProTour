@@ -972,12 +972,14 @@ namespace PVegas2K25ProTour
             }
             if (IsKeyPressed())
             {
+                
 
                 stateOfGame = "Settings";
                 foreach (var component in _gameComponents)
                 {
                     component.Update(gameTime);
                 }
+                LoadContent();
             }
 
             Window.ClientSizeChanged += windowClientSizeChanged;
