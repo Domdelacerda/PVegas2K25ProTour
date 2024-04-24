@@ -127,6 +127,12 @@
 /processorParam:TextureFormat=Color
 /build:check.png
 
+#begin coinCollect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:coinCollect.wav
+
 #begin CoinPVegas.png
 /importer:TextureImporter
 /processor:TextureProcessor

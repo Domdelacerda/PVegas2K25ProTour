@@ -109,4 +109,6 @@ namespace PVegas2K25ProTour
             return coinCost;
         }
     }
+
+   
 }

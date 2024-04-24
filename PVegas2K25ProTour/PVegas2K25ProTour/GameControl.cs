@@ -37,6 +37,7 @@ namespace PVegas2K25ProTour
         private int MAX_SCORE = 5000;
         private int MAX_COINS = 25;
         private bool clickedNext;
+        private Coin coin;
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -154,6 +155,7 @@ namespace PVegas2K25ProTour
             soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
             soundEffects.Add(Content.Load<SoundEffect>("swing"));
             soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
+            soundEffects.Add(Content.Load<SoundEffect>("coinCollect"));
             songs.Add(Content.Load<Song>("MainMenu"));
             songs.Add(Content.Load<Song>("Take a Swing"));
 
@@ -1050,7 +1052,13 @@ namespace PVegas2K25ProTour
                     level_manager.loadNextLevel(_sprite_batch, Content);
                 }
             }
+            if(level_manager.removeCoinCheck())
+            {
+                soundEffects[3].Play();
+                level_manager.removeCoinCheckChange(false);
+            }
             swingCounter();
+
             base.Update(gameTime);
         }
         private void swingCounter()
