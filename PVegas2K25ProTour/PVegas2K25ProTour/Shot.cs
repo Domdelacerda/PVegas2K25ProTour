@@ -27,6 +27,8 @@ namespace PVegas2K25ProTour
         private Texture2D arrow_sprite;
         private Rectangle arrow_rect;
         private int stroke_count = -1;
+        private float sensitivity;
+        private const float DEFAULT_SENSITIVITY = 5f;
 
         private bool shot_released_bool = false;
 
@@ -123,7 +125,8 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void windupShot(Vector2 mouse_pos, Vector2 ball_center)
         {
-            launch_speed = distanceVector(ball_center, mouse_pos);
+            launch_speed = distanceVector(ball_center, mouse_pos) 
+                * (sensitivity / DEFAULT_SENSITIVITY);
         }
 
         /// <summary>----------------------------------------------------------
@@ -206,6 +209,19 @@ namespace PVegas2K25ProTour
                 launch_speed.Normalize();
                 launch_speed *= MAX_SHOT_POWER;
             }
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Sets the sensitivity value of the shot, which determines the ratio
+        /// between the distance between the mouse and ball and the resulting
+        /// shot power
+        /// </summary>
+        /// <param name="new_sensitivity">the new sensitivity value for the 
+        /// shot the arrow.</param>
+        /// -------------------------------------------------------------------
+        public void setSensitivity(float new_sensitivity)
+        {
+            sensitivity = new_sensitivity;
         }
 
         //---------------------------------------------------------------------

@@ -28,6 +28,8 @@ namespace PVegas2K25ProTour
     {
         private const int DEFAULT_RES_WIDTH = 800;
         private const int DEFAULT_RES_HEIGHT = 480;
+        private const float incrementVal = (float)0.01;
+        
 
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
@@ -37,10 +39,12 @@ namespace PVegas2K25ProTour
         private float SCORE_REDUCTION_SCALE = 1f;
         private float SHOT_PENALTY = 250f;
         private float score;
+        private Coin coin;
 
         //Settings variables for now
         Texture2D arrowTexture;
         private const int MAX_SETTINGS_VAL = 9;
+        private const int DEFAULT_SETTINGS_VAL = 5;
         private const int MIN_SETTINGS_VAL = 2;
         private float _holeSize = 5;
         private float _sensitivity = 5;
@@ -76,6 +80,7 @@ namespace PVegas2K25ProTour
         private int totalStrokesLifetime;
         private int current_level = 0;
         bool isFirstContentLoad = true;
+        private float workVal;
 
         Texture2D line;
         private float angleOfLine;
@@ -139,11 +144,6 @@ namespace PVegas2K25ProTour
             // Load the current user name and stroke count
             playerRecord = SaveLoadSystem.Load<PlayerRecord>();
 
-            //Set volume based on settings
-            MediaPlayer.Volume = getVolumeVal() / 10;
-
-
-
             arrowTexture = Content.Load<Texture2D>("arrow");
 
             //Loading sounds used in game
@@ -153,6 +153,7 @@ namespace PVegas2K25ProTour
                 soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
                 soundEffects.Add(Content.Load<SoundEffect>("swing"));
                 soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
+                soundEffects.Add(Content.Load<SoundEffect>("coinCollect"));
             }
             catch (DivideByZeroException e)
             {
@@ -169,6 +170,10 @@ namespace PVegas2K25ProTour
             totalStrokesLifetime = playerRecord.TotalStrokesLifetime;
             _sensitivity = playerRecord.swingSensitivityPreference;
             _holeSize = playerRecord.holeSize;
+            _volume = playerRecord.volumePreference;
+
+            //Set volume based on settings
+            MediaPlayer.Volume = getVolumeVal() / 10;
 
             // Load the graphics device
             _device = GraphicsDevice;
@@ -611,7 +616,7 @@ namespace PVegas2K25ProTour
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
                 hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                    hitbox, Vector2.One);
+                    hitbox, Vector2.One, _holeSize/DEFAULT_SETTINGS_VAL);
                 hole.LoadContent(Content);
 
                 level_manager = new LevelManager(golf_ball, hole, hitbox);
@@ -679,8 +684,6 @@ namespace PVegas2K25ProTour
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
             _volume = volume;
-           
-
         }
         private void downVolume_Click(object sender, EventArgs e)
         {
@@ -691,8 +694,6 @@ namespace PVegas2K25ProTour
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
             _sensitivity = sensitivity;
-
-
         }
         private void downSens_Click(object sender, EventArgs e)
         {
@@ -1085,7 +1086,14 @@ namespace PVegas2K25ProTour
             {
                 reduceScore();
             }
+            if (level_manager.removeCoinCheck())
+            {
+                soundEffects[3].Play();
+                level_manager.removeCoinCheckChange(false);
+            }
             swingCounter();
+            shot.setSensitivity(getSensitivityVal());
+
             base.Update(gameTime);
         }
         private void swingCounter()
@@ -1350,8 +1358,6 @@ namespace PVegas2K25ProTour
         }
 
         //Settings class for now until we implement screen managment
-
-
         public (int volume, int sensitivity, int holeSize) AdjustSettingVal(int choice)
         {
             int volume = playerRecord.volumePreference;
@@ -1398,25 +1404,8 @@ namespace PVegas2K25ProTour
             return (volume, sensitivity, holeSize);
         }
 
-        public void checkFirstContentLoad()
-        {
-            if (isFirstContentLoad)
-            {
-                if (playerRecord.holeSize == 0 && playerRecord.swingSensitivityPreference == 0
-                    && playerRecord.volumePreference == 0)
-                {
-                    Debug.WriteLine("No Previous Settings Save Data. Defaults set to 5.");
-                    playerRecord.holeSize = 5;
-                    playerRecord.swingSensitivityPreference = 5;
-                    playerRecord.volumePreference = 5;
-                }
-            }
-        }
-
         public void populateSettingsScreen()
         {
-            checkFirstContentLoad();
-
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
             Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
@@ -1510,6 +1499,32 @@ namespace PVegas2K25ProTour
         public float getVolumeVal()
         {
             return _volume;
+        }
+
+        public float getSpeedVal()
+        {
+            
+            float value = getSensitivityVal();
+            
+            if (value == 5)
+            {
+                return 1;
+            }
+            else
+            {
+                if (value>5)
+                {
+                    workVal = value - 5;
+                    return 1 + workVal * incrementVal;
+                }
+                else if(value < 5)
+                {
+                    workVal = 5 - value;
+                    return 1 - workVal * incrementVal;
+                }
+            }
+            
+            return value;
         }
 
         public bool IsKeyPressed()

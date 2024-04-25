@@ -22,12 +22,14 @@ namespace PVegas2K25ProTour
         private Ball golf_ball;
         private Hole hole;
         private Hitbox hitbox;
+        private bool removedCoin = false;
 
         private List<Action<SpriteBatch, ContentManager>> level_list;
         private int level = 0;
         private List<Obstacle> obstacle_list;
         private List<Coin> coin_list;
         private Obstacle[] borders;
+        
 
         //---------------------------------------------------------------------
         // CONSTRUCTORS
@@ -172,6 +174,23 @@ namespace PVegas2K25ProTour
         public void removeCoin(Coin coin)
         {
             coin_list.Remove(coin);
+            removedCoin = true;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks if a coin has been removed
+        /// </summary>---------------------------------------------------------
+        public bool removeCoinCheck()
+        {
+            return removedCoin;
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Sets the value of removedCoin
+        /// </summary>---------------------------------------------------------
+        public void removeCoinCheckChange(bool input)
+        {
+            removedCoin = input;
         }
 
         /// <summary>----------------------------------------------------------

@@ -18,7 +18,6 @@ namespace PVegas2K25ProTour
         public int TotalHolesCompleted { get; set; }
         public int TotalStrokesLifetime {  get; set; }
 
-
         // Level Based Data
         // IMPLEMENT: Levels lock/unlock accessability
         public bool isLevelOneUnlocked { get; set; }
@@ -33,7 +32,6 @@ namespace PVegas2K25ProTour
         public bool isLevelFourUnlocked { get; set; }
         public int playerScoreLevelFour { get; set; }
 
-
         public bool isLevelFiveUnlocked { get; set; }
         public int playerScoreLevelFive { get; set; }
 
@@ -46,13 +44,9 @@ namespace PVegas2K25ProTour
         public Color currentColor { get; set; }
 
         // Settings Based Data
-        public int swingSensitivityPreference { get; set; }
+        public int swingSensitivityPreference { get; set; } = 5;
         public bool audioEnabled { get; set; }
-        public int volumePreference { get; set; }
-        public int holeSize { get; set; }
-
-
-
+        public int volumePreference { get; set; } = 5;
+        public int holeSize { get; set; } = 5;
     }
-
 }
