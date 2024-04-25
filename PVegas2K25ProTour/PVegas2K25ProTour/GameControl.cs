@@ -29,6 +29,8 @@ namespace PVegas2K25ProTour
     {
         private const int DEFAULT_RES_WIDTH = 800;
         private const int DEFAULT_RES_HEIGHT = 480;
+        private const float incrementVal = (float)0.01;
+        
 
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
@@ -80,6 +82,7 @@ namespace PVegas2K25ProTour
         private int totalStrokesLifetime;
         private int current_level = 0;
         bool isFirstContentLoad = true;
+        private float workVal;
 
         Texture2D line;
         private float angleOfLine;
@@ -1058,7 +1061,7 @@ namespace PVegas2K25ProTour
                 level_manager.removeCoinCheckChange(false);
             }
             swingCounter();
-            golf_ball.setSpeedSettings(getSensitivityVal()/5);
+            golf_ball.setSpeedSettings(getSpeedVal());
 
             base.Update(gameTime);
         }
@@ -1481,6 +1484,32 @@ namespace PVegas2K25ProTour
         public float getVolumeVal()
         {
             return _volume;
+        }
+
+        public float getSpeedVal()
+        {
+            
+            float value = getSensitivityVal();
+            
+            if (value == 5)
+            {
+                return 1;
+            }
+            else
+            {
+                if (value>5)
+                {
+                    workVal = value - 5;
+                    return 1 + workVal * incrementVal;
+                }
+                else if(value < 5)
+                {
+                    workVal = 5 - value;
+                    return 1 - workVal * incrementVal;
+                }
+            }
+            
+            return value;
         }
 
         public bool IsKeyPressed()
