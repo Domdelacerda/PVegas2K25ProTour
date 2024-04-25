@@ -105,7 +105,7 @@ namespace PVegas2K25ProTour
         public int moneyAmount()
         {
             Random rand = new Random();
-            int coinCost = (int)rand.NextInt64(1,16);
+            int coinCost = (int)rand.NextInt64(2,5);
             return coinCost;
         }
     }

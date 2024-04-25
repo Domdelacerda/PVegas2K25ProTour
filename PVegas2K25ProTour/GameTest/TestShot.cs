@@ -150,5 +150,56 @@ namespace GameTest
             Assert.IsTrue(golf_ball_reference.getSpeed().X != 0 &&
                 golf_ball_reference.getSpeed().Y != 0);
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if the shot released check works when the shot is
+        /// still being wound up, A.K.A. the shot hasn't been released, which
+        /// should return false
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void testShotReleasedFalse()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+
+            // set mouse position and ball center position to different 
+            // then call windup shot
+
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+
+            Assert.IsFalse(shot_reference.shotReleased());
+        }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if the shot released check works when the shot is
+        /// wound up then released, which should return true
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void testShotReleasedTrue()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+
+            // set mouse position and ball center position to different 
+            // then call windup shot
+
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+
+            shot_reference.releaseShot(golf_ball_reference);
+
+            Assert.IsTrue(shot_reference.shotReleased());
+        }
     }
 }

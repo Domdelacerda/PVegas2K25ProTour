@@ -16,7 +16,6 @@ using System.ComponentModel;
 using PVegas2K25ProTour.Controls;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PVegas2K25ProTour
 {
@@ -34,9 +33,10 @@ namespace PVegas2K25ProTour
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
         private Renderer renderer;
-        private int MAX_SCORE = 5000;
-        private int MAX_COINS = 25;
-        private bool clickedNext;
+        private float MAX_SCORE = 5000f;
+        private float SCORE_REDUCTION_SCALE = 1f;
+        private float SHOT_PENALTY = 250f;
+        private float score;
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -45,9 +45,6 @@ namespace PVegas2K25ProTour
         private float _holeSize = 5;
         private float _sensitivity = 5;
         private float _volume = 5;
-        private MouseState previousMouseState;
-        private MouseState currentMouseState;
-
 
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
@@ -86,6 +83,8 @@ namespace PVegas2K25ProTour
             DEFAULT_RES_HEIGHT);
 
         private List<Button> _gameComponents;
+        private Button NextButton;
+        private Button MenuButton;
         private String stateOfGame = "menu";
         private String previousGameState = "menu";
         Vector2 strokeCounter;
@@ -101,7 +100,6 @@ namespace PVegas2K25ProTour
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
         }
 
         protected override void Initialize()
@@ -122,7 +120,6 @@ namespace PVegas2K25ProTour
             _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             renderer.setDestination();
-
 
             Exiting += OnExiting;
             base.Initialize();
@@ -151,9 +148,16 @@ namespace PVegas2K25ProTour
 
             //Loading sounds used in game
             soundEffects = new List<SoundEffect>();
-            soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
-            soundEffects.Add(Content.Load<SoundEffect>("swing"));
-            soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
+            try
+            {
+                soundEffects.Add(Content.Load<SoundEffect>("holeSound"));
+                soundEffects.Add(Content.Load<SoundEffect>("swing"));
+                soundEffects.Add(Content.Load<SoundEffect>("buttonNoise"));
+            }
+            catch (DivideByZeroException e)
+            {
+                Debug.Write("Sound effects could not be loaded");
+            }
             songs.Add(Content.Load<Song>("MainMenu"));
             songs.Add(Content.Load<Song>("Take a Swing"));
 
@@ -175,7 +179,6 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "menu")
             {
                 mainMusicCheck();
-
 
                 var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
@@ -295,7 +298,6 @@ namespace PVegas2K25ProTour
                 }
                 FiveButton.Click += FiveButton_Click;
 
-                golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
                 {
                     BackButton,
@@ -316,17 +318,12 @@ namespace PVegas2K25ProTour
                 };
                 BackButton.Click += BackButton_Click;
 
-         
-
-
                 var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(660, 0),
 
                     Text = playerRecord.Coins.ToString(),
                 };
-
-
 
                 Button Cosmetic1Button = null;
                 Button Cosmetic2Button = null;
@@ -498,8 +495,6 @@ namespace PVegas2K25ProTour
                 }
                 GreenButton.Click += GreenButton_Click;
 
-
-                golf_ball.LoadContent(Content);
                 _gameComponents = new List<Button>()
                 {
                     BackButton,
@@ -569,7 +564,6 @@ namespace PVegas2K25ProTour
                 };
                 downHoleClick.Click += downHole_Click;
 
-
                 _gameComponents = new List<Button>()
                 {
                     BackButton,
@@ -584,14 +578,25 @@ namespace PVegas2K25ProTour
             }
             else
             {
+                NextButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(270, 270),
+                    Text = "Next Level",
+                };
+                NextButton.Click += NextButton_Click;
+                MenuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                {
+                    Position = new Vector2(737, 0),
+                    Text = "",
+                };
+                MenuButton.Click += menuButton_Click;
+
                 // TODO: use this.Content to load your game content here
                 background = Content.Load<Texture2D>("background");
                 golf_ball = new Ball(_sprite_batch);
                 golf_ball.setVirtualScale(renderer.getScale());
                 golf_ball.setVirtualOffset(renderer.getOffset());
                 golf_ball.LoadContent(Content);
-                // USE THESE METHODS TO ALTER BALL COSMETICS
-                //golf_ball.setHat(Content, null);
                 if (playerRecord.currentColor == Color.Transparent)
                 {
                     playerRecord.currentColor = Color.White;
@@ -612,15 +617,14 @@ namespace PVegas2K25ProTour
                 level_manager = new LevelManager(golf_ball, hole, hitbox);
                 level_manager.loadBorders((int)game_resolution.X, (int)game_resolution.Y);
                 level_manager.generateLevelList();
+                score = MAX_SCORE;
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
-
             }
             for (int i = 0; i < _gameComponents.Count; i++)
             {
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
             }
-
         }
 
         /*
@@ -766,6 +770,30 @@ namespace PVegas2K25ProTour
             LoadContent();
         }
 
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (current_level <= 5)
+            {
+                playedHole = false;
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadNextLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                previousGameState = "menu";
+                stateOfGame = "menu";
+                LoadContent();
+            }
+        }
+
         private void FiveButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -782,6 +810,13 @@ namespace PVegas2K25ProTour
                 level_manager.setLevel(4);
                 current_level = 4;
                 stateOfGame = "play";
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
@@ -808,6 +843,13 @@ namespace PVegas2K25ProTour
                 level_manager.setLevel(3);
                 current_level = 3;
                 stateOfGame = "play";
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
@@ -834,6 +876,13 @@ namespace PVegas2K25ProTour
                 level_manager.setLevel(2);
                 current_level = 2;
                 stateOfGame = "play";
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
@@ -861,6 +910,13 @@ namespace PVegas2K25ProTour
                 level_manager.setLevel(1);
                 current_level = 1;
                 stateOfGame = "play";
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
@@ -887,6 +943,13 @@ namespace PVegas2K25ProTour
                 level_manager.setLevel(0);
                 current_level = 0;
                 stateOfGame = "play";
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
                 level_manager.loadCurrentLevel(_sprite_batch, Content);
             }
             else
@@ -906,7 +969,7 @@ namespace PVegas2K25ProTour
         }
         private void menuButton_Click(Object sender, EventArgs e)
         {
-            previousGameState = stateOfGame;
+            previousGameState = "menu";
             stateOfGame = "menu";
             soundEffects[2].Play();
             LoadContent();
@@ -934,9 +997,16 @@ namespace PVegas2K25ProTour
             stateOfGame = "play";
             songStart = false;
             soundEffects[2].Play();
+            current_level = 0;
             MediaPlayer.Stop();
             playSong(1);
             LoadContent();
+            _gameComponents = new List<Button>()
+            {
+                MenuButton
+            };
+            MenuButton.setLocalScale(renderer.getScale());
+            MenuButton.setOffset(renderer.getOffset());
         }
 
         private void windowClientSizeChanged(object sender, System.EventArgs e)
@@ -972,46 +1042,14 @@ namespace PVegas2K25ProTour
             }
             if (IsKeyPressed())
             {
-                
-
                 stateOfGame = "Settings";
-                foreach (var component in _gameComponents)
-                {
-                    component.Update(gameTime);
-                }
                 LoadContent();
             }
 
             Window.ClientSizeChanged += windowClientSizeChanged;
-            if (stateOfGame == "menu")
+            foreach (var component in _gameComponents)
             {
-
-
-                foreach (var component in _gameComponents)
-                {
-                    component.Update(gameTime);
-                }
-            }
-            else if (stateOfGame == "levels")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    component.Update(gameTime);
-                }
-            }
-            else if (stateOfGame == "store")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    component.Update(gameTime);
-                }
-            }
-            else if (stateOfGame == "Settings")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    component.Update(gameTime);
-                }
+                component.Update(gameTime);
             }
 
             // TODO: Add your update logic here
@@ -1030,7 +1068,7 @@ namespace PVegas2K25ProTour
                 {
                     Debug.WriteLine("Updating stats counters...");
                     current_level++;
-                    saveLevelScore(golf_ball.getStrokeCount(), current_level);
+                    saveLevelScore((int)score, current_level);
                     totalHolesCompleted++;
 
                     //Unlock the next level
@@ -1042,13 +1080,10 @@ namespace PVegas2K25ProTour
                     canIncrementHolesCompleted = false;
                     SaveLoadSystem.Save(playerRecord);
                 }
-
-                if (nextLevelCheck())
-                {
-                    playedHole = false;
-                    canIncrementHolesCompleted = true;
-                    level_manager.loadNextLevel(_sprite_batch, Content);
-                }
+            }
+            else
+            {
+                reduceScore();
             }
             swingCounter();
             base.Update(gameTime);
@@ -1139,9 +1174,10 @@ namespace PVegas2K25ProTour
                         soundEffects[0].Play();
                         playedHole = true;
                     }
-                    drawVictoryScreen(shot.getStrokeCount());
+                    drawVictoryScreen();
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                     coins += addCoins(golf_ball.getStrokeCount());
+                    saveGame();
                     SaveLoadSystem.Save(playerRecord);
                     coinAddLevel = !coinAddLevel;
                 }
@@ -1152,12 +1188,18 @@ namespace PVegas2K25ProTour
                         soundEffects[0].Play();
                         playedHole = true;
                     }
-                    drawVictoryScreen(shot.getStrokeCount());
+                    drawVictoryScreen();
                     golf_ball.setPosition(new Vector2(100000, 1000000));
                 }
                 else if (hole.getCollision() == false)
                 {
                     coinAddLevel = false;
+                }
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
                 }
                 _sprite_batch.End();
                 renderer.Draw(_sprite_batch, Color.Black);
@@ -1224,19 +1266,21 @@ namespace PVegas2K25ProTour
 
         public int calculateScore(int number_of_shots)
         {
-            //scaling value to be determined
-            int score = MAX_SCORE - number_of_shots * 343;
-
-            if (score < 0)
+            int level_score = (int)(score - number_of_shots * SHOT_PENALTY);
+            if (level_score < 0)
             {
-                score = 0;
+                level_score = 0;
             }
-            return score;
+            return level_score;
+        }
+        public void reduceScore()
+        {
+            score -= SCORE_REDUCTION_SCALE;
         }
         public int calculateCoins(int number_of_shots)
         {
             //scaling value to be determined
-            int coins = MAX_COINS - number_of_shots * 10;
+            int coins = (current_level + 1) * 2 - number_of_shots;
 
             if (coins < 0)
             {
@@ -1248,7 +1292,7 @@ namespace PVegas2K25ProTour
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
-            int coins = MAX_COINS - number_of_shots * 10;
+            int coins = (current_level + 1) * 2 - number_of_shots;
 
             if (coins < 0)
             {
@@ -1274,35 +1318,29 @@ namespace PVegas2K25ProTour
             Vector2 win_text_pos = new Vector2(0, -100) + screen_center;
             Vector2 score_text_pos = new Vector2(-100, -40) + screen_center;
             Vector2 coins_text_pos = new Vector2(100, -40) + screen_center;
-            Vector2 next_text_pos = new Vector2(0, 40) + screen_center;
-            Vector2 next_button_size = new Vector2(150, 75);
-            Vector2 next_button_pos = new Vector2(-(next_button_size.X / 2f), 0) + screen_center;
 
             //Methods to format the text 
             String score = "Score: " + calculateScore(number_of_shots).ToString();
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
-
             //Populates the victory screen
             _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
-
-            _sprite_batch.Draw(line, new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y,
-                (int)next_button_size.X, (int)next_button_size.Y), null, Color.White, 2 * MathHelper.Pi, new Vector2(0, 0), SpriteEffects.None, 0);
-
-            _sprite_batch.DrawString(font, "Next Level", new Vector2(next_text_pos.X, next_text_pos.Y),
-                Color.Black, 0, textMiddlePoint, 1.5f, SpriteEffects.None, 0.5f);
         }
-        public void drawVictoryScreen(int number_of_shots)
+
+        public void drawVictoryScreen()
         {
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
-            Vector2 win_screen_size = new Vector2(500, 300);
+            Vector2 win_screen_size = new Vector2(500, 400);
             Vector2 win_screen_pos = new Vector2(-(win_screen_size.X / 2f), -200) + screen_center;
             line.SetData(new[] { Color.DarkSlateGray });
             _sprite_batch.Draw(line, new Rectangle((int)win_screen_pos.X, (int)win_screen_pos.Y,
                 (int)win_screen_size.X, (int)win_screen_size.Y), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
+            _gameComponents.Add(NextButton);
+            NextButton.setLocalScale(renderer.getScale());
+            NextButton.setOffset(renderer.getOffset());
             populateVictoryScreen(golf_ball.getStrokeCount());
         }
 
@@ -1503,22 +1541,20 @@ namespace PVegas2K25ProTour
         /// level and if it is larger than the current high score for that level,
         /// updates the current high score to the newly earned high score. 
         /// </summary>---------------------------------------------------------
-        public void saveLevelScore(int number_of_shots, int currentLevel)
+        public void saveLevelScore(int score, int currentLevel)
         {
-            Debug.WriteLine("num of shots: " + number_of_shots);
+            Debug.WriteLine("score: " + score);
 
-            int current_score = calculateScore(number_of_shots);
-
-            if (current_score > playerRecord.playerScoreLevelOne && currentLevel == 1)
-                playerRecord.playerScoreLevelOne = current_score;
-            else if (current_score > playerRecord.playerScoreLevelTwo && currentLevel == 2)
-                playerRecord.playerScoreLevelTwo = current_score;
-            else if (current_score > playerRecord.playerScoreLevelThree && currentLevel == 3)
-                playerRecord.playerScoreLevelThree = current_score;
-            else if (current_score > playerRecord.playerScoreLevelFour && currentLevel == 4)
-                playerRecord.playerScoreLevelFour = current_score;
-            else if (current_score > playerRecord.playerScoreLevelFive && currentLevel == 5)
-                playerRecord.playerScoreLevelFive = current_score;
+            if (score > playerRecord.playerScoreLevelOne && currentLevel == 1)
+                playerRecord.playerScoreLevelOne = score;
+            else if (score > playerRecord.playerScoreLevelTwo && currentLevel == 2)
+                playerRecord.playerScoreLevelTwo = score;
+            else if (score > playerRecord.playerScoreLevelThree && currentLevel == 3)
+                playerRecord.playerScoreLevelThree = score;
+            else if (score > playerRecord.playerScoreLevelFour && currentLevel == 4)
+                playerRecord.playerScoreLevelFour = score;
+            else if (score > playerRecord.playerScoreLevelFive && currentLevel == 5)
+                playerRecord.playerScoreLevelFive = score;
         }
 
         /// <summary>----------------------------------------------------------
@@ -1539,37 +1575,6 @@ namespace PVegas2K25ProTour
                 playerRecord.isLevelFiveUnlocked = true;
             else
                 Debug.WriteLine("NO MORE LEVELS!");
-        }
-
-        public bool nextLevelCheck()
-        {
-            Vector2 screen_center = new Vector2(game_resolution.X / 2 * renderer.getScale(),
-                game_resolution.Y / 2 * renderer.getScale());
-            Vector2 next_button_size = new Vector2(150 * renderer.getScale(), 75 * renderer.getScale());
-            Vector2 next_button_pos = new Vector2(-75, 0) + screen_center;
-
-            MouseState currentMouseState = Mouse.GetState();
-            bool isLeftButtonClicked = currentMouseState.LeftButton == ButtonState.Pressed;
-
-            // Check if left button was clicked and released
-            bool wasLeftButtonClickedAndReleased = isLeftButtonClicked && prevMouseState.LeftButton == ButtonState.Released;
-
-            if (wasLeftButtonClickedAndReleased)
-            {
-                Rectangle Rect = new Rectangle((int)next_button_pos.X, (int)next_button_pos.Y,
-                    (int)next_button_size.X, (int)next_button_size.Y);
-
-                if (Rect.Contains(mouse_pos))
-                {
-                    soundEffects[2].Play();
-                    return true;
-                }
-
-            }
-
-            // Update the previous mouse state for the next frame
-            prevMouseState = currentMouseState;
-            return false;
         }
 
         //---------------------------------------------------------------------
