@@ -23,7 +23,7 @@ namespace GameTest
         /// sure that the original record is equal to the loaded record. 
         /// </summary>---------------------------------------------------------
         [TestMethod]
-        public void TestFileSaveAndLoad()
+        public void testFileSaveAndLoad()
         {
             PlayerRecord my_first_player = new PlayerRecord();
             PlayerRecord my_second_player = new PlayerRecord();

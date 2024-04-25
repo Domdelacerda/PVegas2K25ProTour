@@ -23,7 +23,7 @@ namespace GameTest
         /// which it always should
         /// </summary>---------------------------------------------------------
         [TestMethod]
-        public void TestWindupShot()
+        public void testWindupShot()
         {
             using var new_game = new GameControl();
             new_game.RunOneFrame();
@@ -56,7 +56,7 @@ namespace GameTest
         /// arrow display, which it always should
         /// </summary>---------------------------------------------------------
         [TestMethod]
-        public void TestArrowSize()
+        public void testArrowSize()
         {
             using var new_game = new GameControl();
             new_game.RunOneFrame();
@@ -91,7 +91,7 @@ namespace GameTest
         /// shot power is zero
         /// </summary>---------------------------------------------------------
         [TestMethod]
-        public void TestArrowSizeZero()
+        public void testArrowSizeZero()
         {
             using var new_game = new GameControl();
             new_game.RunOneFrame();
@@ -111,7 +111,7 @@ namespace GameTest
         /// to the maximum value
         /// </summary>---------------------------------------------------------
         [TestMethod]
-        public void TestClampShotPower()
+        public void testClampShotPower()
         {
             using var new_game = new GameControl();
             new_game.RunOneFrame();
