@@ -1300,9 +1300,17 @@ namespace PVegas2K25ProTour
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
-            int coins = (current_level + 1) * 2 - number_of_shots;
+            int coins = 0;
 
             if (coins < 0)
+            {
+                coins = 0;
+            }
+            if (getSensitivityVal() <= 5 && getHoleSize() <= 5)
+            {
+                coins = (current_level + 1) * 2 - number_of_shots;
+            }
+            else
             {
                 coins = 0;
             }
@@ -1314,7 +1322,10 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void addMoney(float amount)
         {
-            coins += (int)amount;
+            if (getSensitivityVal() <= 5 && getHoleSize() <= 5)
+            {
+                coins += (int)amount;
+            }
         }
 
         public void populateVictoryScreen(int number_of_shots)
