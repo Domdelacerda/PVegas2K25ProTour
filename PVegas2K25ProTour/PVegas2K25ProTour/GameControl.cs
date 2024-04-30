@@ -718,8 +718,6 @@ namespace PVegas2K25ProTour
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
             _holeSize = holeSize;
-
-
         }
         private void downHole_Click(object sender, EventArgs e)
         {
