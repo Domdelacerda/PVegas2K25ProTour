@@ -29,7 +29,26 @@ namespace PVegas2K25ProTour
         public override void unexecute()
         {
             // To do: receiver.action() 
-            game_control.AdjustSettingVal(settings_type + 1);
+            game_control.AdjustSettingVal(game_control.choiceSwitch(settings_type));
+        }
+        
+    }
+    class DecreaseCommand : Command
+    {
+        private int settings_type;
+        public DecreaseCommand(GameControl gc, int type) : base(gc)
+        {
+            settings_type = type;
+        }
+        public override void execute()
+        {
+            // To do: receiver.action()
+            game_control.AdjustSettingVal(settings_type);
+        }
+        public override void unexecute()
+        {
+            // To do: receiver.action() 
+            game_control.AdjustSettingVal(game_control.choiceSwitch(settings_type));
         }
 
     }

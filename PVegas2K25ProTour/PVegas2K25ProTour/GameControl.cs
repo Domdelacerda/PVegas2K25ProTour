@@ -96,6 +96,7 @@ namespace PVegas2K25ProTour
 
         private int coins = 0;
         private bool coinAddLevel = false;
+        private Handler handler;
 
         //---------------------------------------------------------------------
         // GENERATED METHODS
@@ -125,6 +126,8 @@ namespace PVegas2K25ProTour
             _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             renderer.setDestination();
+
+            handler=new Handler(this);
 
             Exiting += OnExiting;
             base.Initialize();
@@ -573,13 +576,13 @@ namespace PVegas2K25ProTour
                     Position = new Vector2(330, 0),
                     Text = "",
                 };
-                undo.Click += downHole_Click;
+                undo.Click += UndoClick;
                 var redo = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("redo (1)"))
                 {
                     Position = new Vector2(390, 0),
                     Text = "",
                 };
-                redo.Click += downHole_Click;
+                redo.Click += RedoClick;
 
                 _gameComponents = new List<Button>()
                 {
@@ -650,7 +653,16 @@ namespace PVegas2K25ProTour
          * This method subtracts the appropriate amount of coins for purchasing
          * a new hat cosmetic and saves the new player coin total to the save file. 
          */
-
+        private void RedoClick(object sender, EventArgs e)
+        {
+            handler.Redo();
+            LoadContent();
+        }
+        private void UndoClick(object sender, EventArgs e)
+        {
+            handler.Undo();
+            LoadContent();
+        }
         private void BlankButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -696,33 +708,46 @@ namespace PVegas2K25ProTour
         }
         private void upVolume_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
-            _volume = volume;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
+            handler.IncreaseSetting(1);
+            LoadContent();
+            //_volume = volume;
+            
         }
         private void downVolume_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
-            _volume = volume;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
+            handler.DecreaseSetting(2);
+            LoadContent();
+            //_volume = volume;
         }
         private void upSens_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
-            _sensitivity = sensitivity;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
+            handler.IncreaseSetting(3);
+            LoadContent();
+           // _sensitivity = sensitivity;
         }
         private void downSens_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
-            _sensitivity = sensitivity;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
+            handler.DecreaseSetting(4);
+            LoadContent();
+            //_sensitivity = sensitivity;
         }
         private void upHole_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
-            _holeSize = holeSize;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
+            handler.IncreaseSetting(5);
+            LoadContent();
+            //_holeSize = holeSize;
         }
         private void downHole_Click(object sender, EventArgs e)
         {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
-            _holeSize = holeSize;
+            //(int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
+            handler.DecreaseSetting(6);
+            LoadContent();
+            //_holeSize = holeSize;
         }
 
         private void Cosmetic3Button_Click(object sender, EventArgs e)
@@ -1426,7 +1451,13 @@ namespace PVegas2K25ProTour
 
             return (volume, sensitivity, holeSize);
         }
-
+        public int choiceSwitch(int choice)
+        {
+            if (choice % 2 == 0)
+                return choice - 1;
+            else
+                return choice + 1;
+        }
         public void populateSettingsScreen()
         {
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
