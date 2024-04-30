@@ -1306,7 +1306,7 @@ namespace PVegas2K25ProTour
             {
                 coins = 0;
             }
-            if (getSensitivityVal() <= 5 && getHoleSize() <= 5)
+            if (getHoleSize() <= 5)
             {
                 coins = (current_level + 1) * 2 - number_of_shots;
             }
@@ -1322,7 +1322,7 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void addMoney(float amount)
         {
-            if (getSensitivityVal() <= 5 && getHoleSize() <= 5)
+            if (getHoleSize() <= 5)
             {
                 coins += (int)amount;
             }
