@@ -568,6 +568,18 @@ namespace PVegas2K25ProTour
                     Text = "<",
                 };
                 downHoleClick.Click += downHole_Click;
+                var undo = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("undo (1)"))
+                {
+                    Position = new Vector2(330, 0),
+                    Text = "",
+                };
+                undo.Click += downHole_Click;
+                var redo = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("redo (1)"))
+                {
+                    Position = new Vector2(390, 0),
+                    Text = "",
+                };
+                redo.Click += downHole_Click;
 
                 _gameComponents = new List<Button>()
                 {
@@ -578,7 +590,9 @@ namespace PVegas2K25ProTour
                     upSensClick,
                     downSensClick,
                     upHoleClick,
-                    downHoleClick
+                    downHoleClick,
+                    undo,
+                    redo
                 };
             }
             else
@@ -1419,19 +1433,16 @@ namespace PVegas2K25ProTour
         {
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
-            Vector2 settings_text_pos = new Vector2(0, -175) + screen_center;
+            Vector2 settings_text_pos = new Vector2(0, -150) + screen_center;
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
             Vector2 hole_value_pos = new Vector2(-140, 155) + screen_center;
-        
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
             Vector2 sensitivity_value_pos = new Vector2(275, 155) + screen_center;
 
             Vector2 volume_text_pos = new Vector2(50, 200) + screen_center;
             Vector2 volume_value_pos = new Vector2(155, 200) + screen_center;
-
-
 
             String holeSize = getHoleSize().ToString();
 

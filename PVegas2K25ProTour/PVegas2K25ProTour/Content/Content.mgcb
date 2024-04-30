@@ -327,6 +327,18 @@
 /processorParam:TextureFormat=Color
 /build:red.png
 
+#begin redo (1).gif
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:redo (1).gif
+
 #begin Sand.gif
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -422,6 +434,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TopHat.gif
+
+#begin undo (1).gif
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:undo (1).gif
 
 #begin Wall.gif
 /importer:TextureImporter
