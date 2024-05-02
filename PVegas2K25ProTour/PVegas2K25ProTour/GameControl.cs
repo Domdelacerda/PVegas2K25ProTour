@@ -45,7 +45,7 @@ namespace PVegas2K25ProTour
         private float _holeSize = 5;
         private float _sensitivity = 5;
         private float _volume = 5;
-
+        11111111111111111111111111111111111111111111111111111111111111111111111111111111
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
@@ -175,13 +175,15 @@ namespace PVegas2K25ProTour
             {
                 mainMusicCheck();
 
-                var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var playButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "Play",
                 };
                 playButton.Click += PlayButton_Click;
-                var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var quitButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 260),
                     Text = "Quit",
@@ -190,27 +192,31 @@ namespace PVegas2K25ProTour
                 quitButton.Click += QuitButton_Click;
                 golf_ball = new Ball(_sprite_batch);
                 golf_ball = new Ball(_sprite_batch);
-                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("settings"))
+                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("settings"))
                 {
                     Position = new Vector2(730, 0),
                     //Text = "Settings",
                 };
                 settingsButton.Click += SettingsButton_Click;
 
-                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("store"))
+                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("store"))
                 {
                     Position = new Vector2(660, 0),
                     //Text = "Settings",
                 };
                 shopingButton.Click += ShopingButton_Click;
 
-                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var LevelButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 130),
                     Text = "Level",
                 };
                 LevelButton.Click += LevelButton_Click;
-                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("delete"))
+                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("delete"))
                 {
                     Position = new Vector2(730, 324),
                 };
@@ -229,14 +235,16 @@ namespace PVegas2K25ProTour
             {
                 mainMusicCheck();
 
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
 
-                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var OneButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 70),
                     Text = "Level 1" + "\n " + playerRecord.playerScoreLevelOne,
@@ -244,7 +252,8 @@ namespace PVegas2K25ProTour
                 };
                 OneButton.Click += OneButton_Click;
 
-                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var TwoButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 70),
                     Text = "Level 2" + "\n " + playerRecord.playerScoreLevelTwo,
@@ -256,7 +265,8 @@ namespace PVegas2K25ProTour
                     TwoButton.color = Color.Black;
                 }
                 TwoButton.Click += TwoButton_Click;
-                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var ThreeButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 70),
                     Text = "Level 3" + "\n " + playerRecord.playerScoreLevelThree,
@@ -268,7 +278,8 @@ namespace PVegas2K25ProTour
                     ThreeButton.color = Color.Black;
                 }
                 ThreeButton.Click += ThreeButton_Click;
-                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var FourButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 200),
                     Text = "Level 4" + "\n " + playerRecord.playerScoreLevelFour,
@@ -280,7 +291,8 @@ namespace PVegas2K25ProTour
                     FourButton.color = Color.Black;
                 }
                 FourButton.Click += FourButton_Click;
-                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var FiveButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 200),
                     Text = "Level 5" + "\n " + playerRecord.playerScoreLevelFive,
@@ -292,7 +304,8 @@ namespace PVegas2K25ProTour
                     FiveButton.color = Color.Black;
                 }
                 FiveButton.Click += FiveButton_Click;
-                var SixButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var SixButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 200),
                     Text = "Level 6" + "\n " + playerRecord.playerScoreLevelSix,
@@ -319,14 +332,16 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "store")
             {
                 mainMusicCheck();
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
 
-                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
+                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(660, 0),
 
@@ -340,7 +355,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticOneUnlocked == false)
                 {
 
-                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 130),
                         Text = "50",
@@ -348,7 +364,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 130),
 
@@ -357,7 +374,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic1Button.Click += Cosmetic1Button_Click;
 
-                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"), Content.Load<SpriteFont>("Font"))
+                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 130),
                     _isHoveringColour = Color.White,
@@ -372,7 +390,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticTwoUnlocked == false)
                 {
 
-                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 260),
                         Text = "50",
@@ -380,7 +399,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 260),
 
@@ -389,7 +409,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic2Button.Click += Cosmetic2Button_Click;
 
-                var TopHat = new Button(Content.Load<Texture2D>("TopHat"), Content.Load<SpriteFont>("Font"))
+                var TopHat = new Button(Content.Load<Texture2D>("TopHat"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 260),
                     _isHoveringColour = Color.White,
@@ -404,7 +425,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticThreeUnlocked == false)
                 {
 
-                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 390),
                         Text = "50",
@@ -413,7 +435,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 390),
 
@@ -422,7 +445,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic3Button.Click += Cosmetic3Button_Click;
 
-                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"), Content.Load<SpriteFont>("Font"))
+                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 390),
                     _isHoveringColour = Color.White,
@@ -434,7 +458,8 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat.Text = "E";
                 }
 
-                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 0),
                     Text = " "
@@ -450,7 +475,8 @@ namespace PVegas2K25ProTour
                     BlankButton._isHoveringColour = Color.Red;
                 }
                 BlankButton.Click += BlankButton_Click;
-                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(130, 0),
                     Text = " "
@@ -468,7 +494,8 @@ namespace PVegas2K25ProTour
                 NoHat.Click += NoHat_Click;
 
 
-                var RedButton = new Button(Content.Load<Texture2D>("red"), Content.Load<SpriteFont>("Font"))
+                var RedButton = new Button(Content.Load<Texture2D>("red"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 390),
                     Text = " "
@@ -479,7 +506,8 @@ namespace PVegas2K25ProTour
                     RedButton.Text = "E";
                 }
                 RedButton.Click += RedButton_Click;
-                var BlueButton = new Button(Content.Load<Texture2D>("blue"), Content.Load<SpriteFont>("Font"))
+                var BlueButton = new Button(Content.Load<Texture2D>("blue"),
+                    Content.Load<SpriteFont>("Font"))
                 {
 
                     Position = new Vector2(260, 260),
@@ -491,7 +519,8 @@ namespace PVegas2K25ProTour
                     BlueButton._isHoveringColour = Color.Green;
                 }
                 BlueButton.Click += BlueButton_Click;
-                var GreenButton = new Button(Content.Load<Texture2D>("green"), Content.Load<SpriteFont>("Font"))
+                var GreenButton = new Button(Content.Load<Texture2D>("green"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 130),
                     Text = " "
@@ -523,49 +552,57 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "Settings")
             {
                 mainMusicCheck();
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
-                var menuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                var menuButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("aHouse2.0"))
                 {
                     Position = new Vector2(737, 0),
                     Text = "",
                 };
                 menuButton.Click += menuButton_Click;
-                var upVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upVolume = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(420, 210),
                     Text = ">",
                 };
                 upVolume.Click += upVolume_Click;
-                var downVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downVolume = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(300, 210),
                     Text = "<",
                 };
                 downVolume.Click += downVolume_Click;
-                var upSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upSensClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(647, 365),
                     Text = ">",
                 };
                 upSensClick.Click += upSens_Click;
-                var downSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downSensClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(527, 365),
                     Text = "<",
                 };
                 downSensClick.Click += downSens_Click;
-                var upHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upHoleClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(235, 365),
                     Text = ">",
                 };
                 upHoleClick.Click += upHole_Click;
-                var downHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downHoleClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(115, 365),
                     Text = "<",
@@ -586,13 +623,15 @@ namespace PVegas2K25ProTour
             }
             else
             {
-                NextButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                NextButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(270, 270),
                     Text = "Next Level",
                 };
                 NextButton.Click += NextButton_Click;
-                MenuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                MenuButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("aHouse2.0"))
                 {
                     Position = new Vector2(737, 0),
                     Text = "",
@@ -1388,7 +1427,8 @@ namespace PVegas2K25ProTour
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " 
+                    + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
                 if (hole.getCollision() == true && !coinAddLevel)
                 {
@@ -1601,9 +1641,12 @@ namespace PVegas2K25ProTour
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
             //Populates the victory screen
-            _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0,
+                textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0,
+                textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0,
+                textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
         }
         //// <summary>----------------------------------------------------------
         /// Method that actually draws the victory screen
@@ -1721,7 +1764,8 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X - game_resolution.X / 5, volume_value_pos.Y - game_resolution.Y / 2 - 20),
+            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X
+                - game_resolution.X / 5, volume_value_pos.Y - game_resolution.Y / 2 - 20),
               Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
@@ -1739,12 +1783,16 @@ namespace PVegas2K25ProTour
             }
             if (getVolumeVal() >= 1 && getVolumeVal() < 10)
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2, hole_value_pos.Y - game_resolution.Y / 3 + 10),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X
+                    - font.MeasureString(volume).X / 2,
+                    hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
             else
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2 - 10, hole_value_pos.Y - game_resolution.Y / 3 + 10),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X
+                    - font.MeasureString(volume).X / 2 - 10,
+                    hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
@@ -1769,7 +1817,8 @@ namespace PVegas2K25ProTour
         public void drawSettingsScreen()
         {
             line.SetData(new[] { Color.DarkSlateGray });
-            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), null,
+            _sprite_batch.Draw(line, new Rectangle(0, 0,
+                Window.ClientBounds.Width, Window.ClientBounds.Height), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateSettingsScreen();
         }
@@ -1818,7 +1867,8 @@ namespace PVegas2K25ProTour
 
         public void mainMusicCheck()
         {
-            if ((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
+            if ((stateOfGame == "menu" || stateOfGame == "Settings" ||
+                stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
             {
                 playSong(0);
 
