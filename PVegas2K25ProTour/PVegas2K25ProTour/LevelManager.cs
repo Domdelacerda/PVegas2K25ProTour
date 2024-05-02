@@ -101,6 +101,16 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
 
         /// <summary>----------------------------------------------------------
+        /// Gets the current level the game is on
+        /// </summary>
+        /// <returns>the current level of the game.</returns>
+        /// -------------------------------------------------------------------
+        public int currentLevel()
+        {
+            return level;
+        }
+
+        /// <summary>----------------------------------------------------------
         /// Loads each of the borders at the edge of the screen
         /// </summary>
         /// <param name="window_width">the width of the window.</param>

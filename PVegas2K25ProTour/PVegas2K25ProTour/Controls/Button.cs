@@ -12,33 +12,21 @@ namespace PVegas2K25ProTour.Controls
 {
     public class Button : Component
     {
-
         private MouseState _mouseState;
-
         private SpriteFont _font;
-
         private bool _isHovering;
+        private bool locked = false;
         public Color _isHoveringColour {get; set;}
         public Color color { get; set; }
-        private MouseState _previousMouse;
-
         private Texture2D _texture;
         private Texture2D _texture2;
-
         private float local_scale;
-
         private Vector2 local_offset;
-
-
         public event EventHandler Click;
-
         public bool Clicked { get; private set; }
-
         public Color PenColour { get; set; }
-
         public Vector2 Position { get; set; }
-
-
+        public Rectangle previousRectangle;
         public Rectangle rectangle
         {
             get
@@ -94,7 +82,7 @@ namespace PVegas2K25ProTour.Controls
 
         public override void Update(GameTime gameTime)
         {
-            _previousMouse = _mouseState;
+            //_previousMouse = _mouseState;
             _mouseState = Mouse.GetState();
 
             var mouseRectangle = new Rectangle(_mouseState.X, _mouseState.Y, 1, 1);
@@ -107,11 +95,23 @@ namespace PVegas2K25ProTour.Controls
             if(mouseRectangle.Intersects(scaledRectangle)) 
             { 
                 _isHovering= true;
-
-                if(_mouseState.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed) 
+                if(_mouseState.LeftButton == ButtonState.Released && 
+                    previousRectangle.Intersects(scaledRectangle) && locked == true)
                 { 
                     Click?.Invoke(this, new EventArgs());
+                    locked = false;
                 }
+            }
+
+            if (_mouseState.LeftButton == ButtonState.Pressed && locked == false)
+            {
+                previousRectangle = new Rectangle(_mouseState.X, _mouseState.Y, 1, 1);
+                locked = true;
+            }
+            else if (_mouseState.LeftButton == ButtonState.Released && locked == true)
+            {
+                previousRectangle = new Rectangle(0, 0, 0, 0);
+                locked = false;
             }
         }
 

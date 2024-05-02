@@ -35,6 +35,9 @@ namespace PVegas2K25ProTour
         public bool isLevelFiveUnlocked { get; set; }
         public int playerScoreLevelFive { get; set; }
 
+        public bool isLevelSixUnlocked { get; set; }
+        public int playerScoreLevelSix { get; set; }
+
         // Cosmetics Based Data
         public bool isCosmeticOneUnlocked { get; set; }
         public bool isCosmeticTwoUnlocked { get; set; }

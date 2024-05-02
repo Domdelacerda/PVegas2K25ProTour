@@ -39,7 +39,6 @@ namespace PVegas2K25ProTour
         private float SCORE_REDUCTION_SCALE = 1f;
         private float SHOT_PENALTY = 250f;
         private float score;
-        private Coin coin;
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -59,7 +58,6 @@ namespace PVegas2K25ProTour
         private bool songStart = false;
         private bool songStartLevel = false;
         private bool playedHole = false;
-        private bool playedSwing = false;
         private int counter;
 
         private Ball golf_ball;
@@ -68,18 +66,13 @@ namespace PVegas2K25ProTour
         private Hitbox hitbox;
         private LevelManager level_manager;
         private Texture2D background;
-        private Texture2D cursor;
         SpriteFont font;
-        MouseState prevMouseState;
-        MouseState prevMouseStateVol;
         KeyboardState previousKeyState;
 
         private PlayerRecord playerRecord;
         private int totalHolesCompleted;
         private bool canIncrementHolesCompleted = true;
         private int totalStrokesLifetime;
-        private int current_level = 0;
-        bool isFirstContentLoad = true;
         private float workVal;
 
         Texture2D line;
@@ -249,7 +242,7 @@ namespace PVegas2K25ProTour
                 var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 70),
-                    Text = "Level 1",
+                    Text = "Level 1" + "\n " + playerRecord.playerScoreLevelOne,
 
                 };
                 OneButton.Click += OneButton_Click;
@@ -257,7 +250,7 @@ namespace PVegas2K25ProTour
                 var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 70),
-                    Text = "Level 2",
+                    Text = "Level 2" + "\n " + playerRecord.playerScoreLevelTwo,
 
                 };
                 if (playerRecord.isLevelTwoUnlocked == false)
@@ -269,7 +262,7 @@ namespace PVegas2K25ProTour
                 var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 70),
-                    Text = "Level 3",
+                    Text = "Level 3" + "\n " + playerRecord.playerScoreLevelThree,
 
                 };
                 if (playerRecord.isLevelThreeUnlocked == false)
@@ -281,7 +274,7 @@ namespace PVegas2K25ProTour
                 var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 200),
-                    Text = "Level 4",
+                    Text = "Level 4" + "\n " + playerRecord.playerScoreLevelFour,
 
                 };
                 if (playerRecord.isLevelFourUnlocked == false)
@@ -293,7 +286,7 @@ namespace PVegas2K25ProTour
                 var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 200),
-                    Text = "Level 5",
+                    Text = "Level 5" + "\n " + playerRecord.playerScoreLevelFive,
 
                 };
                 if (playerRecord.isLevelFiveUnlocked == false)
@@ -302,6 +295,18 @@ namespace PVegas2K25ProTour
                     FiveButton.color = Color.Black;
                 }
                 FiveButton.Click += FiveButton_Click;
+                var SixButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                {
+                    Position = new Vector2(520, 200),
+                    Text = "Level 6" + "\n " + playerRecord.playerScoreLevelSix,
+
+                };
+                if (playerRecord.isLevelSixUnlocked == false)
+                {
+                    SixButton._isHoveringColour = Color.Black;
+                    SixButton.color = Color.Black;
+                }
+                SixButton.Click += SixButton_Click;
 
                 _gameComponents = new List<Button>()
                 {
@@ -310,7 +315,8 @@ namespace PVegas2K25ProTour
                     TwoButton,
                     ThreeButton,
                     FourButton,
-                    FiveButton
+                    FiveButton,
+                    SixButton
                 };
             }
             if (stateOfGame == "store")
@@ -774,7 +780,7 @@ namespace PVegas2K25ProTour
         private void NextButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
-            if (current_level <= 5)
+            if (level_manager.currentLevel() < 5)
             {
                 playedHole = false;
                 canIncrementHolesCompleted = true;
@@ -791,7 +797,41 @@ namespace PVegas2K25ProTour
             {
                 previousGameState = "menu";
                 stateOfGame = "menu";
+                soundEffects[2].Play();
                 LoadContent();
+            }
+        }
+
+        private void SixButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelSixUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(5);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 5 is not unlocked
+                Debug.WriteLine("Level 5 not unlocked!!");
             }
         }
 
@@ -809,8 +849,8 @@ namespace PVegas2K25ProTour
             {
                 // Yes, this is correct because level 1 has value: level = 0
                 level_manager.setLevel(4);
-                current_level = 4;
                 stateOfGame = "play";
+                canIncrementHolesCompleted = true;
                 score = MAX_SCORE;
                 _gameComponents = new List<Button>()
                 {
@@ -842,8 +882,8 @@ namespace PVegas2K25ProTour
             {
                 // Yes, this is correct because level 1 has value: level = 0
                 level_manager.setLevel(3);
-                current_level = 3;
                 stateOfGame = "play";
+                canIncrementHolesCompleted = true;
                 score = MAX_SCORE;
                 _gameComponents = new List<Button>()
                 {
@@ -875,8 +915,8 @@ namespace PVegas2K25ProTour
             {
                 // Yes, this is correct because level 1 has value: level = 0
                 level_manager.setLevel(2);
-                current_level = 2;
                 stateOfGame = "play";
+                canIncrementHolesCompleted = true;
                 score = MAX_SCORE;
                 _gameComponents = new List<Button>()
                 {
@@ -909,8 +949,8 @@ namespace PVegas2K25ProTour
             {
                 // Yes, this is correct because level 1 has value: level = 0
                 level_manager.setLevel(1);
-                current_level = 1;
                 stateOfGame = "play";
+                canIncrementHolesCompleted = true;
                 score = MAX_SCORE;
                 _gameComponents = new List<Button>()
                 {
@@ -942,8 +982,8 @@ namespace PVegas2K25ProTour
             {
                 // Yes, this is correct because level 1 has value: level = 0
                 level_manager.setLevel(0);
-                current_level = 0;
                 stateOfGame = "play";
+                canIncrementHolesCompleted = true;
                 score = MAX_SCORE;
                 _gameComponents = new List<Button>()
                 {
@@ -998,7 +1038,7 @@ namespace PVegas2K25ProTour
             stateOfGame = "play";
             songStart = false;
             soundEffects[2].Play();
-            current_level = 0;
+            level_manager.setLevel(0);
             MediaPlayer.Stop();
             playSong(1);
             LoadContent();
@@ -1068,12 +1108,12 @@ namespace PVegas2K25ProTour
                 if (canIncrementHolesCompleted)
                 {
                     Debug.WriteLine("Updating stats counters...");
-                    current_level++;
-                    saveLevelScore((int)score, current_level);
+                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()), 
+                        level_manager.currentLevel());
                     totalHolesCompleted++;
 
                     //Unlock the next level
-                    unlockNextLevel(current_level);
+                    unlockNextLevel(level_manager.currentLevel());
 
                     // Note, user's lifetime strokes only update after a
                     // level is completed
@@ -1288,7 +1328,7 @@ namespace PVegas2K25ProTour
         public int calculateCoins(int number_of_shots)
         {
             //scaling value to be determined
-            int coins = (current_level + 1) * 2 - number_of_shots;
+            int coins = (level_manager.currentLevel() + 1) * 2 - number_of_shots;
 
             if (coins < 0)
             {
@@ -1308,7 +1348,7 @@ namespace PVegas2K25ProTour
             }
             if (getHoleSize() <= 5)
             {
-                coins = (current_level + 1) * 2 - number_of_shots;
+                coins = (level_manager.currentLevel() + 1) * 2 - number_of_shots;
             }
             else
             {
@@ -1571,16 +1611,18 @@ namespace PVegas2K25ProTour
         {
             Debug.WriteLine("score: " + score);
 
-            if (score > playerRecord.playerScoreLevelOne && currentLevel == 1)
+            if (score > playerRecord.playerScoreLevelOne && currentLevel == 0)
                 playerRecord.playerScoreLevelOne = score;
-            else if (score > playerRecord.playerScoreLevelTwo && currentLevel == 2)
+            else if (score > playerRecord.playerScoreLevelTwo && currentLevel == 1)
                 playerRecord.playerScoreLevelTwo = score;
-            else if (score > playerRecord.playerScoreLevelThree && currentLevel == 3)
+            else if (score > playerRecord.playerScoreLevelThree && currentLevel == 2)
                 playerRecord.playerScoreLevelThree = score;
-            else if (score > playerRecord.playerScoreLevelFour && currentLevel == 4)
+            else if (score > playerRecord.playerScoreLevelFour && currentLevel == 3)
                 playerRecord.playerScoreLevelFour = score;
-            else if (score > playerRecord.playerScoreLevelFive && currentLevel == 5)
+            else if (score > playerRecord.playerScoreLevelFive && currentLevel == 4)
                 playerRecord.playerScoreLevelFive = score;
+            else if (score > playerRecord.playerScoreLevelSix && currentLevel == 5)
+                playerRecord.playerScoreLevelSix = score;
         }
 
         /// <summary>----------------------------------------------------------
@@ -1591,14 +1633,16 @@ namespace PVegas2K25ProTour
         /// </summary>---------------------------------------------------------
         public void unlockNextLevel(int currentLevel)
         {
-            if (currentLevel == 1)
+            if (currentLevel == 0)
                 playerRecord.isLevelTwoUnlocked = true;
-            else if (currentLevel == 2)
+            else if (currentLevel == 1)
                 playerRecord.isLevelThreeUnlocked = true;
-            else if (currentLevel == 3)
+            else if (currentLevel == 2)
                 playerRecord.isLevelFourUnlocked = true;
-            else if (currentLevel == 4)
+            else if (currentLevel == 3)
                 playerRecord.isLevelFiveUnlocked = true;
+            else if (currentLevel == 4)
+                playerRecord.isLevelSixUnlocked = true;
             else
                 Debug.WriteLine("NO MORE LEVELS!");
         }
