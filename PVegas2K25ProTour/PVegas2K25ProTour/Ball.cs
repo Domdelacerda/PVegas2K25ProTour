@@ -67,6 +67,12 @@ namespace PVegas2K25ProTour
             ball_sprite = _content.Load<Texture2D>("GolfBall");
         }
 
+        public void Update(GameTime time)
+        {
+            updateSpeed();
+            updatePosition(time);
+        }
+
         public void Draw()
         {
             _sprite_batch.Draw(ball_sprite, ball_pos, ball_color);
@@ -139,17 +145,6 @@ namespace PVegas2K25ProTour
         public Vector2 virtualCenter()
         {
             return center() * virtual_scale + virtual_offset;
-        }
-
-        /// <summary>----------------------------------------------------------
-        /// Composite date function to update speed and position every frame
-        /// </summary>
-        /// <param name="time">the time used for physics calculations.</param>
-        /// -------------------------------------------------------------------
-        public void Update(GameTime time)
-        {
-            updateSpeed();
-            updatePosition(time);
         }
 
         /// <summary>----------------------------------------------------------

@@ -109,9 +109,9 @@ namespace PVegas2K25ProTour
         }
 
         /// <summary>----------------------------------------------------------
-        /// Obtains the width of the object from the size of its sprite
+        /// Obtains the width of the obstacle from the size of its sprite
         /// </summary>
-        /// <returns>the width of the object.</returns>
+        /// <returns>the width of the obstacle.</returns>
         /// -------------------------------------------------------------------
         public override float width()
         {
@@ -119,9 +119,9 @@ namespace PVegas2K25ProTour
         }
 
         /// <summary>----------------------------------------------------------
-        /// Obtains the height of the object from the size of its sprite
+        /// Obtains the height of the obstacle from the size of its sprite
         /// </summary>
-        /// <returns>the width of the object.</returns>
+        /// <returns>the width of the obstacle.</returns>
         /// -------------------------------------------------------------------
         public override float height()
         {
@@ -129,7 +129,7 @@ namespace PVegas2K25ProTour
         }
 
         /// <summary>----------------------------------------------------------
-        /// Obtains the center of a game object using its position and 
+        /// Obtains the center of the obstacle using its position and 
         /// dimensions
         /// </summary>
         /// <returns>the center of the object.</returns>
