@@ -28,7 +28,13 @@ namespace GameTest
         {
             using var new_game = new GameControl();
             new_game.RunOneFrame();
-            Assert.IsTrue(true);
+            Ball ball = new_game.getBall();
+            Vector2 ogPos = ball.position();
+            ball.setSpeed(new Vector2(1, 1));
+            Lake lake=new Lake(new Vector2(150,150),new_game.getSpriteBatch(),new Hitbox(),new Vector2(1,1));
+            ball.setPosition(lake.position());
+            bool backToOgSpot = ball.position().Y == ogPos.Y && ball.position().X == ogPos.X;
+            Assert.IsTrue(backToOgSpot);
         }
 
         [TestMethod]
