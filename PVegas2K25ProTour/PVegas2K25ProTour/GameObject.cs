@@ -210,11 +210,6 @@ namespace PVegas2K25ProTour
             vector1.Normalize();
             vector2.Normalize();
             return (float)Math.Acos(Vector2.Dot(vector1, vector2));
-            /*
-            Vector2 inverted_distance = new Vector2(vector2.Y - vector1.Y, 
-                vector2.X - vector1.X);
-            return (float)Math.Atan2(inverted_distance.X, inverted_distance.Y);
-            */
         }
     }
 }

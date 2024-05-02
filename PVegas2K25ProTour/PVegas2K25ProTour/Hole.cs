@@ -163,13 +163,5 @@ namespace PVegas2K25ProTour
         {
             collision = new_collision;
         }
-        /*Hole     Par
-         * 1        1
-         * 2        3
-         * 3        2
-         * 4        2
-         * 5        3
-         * 6        3
-         */
     }
 }
