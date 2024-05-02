@@ -1547,7 +1547,6 @@ namespace PVegas2K25ProTour
             return level_score;
         }
 
-<<<<<<< HEAD
         public int getShotPenalty()
         {
             return SHOT_PENALTY;
@@ -1557,18 +1556,13 @@ namespace PVegas2K25ProTour
             return MAX_SCORE;
         }
 
-=======
         //// <summary>----------------------------------------------------------
         /// Method used to alter the score of a level
         /// </summary>---------------------------------------------------------
->>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
         public void reduceScore()
         {
             score -= SCORE_REDUCTION_SCALE;
         }
-<<<<<<< HEAD
-
-=======
 
         //// <summary>----------------------------------------------------------
         /// Method used to calculate the coin amount obtained in a level
@@ -1593,7 +1587,6 @@ namespace PVegas2K25ProTour
         /// <param name="number_of_shots"> the number of strokes the user
         /// performed in a given level.</param>
         /// </summary>---------------------------------------------------------
->>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1630,13 +1623,6 @@ namespace PVegas2K25ProTour
         private void swingCounter()
         {
 
-<<<<<<< HEAD
-        public int getCoins()
-        {
-            return coins;
-        }
-
-=======
             if (golf_ball.getStrokeCount() > counter)
             {
                 counter++;
@@ -1647,11 +1633,14 @@ namespace PVegas2K25ProTour
                 counter = 0;
             }
         }
+        public int getCoins()
+        {
+            return coins;
+        }
 
         //// <summary>----------------------------------------------------------
         /// Method that is used to populate the vicoty screen
         /// </summary>---------------------------------------------------------
->>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
