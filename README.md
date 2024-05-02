@@ -9,4 +9,7 @@ Inside of the project properties, click on the build page. In the platform targe
 
 The last step is to build the solution by clicking on the build tab in the toolbar and clicking build solution. Once the solution is finished building, the folder you specified in the output path field will now contain the executable file for our game, PVegas2K25ProTour.exe, which you can run by double clicking on it in the file explorer.
 
+Level 5 contains a slight bug, where the 2nd downslope does not act as intended. This happens due to the logic of the obstacle. This would be easy fix, but due to time constraints it was unable to be fixed.
+Obstacles have a bug with collision, where if ball is hit in a perfect way can cause ball to appear to be stuck to whatever it has collided with whether it is an obstacle or border. Due to the construction of our collision, it simple would have been way to large of an undertaking to try and accomplish this debugging. Implementing Full screen doesn't have a bug, but does contains a performance issue, where it may take a while to load Full screen. Coin updating has an issue, where it doen't always update. This issue wasn't fixed we struggled to locate source of the issue.
+
 
