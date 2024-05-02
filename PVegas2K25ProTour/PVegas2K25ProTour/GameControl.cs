@@ -674,6 +674,183 @@ namespace PVegas2K25ProTour
             }
         }
 
+        protected override void Update(GameTime gameTime)
+        {
+
+            // See if the user pressed Quit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
+                ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+            if (IsKeyPressed())
+            {
+                stateOfGame = "Settings";
+                LoadContent();
+            }
+
+            Window.ClientSizeChanged += windowClientSizeChanged;
+            foreach (var component in _gameComponents)
+            {
+                component.Update(gameTime);
+            }
+
+            // TODO: Add your update logic here
+            MouseState mouse_state = Mouse.GetState();
+            moveMouseTo(mouse_state.X, mouse_state.Y);
+            updateDragState(isDraggingBall(mouse_state, golf_ball));
+            shot.Update(dragging_mouse, mouse_pos, golf_ball);
+            hole.Update(golf_ball.center());
+            golf_ball.Update(gameTime);
+            addMoney(level_manager.Update());
+            if (hole.getCollision() == true)
+            {
+                // uses a flag to ensure stats counters are only
+                // updated once per level
+                if (canIncrementHolesCompleted)
+                {
+                    Debug.WriteLine("Updating stats counters...");
+                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()),
+                        level_manager.currentLevel());
+                    totalHolesCompleted++;
+
+                    //Unlock the next level
+                    unlockNextLevel(level_manager.currentLevel());
+
+                    // Note, user's lifetime strokes only update after a
+                    // level is completed
+                    totalStrokesLifetime += golf_ball.getStrokeCount();
+                    canIncrementHolesCompleted = false;
+                    SaveLoadSystem.Save(playerRecord);
+                }
+            }
+            else
+            {
+                reduceScore();
+            }
+            if (level_manager.removeCoinCheck())
+            {
+                soundEffects[3].Play();
+                level_manager.removeCoinCheckChange(false);
+            }
+            swingCounter();
+            shot.setSensitivity(getSensitivityVal());
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            renderer.setActive(Color.Black);
+
+            // TODO: Add your drawing code here
+            _sprite_batch.Begin();
+            // Draw all obstacles in the obstacle list
+            _sprite_batch.Draw(background, Vector2.Zero, Color.DarkOliveGreen);
+            if (stateOfGame == "menu")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "levels")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "store")
+            {
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else if (stateOfGame == "Settings")
+            {
+                drawSettingsScreen();
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+            else
+            {
+                level_manager.Draw(_sprite_batch);
+                hole.Draw();
+                shot.Draw();
+                golf_ball.Draw();
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: "
+                    + golf_ball.getStrokeCount().ToString()
+                   , strokeCounter, Color.Black);
+                if (hole.getCollision() == true && !coinAddLevel)
+                {
+                    if (playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
+                    drawVictoryScreen();
+                    golf_ball.setPosition(new Vector2(100000, 1000000));
+                    coins += addCoins(golf_ball.getStrokeCount());
+                    saveGame();
+                    SaveLoadSystem.Save(playerRecord);
+                    coinAddLevel = !coinAddLevel;
+                }
+                else if (hole.getCollision() == true)
+                {
+                    if (playedHole == false)
+                    {
+                        soundEffects[0].Play();
+                        playedHole = true;
+                    }
+                    drawVictoryScreen();
+                    golf_ball.setPosition(new Vector2(100000, 1000000));
+                }
+                else if (hole.getCollision() == false)
+                {
+                    coinAddLevel = false;
+                }
+                foreach (var component in _gameComponents)
+                {
+                    {
+                        component.Draw(gameTime, _sprite_batch);
+                    }
+                }
+                _sprite_batch.End();
+                renderer.Draw(_sprite_batch, Color.Black);
+                base.Draw(gameTime);
+            }
+        }
+
+        //---------------------------------------------------------------------
+        // PROGRAMMER-WRITTEN METHODS
+        //---------------------------------------------------------------------
+
+
         //// <summary>----------------------------------------------------------
         /// Method used to give functionality to the color blank button
         /// which when clicked resets the balls color to white
@@ -1297,182 +1474,6 @@ namespace PVegas2K25ProTour
             //add delete progress conditions here
             SaveLoadSystem.DeleteSaveFile();
         }
-
-        protected override void Update(GameTime gameTime)
-        {
-
-            // See if the user pressed Quit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
-                ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-            if (IsKeyPressed())
-            {
-                stateOfGame = "Settings";
-                LoadContent();
-            }
-
-            Window.ClientSizeChanged += windowClientSizeChanged;
-            foreach (var component in _gameComponents)
-            {
-                component.Update(gameTime);
-            }
-
-            // TODO: Add your update logic here
-            MouseState mouse_state = Mouse.GetState();
-            moveMouseTo(mouse_state.X, mouse_state.Y);
-            updateDragState(isDraggingBall(mouse_state, golf_ball));
-            shot.Update(dragging_mouse, mouse_pos, golf_ball);
-            hole.Update(golf_ball.center());
-            golf_ball.Update(gameTime);
-            addMoney(level_manager.Update());
-            if (hole.getCollision() == true)
-            {
-                // uses a flag to ensure stats counters are only
-                // updated once per level
-                if (canIncrementHolesCompleted)
-                {
-                    Debug.WriteLine("Updating stats counters...");
-                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()),
-                        level_manager.currentLevel());
-                    totalHolesCompleted++;
-
-                    //Unlock the next level
-                    unlockNextLevel(level_manager.currentLevel());
-
-                    // Note, user's lifetime strokes only update after a
-                    // level is completed
-                    totalStrokesLifetime += golf_ball.getStrokeCount();
-                    canIncrementHolesCompleted = false;
-                    SaveLoadSystem.Save(playerRecord);
-                }
-            }
-            else
-            {
-                reduceScore();
-            }
-            if (level_manager.removeCoinCheck())
-            {
-                soundEffects[3].Play();
-                level_manager.removeCoinCheckChange(false);
-            }
-            swingCounter();
-            shot.setSensitivity(getSensitivityVal());
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            renderer.setActive(Color.Black);
-
-            // TODO: Add your drawing code here
-            _sprite_batch.Begin();
-            // Draw all obstacles in the obstacle list
-            _sprite_batch.Draw(background, Vector2.Zero, Color.DarkOliveGreen);
-            if (stateOfGame == "menu")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    {
-                        component.Draw(gameTime, _sprite_batch);
-                    }
-                }
-                _sprite_batch.End();
-                renderer.Draw(_sprite_batch, Color.Black);
-                base.Draw(gameTime);
-            }
-            else if (stateOfGame == "levels")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    {
-                        component.Draw(gameTime, _sprite_batch);
-                    }
-                }
-                _sprite_batch.End();
-                renderer.Draw(_sprite_batch, Color.Black);
-                base.Draw(gameTime);
-            }
-            else if (stateOfGame == "store")
-            {
-                foreach (var component in _gameComponents)
-                {
-                    {
-                        component.Draw(gameTime, _sprite_batch);
-                    }
-                }
-                _sprite_batch.End();
-                renderer.Draw(_sprite_batch, Color.Black);
-                base.Draw(gameTime);
-            }
-            else if (stateOfGame == "Settings")
-            {
-                drawSettingsScreen();
-                foreach (var component in _gameComponents)
-                {
-                    {
-                        component.Draw(gameTime, _sprite_batch);
-                    }
-                }
-                _sprite_batch.End();
-                renderer.Draw(_sprite_batch, Color.Black);
-                base.Draw(gameTime);
-            }
-            else
-            {
-                level_manager.Draw(_sprite_batch);
-                hole.Draw();
-                shot.Draw();
-                golf_ball.Draw();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " 
-                    + golf_ball.getStrokeCount().ToString()
-                   , strokeCounter, Color.Black);
-                if (hole.getCollision() == true && !coinAddLevel)
-                {
-                    if (playedHole == false)
-                    {
-                        soundEffects[0].Play();
-                        playedHole = true;
-                    }
-                    drawVictoryScreen();
-                    golf_ball.setPosition(new Vector2(100000, 1000000));
-                    coins += addCoins(golf_ball.getStrokeCount());
-                    saveGame();
-                    SaveLoadSystem.Save(playerRecord);
-                    coinAddLevel = !coinAddLevel;
-                }
-                else if (hole.getCollision() == true)
-                {
-                    if (playedHole == false)
-                    {
-                        soundEffects[0].Play();
-                        playedHole = true;
-                    }
-                    drawVictoryScreen();
-                    golf_ball.setPosition(new Vector2(100000, 1000000));
-                }
-                else if (hole.getCollision() == false)
-                {
-                    coinAddLevel = false;
-                }
-                foreach (var component in _gameComponents)
-                {
-                    {
-                        component.Draw(gameTime, _sprite_batch);
-                    }
-                }
-                _sprite_batch.End();
-                renderer.Draw(_sprite_batch, Color.Black);
-                base.Draw(gameTime);
-            }
-        }
-
-        //---------------------------------------------------------------------
-        // PROGRAMMER-WRITTEN METHODS
-        //---------------------------------------------------------------------
 
         /// <summary>----------------------------------------------------------
         /// Determines if the mouse is being dragged from the ball or not
