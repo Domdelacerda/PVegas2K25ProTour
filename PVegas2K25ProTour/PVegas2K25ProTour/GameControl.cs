@@ -28,8 +28,6 @@ namespace PVegas2K25ProTour
     {
         private const int DEFAULT_RES_WIDTH = 800;
         private const int DEFAULT_RES_HEIGHT = 480;
-        private const float incrementVal = (float)0.01;
-        
 
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
@@ -40,7 +38,6 @@ namespace PVegas2K25ProTour
         private float SHOT_PENALTY = 250f;
         private float score;
 
-        //Settings variables for now
         Texture2D arrowTexture;
         private const int MAX_SETTINGS_VAL = 9;
         private const int DEFAULT_SETTINGS_VAL = 5;
@@ -48,7 +45,6 @@ namespace PVegas2K25ProTour
         private float _holeSize = 5;
         private float _sensitivity = 5;
         private float _volume = 5;
-
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
@@ -178,13 +174,15 @@ namespace PVegas2K25ProTour
             {
                 mainMusicCheck();
 
-                var playButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var playButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "Play",
                 };
                 playButton.Click += PlayButton_Click;
-                var quitButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var quitButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 260),
                     Text = "Quit",
@@ -193,27 +191,31 @@ namespace PVegas2K25ProTour
                 quitButton.Click += QuitButton_Click;
                 golf_ball = new Ball(_sprite_batch);
                 golf_ball = new Ball(_sprite_batch);
-                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("settings"))
+                var settingsButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("settings"))
                 {
                     Position = new Vector2(730, 0),
                     //Text = "Settings",
                 };
                 settingsButton.Click += SettingsButton_Click;
 
-                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("store"))
+                var shopingButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("store"))
                 {
                     Position = new Vector2(660, 0),
                     //Text = "Settings",
                 };
                 shopingButton.Click += ShopingButton_Click;
 
-                var LevelButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var LevelButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 130),
                     Text = "Level",
                 };
                 LevelButton.Click += LevelButton_Click;
-                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("delete"))
+                var DeleteButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("delete"))
                 {
                     Position = new Vector2(730, 324),
                 };
@@ -232,14 +234,16 @@ namespace PVegas2K25ProTour
             {
                 mainMusicCheck();
 
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
 
-                var OneButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var OneButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 70),
                     Text = "Level 1" + "\n " + playerRecord.playerScoreLevelOne,
@@ -247,7 +251,8 @@ namespace PVegas2K25ProTour
                 };
                 OneButton.Click += OneButton_Click;
 
-                var TwoButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var TwoButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 70),
                     Text = "Level 2" + "\n " + playerRecord.playerScoreLevelTwo,
@@ -259,7 +264,8 @@ namespace PVegas2K25ProTour
                     TwoButton.color = Color.Black;
                 }
                 TwoButton.Click += TwoButton_Click;
-                var ThreeButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var ThreeButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 70),
                     Text = "Level 3" + "\n " + playerRecord.playerScoreLevelThree,
@@ -271,7 +277,8 @@ namespace PVegas2K25ProTour
                     ThreeButton.color = Color.Black;
                 }
                 ThreeButton.Click += ThreeButton_Click;
-                var FourButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var FourButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 200),
                     Text = "Level 4" + "\n " + playerRecord.playerScoreLevelFour,
@@ -283,7 +290,8 @@ namespace PVegas2K25ProTour
                     FourButton.color = Color.Black;
                 }
                 FourButton.Click += FourButton_Click;
-                var FiveButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var FiveButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 200),
                     Text = "Level 5" + "\n " + playerRecord.playerScoreLevelFive,
@@ -295,7 +303,8 @@ namespace PVegas2K25ProTour
                     FiveButton.color = Color.Black;
                 }
                 FiveButton.Click += FiveButton_Click;
-                var SixButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                var SixButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(520, 200),
                     Text = "Level 6" + "\n " + playerRecord.playerScoreLevelSix,
@@ -322,14 +331,16 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "store")
             {
                 mainMusicCheck();
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
 
-                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"), Content.Load<SpriteFont>("Font"))
+                var MoneyButton = new Button(Content.Load<Texture2D>("price tag"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(660, 0),
 
@@ -343,7 +354,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticOneUnlocked == false)
                 {
 
-                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 130),
                         Text = "50",
@@ -351,7 +363,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic1Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 130),
 
@@ -360,7 +373,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic1Button.Click += Cosmetic1Button_Click;
 
-                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"), Content.Load<SpriteFont>("Font"))
+                var Sunglasses = new Button(Content.Load<Texture2D>("Sunglasses"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 130),
                     _isHoveringColour = Color.White,
@@ -375,7 +389,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticTwoUnlocked == false)
                 {
 
-                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 260),
                         Text = "50",
@@ -383,7 +398,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic2Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 260),
 
@@ -392,7 +408,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic2Button.Click += Cosmetic2Button_Click;
 
-                var TopHat = new Button(Content.Load<Texture2D>("TopHat"), Content.Load<SpriteFont>("Font"))
+                var TopHat = new Button(Content.Load<Texture2D>("TopHat"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 260),
                     _isHoveringColour = Color.White,
@@ -407,7 +424,8 @@ namespace PVegas2K25ProTour
                 if (playerRecord.isCosmeticThreeUnlocked == false)
                 {
 
-                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("smallbutton"),
+                        Content.Load<SpriteFont>("Font"))
                     {
                         Position = new Vector2(130, 390),
                         Text = "50",
@@ -416,7 +434,8 @@ namespace PVegas2K25ProTour
                 }
                 else
                 {
-                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"), Content.Load<Texture2D>("check"))
+                    Cosmetic3Button = new Button(Content.Load<Texture2D>("check"),
+                        Content.Load<Texture2D>("check"))
                     {
                         Position = new Vector2(130, 390),
 
@@ -425,7 +444,9 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic3Button.Click += Cosmetic3Button_Click;
 
-                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"), Content.Load<SpriteFont>("Font"))
+                var NoveltySodaDrinkHat = new Button(
+                    Content.Load<Texture2D>("NoveltySodaDrinkHat"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 390),
                     _isHoveringColour = Color.White,
@@ -437,7 +458,8 @@ namespace PVegas2K25ProTour
                     NoveltySodaDrinkHat.Text = "E";
                 }
 
-                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BlankButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 0),
                     Text = " "
@@ -453,7 +475,8 @@ namespace PVegas2K25ProTour
                     BlankButton._isHoveringColour = Color.Red;
                 }
                 BlankButton.Click += BlankButton_Click;
-                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var NoHat = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(130, 0),
                     Text = " "
@@ -471,7 +494,8 @@ namespace PVegas2K25ProTour
                 NoHat.Click += NoHat_Click;
 
 
-                var RedButton = new Button(Content.Load<Texture2D>("red"), Content.Load<SpriteFont>("Font"))
+                var RedButton = new Button(Content.Load<Texture2D>("red"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 390),
                     Text = " "
@@ -482,7 +506,8 @@ namespace PVegas2K25ProTour
                     RedButton.Text = "E";
                 }
                 RedButton.Click += RedButton_Click;
-                var BlueButton = new Button(Content.Load<Texture2D>("blue"), Content.Load<SpriteFont>("Font"))
+                var BlueButton = new Button(Content.Load<Texture2D>("blue"),
+                    Content.Load<SpriteFont>("Font"))
                 {
 
                     Position = new Vector2(260, 260),
@@ -494,7 +519,8 @@ namespace PVegas2K25ProTour
                     BlueButton._isHoveringColour = Color.Green;
                 }
                 BlueButton.Click += BlueButton_Click;
-                var GreenButton = new Button(Content.Load<Texture2D>("green"), Content.Load<SpriteFont>("Font"))
+                var GreenButton = new Button(Content.Load<Texture2D>("green"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(260, 130),
                     Text = " "
@@ -526,49 +552,57 @@ namespace PVegas2K25ProTour
             if (stateOfGame == "Settings")
             {
                 mainMusicCheck();
-                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var BackButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(0, 0),
                     Text = "<",
                 };
                 BackButton.Click += BackButton_Click;
-                var menuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                var menuButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("aHouse2.0"))
                 {
                     Position = new Vector2(737, 0),
                     Text = "",
                 };
                 menuButton.Click += menuButton_Click;
-                var upVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upVolume = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(420, 210),
                     Text = ">",
                 };
                 upVolume.Click += upVolume_Click;
-                var downVolume = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downVolume = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(300, 210),
                     Text = "<",
                 };
                 downVolume.Click += downVolume_Click;
-                var upSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upSensClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(647, 365),
                     Text = ">",
                 };
                 upSensClick.Click += upSens_Click;
-                var downSensClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downSensClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(527, 365),
                     Text = "<",
                 };
                 downSensClick.Click += downSens_Click;
-                var upHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var upHoleClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(235, 365),
                     Text = ">",
                 };
                 upHoleClick.Click += upHole_Click;
-                var downHoleClick = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<SpriteFont>("Font"))
+                var downHoleClick = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(115, 365),
                     Text = "<",
@@ -589,13 +623,15 @@ namespace PVegas2K25ProTour
             }
             else
             {
-                NextButton = new Button(Content.Load<Texture2D>("button"), Content.Load<SpriteFont>("Font"))
+                NextButton = new Button(Content.Load<Texture2D>("button"),
+                    Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(270, 270),
                     Text = "Next Level",
                 };
                 NextButton.Click += NextButton_Click;
-                MenuButton = new Button(Content.Load<Texture2D>("smallbutton"), Content.Load<Texture2D>("aHouse2.0"))
+                MenuButton = new Button(Content.Load<Texture2D>("smallbutton"),
+                    Content.Load<Texture2D>("aHouse2.0"))
                 {
                     Position = new Vector2(737, 0),
                     Text = "",
@@ -622,7 +658,7 @@ namespace PVegas2K25ProTour
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
                 hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                    hitbox, Vector2.One, _holeSize/DEFAULT_SETTINGS_VAL);
+                    hitbox, Vector2.One, _holeSize / DEFAULT_SETTINGS_VAL);
                 hole.LoadContent(Content);
 
                 level_manager = new LevelManager(golf_ball, hole, hitbox);
@@ -636,439 +672,6 @@ namespace PVegas2K25ProTour
                 _gameComponents[i].setLocalScale(renderer.getScale());
                 _gameComponents[i].setOffset(renderer.getOffset());
             }
-        }
-
-        /*
-         * This method subtracts the appropriate amount of coins for purchasing
-         * a new hat cosmetic and saves the new player coin total to the save file. 
-         */
-
-        private void BlankButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            golf_ball.setColor(Color.White);
-            saveGame();
-            LoadContent();
-        }
-        private void NoHat_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            golf_ball.setHat(Content, "blank");
-            playerRecord.currentCosmetic = "blank";
-            saveGame();
-            LoadContent();
-        }
-        private void RedButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            golf_ball.setColor(Color.Red);
-            saveGame();
-            LoadContent();
-        }
-        private void GreenButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            golf_ball.setColor(Color.Green);
-            saveGame();
-            LoadContent();
-        }
-        private void BlueButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            golf_ball.setColor(Color.Blue);
-            saveGame();
-            LoadContent();
-        }
-
-        private void purchaseHat()
-        {
-            coins -= 50;
-            playerRecord.Coins = coins;
-            SaveLoadSystem.Save(playerRecord);
-        }
-        private void upVolume_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
-            _volume = volume;
-        }
-        private void downVolume_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
-            _volume = volume;
-        }
-        private void upSens_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
-            _sensitivity = sensitivity;
-        }
-        private void downSens_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
-            _sensitivity = sensitivity;
-        }
-        private void upHole_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
-            _holeSize = holeSize;
-
-
-        }
-        private void downHole_Click(object sender, EventArgs e)
-        {
-            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
-            _holeSize = holeSize;
-        }
-
-        private void Cosmetic3Button_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticThreeUnlocked == true)
-            {
-                if (playerRecord.isCosmeticThreeUnlocked == false)
-                {
-                    purchaseHat();
-                }
-                golf_ball.setHat(Content, "NoveltySodaDrinkHat");
-                playerRecord.currentCosmetic = "NoveltySodaDrinkHat";
-                playerRecord.isCosmeticThreeUnlocked = true;
-                saveGame();
-                LoadContent();
-            }
-        }
-
-        private void Cosmetic2Button_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticTwoUnlocked == true)
-            {
-                if (playerRecord.isCosmeticTwoUnlocked == false)
-                {
-                    purchaseHat();
-                }
-                golf_ball.setHat(Content, "TopHat");
-                playerRecord.currentCosmetic = "TopHat";
-                playerRecord.isCosmeticTwoUnlocked = true;
-                saveGame();
-                LoadContent();
-            }
-        }
-
-        private void Cosmetic1Button_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
-            {
-                if (playerRecord.isCosmeticOneUnlocked == false)
-                {
-                    purchaseHat();
-                }
-
-                golf_ball.setHat(Content, "Sunglasses");
-                playerRecord.currentCosmetic = "Sunglasses";
-                playerRecord.isCosmeticOneUnlocked = true;
-                saveGame();
-                LoadContent();
-            }
-        }
-        private void ShopingButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            stateOfGame = "store";
-            LoadContent();
-        }
-
-        private void NextButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (level_manager.currentLevel() < 5)
-            {
-                playedHole = false;
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadNextLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                previousGameState = "menu";
-                stateOfGame = "menu";
-                soundEffects[2].Play();
-                LoadContent();
-            }
-        }
-
-        private void SixButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelSixUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(5);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                // Implement some code here for what happens if level
-                // 5 is not unlocked
-                Debug.WriteLine("Level 5 not unlocked!!");
-            }
-        }
-
-        private void FiveButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelFiveUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(4);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                // Implement some code here for what happens if level
-                // 5 is not unlocked
-                Debug.WriteLine("Level 5 not unlocked!!");
-            }
-
-        }
-        private void FourButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelFourUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(3);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                // Implement some code here for what happens if level
-                // 4 is not unlocked
-                Debug.WriteLine("Level 4 not unlocked!!");
-            }
-
-        }
-        private void ThreeButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelThreeUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(2);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-
-                // Implement some code here for what happens if level
-                // 3 is not unlocked
-                Debug.WriteLine("Level 3 not unlocked!!");
-            }
-        }
-
-        private void TwoButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelTwoUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(1);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                // Implement some code here for what happens if level
-                // 2 is not unlocked
-                Debug.WriteLine("Level 2 not unlocked!!");
-            }
-        }
-
-        private void OneButton_Click(object sender, EventArgs e)
-        {
-            soundEffects[2].Play();
-            if (songStartLevel == false)
-            {
-                playSong(1);
-                songStart = false;
-            }
-            songStartLevel = true;
-
-            if (playerRecord.isLevelOneUnlocked)
-            {
-                // Yes, this is correct because level 1 has value: level = 0
-                level_manager.setLevel(0);
-                stateOfGame = "play";
-                canIncrementHolesCompleted = true;
-                score = MAX_SCORE;
-                _gameComponents = new List<Button>()
-                {
-                    MenuButton
-                };
-                MenuButton.setLocalScale(renderer.getScale());
-                MenuButton.setOffset(renderer.getOffset());
-                level_manager.loadCurrentLevel(_sprite_batch, Content);
-            }
-            else
-            {
-                // Implement some code here for what happens if level
-                // 1 is not unlocked
-                Debug.WriteLine("Level 1 not unlocked!!");
-            }
-        }
-
-        private void SettingsButton_Click(object sender, EventArgs e)
-        {
-            previousGameState = stateOfGame;
-            stateOfGame = "Settings";
-            soundEffects[2].Play();
-            LoadContent();
-        }
-        private void menuButton_Click(Object sender, EventArgs e)
-        {
-            previousGameState = "menu";
-            stateOfGame = "menu";
-            soundEffects[2].Play();
-            LoadContent();
-        }
-        private void LevelButton_Click(object sender, EventArgs e)
-        {
-            previousGameState = stateOfGame;
-            stateOfGame = "levels";
-            soundEffects[2].Play();
-            LoadContent();
-        }
-        private void BackButton_Click(object sender, EventArgs e)
-        {
-            stateOfGame = previousGameState;
-            soundEffects[2].Play();
-            LoadContent();
-        }
-        private void QuitButton_Click(object sender, System.EventArgs e)
-        {
-            soundEffects[2].Play();
-            Exit();
-        }
-        private void PlayButton_Click(object sender, System.EventArgs e)
-        {
-            stateOfGame = "play";
-            songStart = false;
-            soundEffects[2].Play();
-            level_manager.setLevel(0);
-            MediaPlayer.Stop();
-            playSong(1);
-            LoadContent();
-            _gameComponents = new List<Button>()
-            {
-                MenuButton
-            };
-            MenuButton.setLocalScale(renderer.getScale());
-            MenuButton.setOffset(renderer.getOffset());
-        }
-
-        private void windowClientSizeChanged(object sender, System.EventArgs e)
-        {
-            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-            _graphics.ApplyChanges();
-            renderer.setDestination();
-            golf_ball.setVirtualScale(renderer.getScale());
-            golf_ball.setVirtualOffset(renderer.getOffset());
-            for (int i = 0; i < _gameComponents.Count; i++)
-            {
-                _gameComponents[i].setLocalScale(renderer.getScale());
-                _gameComponents[i].setOffset(renderer.getOffset());
-            }
-        }
-
-        private void DeleteButton_Click(object sender, System.EventArgs e)
-        {
-            //add delete progress conditions here
-            SaveLoadSystem.DeleteSaveFile();
         }
 
         protected override void Update(GameTime gameTime)
@@ -1108,7 +711,7 @@ namespace PVegas2K25ProTour
                 if (canIncrementHolesCompleted)
                 {
                     Debug.WriteLine("Updating stats counters...");
-                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()), 
+                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()),
                         level_manager.currentLevel());
                     totalHolesCompleted++;
 
@@ -1135,19 +738,6 @@ namespace PVegas2K25ProTour
             shot.setSensitivity(getSensitivityVal());
 
             base.Update(gameTime);
-        }
-        private void swingCounter()
-        {
-
-            if (golf_ball.getStrokeCount() > counter)
-            {
-                counter++;
-                soundEffects[1].Play();
-            }
-            else if (golf_ball.getStrokeCount() == 0)
-            {
-                counter = 0;
-            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -1213,7 +803,8 @@ namespace PVegas2K25ProTour
                 hole.Draw();
                 shot.Draw();
                 golf_ball.Draw();
-                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: " + golf_ball.getStrokeCount().ToString()
+                _sprite_batch.DrawString(Content.Load<SpriteFont>("Font"), "Stroke Count: "
+                    + golf_ball.getStrokeCount().ToString()
                    , strokeCounter, Color.Black);
                 if (hole.getCollision() == true && !coinAddLevel)
                 {
@@ -1258,6 +849,631 @@ namespace PVegas2K25ProTour
         //---------------------------------------------------------------------
         // PROGRAMMER-WRITTEN METHODS
         //---------------------------------------------------------------------
+
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the color blank button
+        /// which when clicked resets the balls color to white
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void BlankButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            golf_ball.setColor(Color.White);
+            saveGame();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the cosmetic blank button
+        /// which resents the ball back to its defualt appearance
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void NoHat_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            golf_ball.setHat(Content, "blank");
+            playerRecord.currentCosmetic = "blank";
+            saveGame();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the red button in the shop
+        /// which changes the ball to red
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void RedButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            golf_ball.setColor(Color.Red);
+            saveGame();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the green button in the shop
+        /// which changes the ball to green
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void GreenButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            golf_ball.setColor(Color.Green);
+            saveGame();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the blue button in the shop
+        /// which changes the ball to blue
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void BlueButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            golf_ball.setColor(Color.Blue);
+            saveGame();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the hat button 
+        /// which will put a hat on the ball
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void purchaseHat()
+        {
+            coins -= 50;
+            playerRecord.Coins = coins;
+            SaveLoadSystem.Save(playerRecord);
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up volume button 
+        /// in the settings screen 
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void upVolume_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
+            _volume = volume;
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality down volume button 
+        /// in the settings screen 
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void downVolume_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
+            _volume = volume;
+        }
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up sensitivity button
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+
+        private void upSens_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
+            _sensitivity = sensitivity;
+        }
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the down sensitivity button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+
+        private void downSens_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
+            _sensitivity = sensitivity;
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up hole size button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void upHole_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
+            _holeSize = holeSize;
+
+
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the down hole size button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void downHole_Click(object sender, EventArgs e)
+        {
+            (int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
+            _holeSize = holeSize;
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the NovelySodaHat cosmetic 
+        /// button in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void Cosmetic3Button_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticThreeUnlocked == true)
+            {
+                if (playerRecord.isCosmeticThreeUnlocked == false)
+                {
+                    purchaseHat();
+                }
+                golf_ball.setHat(Content, "NoveltySodaDrinkHat");
+                playerRecord.currentCosmetic = "NoveltySodaDrinkHat";
+                playerRecord.isCosmeticThreeUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the Top Hat button 
+        /// in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void Cosmetic2Button_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticTwoUnlocked == true)
+            {
+                if (playerRecord.isCosmeticTwoUnlocked == false)
+                {
+                    purchaseHat();
+                }
+                golf_ball.setHat(Content, "TopHat");
+                playerRecord.currentCosmetic = "TopHat";
+                playerRecord.isCosmeticTwoUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the sunglasses button 
+        /// in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void Cosmetic1Button_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (playerRecord.Coins >= 50 || playerRecord.isCosmeticOneUnlocked == true)
+            {
+                if (playerRecord.isCosmeticOneUnlocked == false)
+                {
+                    purchaseHat();
+                }
+
+                golf_ball.setHat(Content, "Sunglasses");
+                playerRecord.currentCosmetic = "Sunglasses";
+                playerRecord.isCosmeticOneUnlocked = true;
+                saveGame();
+                LoadContent();
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the shop button which will open the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void ShopingButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            stateOfGame = "store";
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the Next level button
+        /// which when clicked loads the next level
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (level_manager.currentLevel() < 5)
+            {
+                playedHole = false;
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadNextLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                previousGameState = "menu";
+                stateOfGame = "menu";
+                soundEffects[2].Play();
+                LoadContent();
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the level 6 button which will
+        /// load level 6
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void SixButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelSixUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(5);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 5 is not unlocked
+                Debug.WriteLine("Level 5 not unlocked!!");
+            }
+        }
+        /// Method used to give functionality to the level 5 button which will
+        /// load level 5
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void FiveButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelFiveUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(4);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 5 is not unlocked
+                Debug.WriteLine("Level 5 not unlocked!!");
+            }
+
+        }
+
+        /// Method used to give functionality to the level 4 button which will
+        /// load level 4
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void FourButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelFourUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(3);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 4 is not unlocked
+                Debug.WriteLine("Level 4 not unlocked!!");
+            }
+
+        }
+
+        /// Method used to give functionality to the level 3 button which will
+        /// load level 3
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void ThreeButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelThreeUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(2);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+
+                // Implement some code here for what happens if level
+                // 3 is not unlocked
+                Debug.WriteLine("Level 3 not unlocked!!");
+            }
+        }
+
+        /// Method used to give functionality to the level 2 button which will
+        /// load level 2
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void TwoButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelTwoUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(1);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 2 is not unlocked
+                Debug.WriteLine("Level 2 not unlocked!!");
+            }
+        }
+
+        /// Method used to give functionality to the level 1 button which will
+        /// load level 1
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void OneButton_Click(object sender, EventArgs e)
+        {
+            soundEffects[2].Play();
+            if (songStartLevel == false)
+            {
+                playSong(1);
+                songStart = false;
+            }
+            songStartLevel = true;
+
+            if (playerRecord.isLevelOneUnlocked)
+            {
+                // Yes, this is correct because level 1 has value: level = 0
+                level_manager.setLevel(0);
+                stateOfGame = "play";
+                canIncrementHolesCompleted = true;
+                score = MAX_SCORE;
+                _gameComponents = new List<Button>()
+                {
+                    MenuButton
+                };
+                MenuButton.setLocalScale(renderer.getScale());
+                MenuButton.setOffset(renderer.getOffset());
+                level_manager.loadCurrentLevel(_sprite_batch, Content);
+            }
+            else
+            {
+                // Implement some code here for what happens if level
+                // 1 is not unlocked
+                Debug.WriteLine("Level 1 not unlocked!!");
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the settings button
+        /// which will load the settings screen when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            previousGameState = stateOfGame;
+            stateOfGame = "Settings";
+            soundEffects[2].Play();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the menu button which 
+        /// will load the main menu when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void menuButton_Click(Object sender, EventArgs e)
+        {
+            previousGameState = "menu";
+            stateOfGame = "menu";
+            soundEffects[2].Play();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the level button 
+        /// which brings up a list of level buttons when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void LevelButton_Click(object sender, EventArgs e)
+        {
+            previousGameState = stateOfGame;
+            stateOfGame = "levels";
+            soundEffects[2].Play();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the back button 
+        /// which reverts the game to the previous game state
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            stateOfGame = previousGameState;
+            soundEffects[2].Play();
+            LoadContent();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the quit button which
+        /// closes the game
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void QuitButton_Click(object sender, System.EventArgs e)
+        {
+            soundEffects[2].Play();
+            Exit();
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the play button 
+        /// which will load the game from level 1
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void PlayButton_Click(object sender, System.EventArgs e)
+        {
+            stateOfGame = "play";
+            songStart = false;
+            soundEffects[2].Play();
+            level_manager.setLevel(0);
+            MediaPlayer.Stop();
+            playSong(1);
+            LoadContent();
+            _gameComponents = new List<Button>()
+            {
+                MenuButton
+            };
+            MenuButton.setLocalScale(renderer.getScale());
+            MenuButton.setOffset(renderer.getOffset());
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to resize the screen
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// </summary>---------------------------------------------------------
+        private void windowClientSizeChanged(object sender, System.EventArgs e)
+        {
+            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            _graphics.ApplyChanges();
+            renderer.setDestination();
+            golf_ball.setVirtualScale(renderer.getScale());
+            golf_ball.setVirtualOffset(renderer.getOffset());
+            for (int i = 0; i < _gameComponents.Count; i++)
+            {
+                _gameComponents[i].setLocalScale(renderer.getScale());
+                _gameComponents[i].setOffset(renderer.getOffset());
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the "delete button"
+        /// which resets all user currency and consmetics
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+        private void DeleteButton_Click(object sender, System.EventArgs e)
+        {
+            //add delete progress conditions here
+            SaveLoadSystem.DeleteSaveFile();
+        }
 
         /// <summary>----------------------------------------------------------
         /// Determines if the mouse is being dragged from the ball or not
@@ -1307,11 +1523,19 @@ namespace PVegas2K25ProTour
             dragging_mouse = newDraggingState;
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Returns the "game_paused" bool
+        /// </summary>---------------------------------------------------------
         public bool isGamePaused()
         {
             return game_paused;
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to calculate the score for a level
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int calculateScore(int number_of_shots)
         {
             int level_score = (int)(score - number_of_shots * SHOT_PENALTY);
@@ -1321,10 +1545,20 @@ namespace PVegas2K25ProTour
             }
             return level_score;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to alter the score of a level
+        /// </summary>---------------------------------------------------------
         public void reduceScore()
         {
             score -= SCORE_REDUCTION_SCALE;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to calculate the coin amount obtained in a level
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int calculateCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1337,6 +1571,12 @@ namespace PVegas2K25ProTour
             //this.coins += coins;
             return (int)this.coins;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to add the calculated coin amount to the users total 
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1367,7 +1607,26 @@ namespace PVegas2K25ProTour
                 coins += (int)amount;
             }
         }
+        /// <summary>----------------------------------------------------------
+        /// Used to control the swing sound effect
+        /// </summary>---------------------------------------------------------
+        private void swingCounter()
+        {
 
+            if (golf_ball.getStrokeCount() > counter)
+            {
+                counter++;
+                soundEffects[1].Play();
+            }
+            else if (golf_ball.getStrokeCount() == 0)
+            {
+                counter = 0;
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method that is used to populate the vicoty screen
+        /// </summary>---------------------------------------------------------
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
@@ -1383,11 +1642,16 @@ namespace PVegas2K25ProTour
             String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
 
             //Populates the victory screen
-            _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
-            _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0,
+                textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0,
+                textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
+            _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0,
+                textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
         }
-
+        //// <summary>----------------------------------------------------------
+        /// Method that actually draws the victory screen
+        /// </summary>---------------------------------------------------------
         public void drawVictoryScreen()
         {
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
@@ -1403,12 +1667,21 @@ namespace PVegas2K25ProTour
             populateVictoryScreen(golf_ball.getStrokeCount());
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to adjust all values within the settings screen 
+        /// <param name="songChoice">value used to determine which song 
+        /// in the "song" lists to call and play.</param>
+        /// </summary>---------------------------------------------------------
         public void playSong(int songChoice)
         {
             MediaPlayer.Play(songs[songChoice]);
         }
 
-        //Settings class for now until we implement screen managment
+        //// <summary>----------------------------------------------------------
+        /// Method used to adjust all values within the settings screen 
+        /// <param name="choice">value used to determin which setting
+        /// to alter.</param>
+        /// </summary>---------------------------------------------------------
         public (int volume, int sensitivity, int holeSize) AdjustSettingVal(int choice)
         {
             int volume = playerRecord.volumePreference;
@@ -1455,6 +1728,9 @@ namespace PVegas2K25ProTour
             return (volume, sensitivity, holeSize);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Method that does the work and logic behind drawing the settings screen
+        /// </summary>---------------------------------------------------------
         public void populateSettingsScreen()
         {
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
@@ -1463,7 +1739,7 @@ namespace PVegas2K25ProTour
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
             Vector2 hole_value_pos = new Vector2(-140, 155) + screen_center;
-        
+
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
             Vector2 sensitivity_value_pos = new Vector2(275, 155) + screen_center;
@@ -1489,7 +1765,8 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, "Swing Sensitivity", sensitivity_text_pos,
                Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
 
-            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X - game_resolution.X / 5, volume_value_pos.Y - game_resolution.Y / 2 - 20),
+            _sprite_batch.DrawString(font, "Volume", new Vector2(volume_value_pos.X
+                - game_resolution.X / 5, volume_value_pos.Y - game_resolution.Y / 2 - 20),
               Color.Black, 0, textMiddlePoint, 2.2f, SpriteEffects.None, 0.5f);
 
 
@@ -1507,12 +1784,16 @@ namespace PVegas2K25ProTour
             }
             if (getVolumeVal() >= 1 && getVolumeVal() < 10)
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2, hole_value_pos.Y - game_resolution.Y / 3 + 10),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X
+                    - font.MeasureString(volume).X / 2,
+                    hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
             else
             {
-                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X - font.MeasureString(volume).X / 2 - 10, hole_value_pos.Y - game_resolution.Y / 3 + 10),
+                _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X
+                    - font.MeasureString(volume).X / 2 - 10,
+                    hole_value_pos.Y - game_resolution.Y / 3 + 10),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
 
@@ -1530,54 +1811,47 @@ namespace PVegas2K25ProTour
             }
 
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Method that actually draws the settings screen
+        /// </summary>---------------------------------------------------------
         public void drawSettingsScreen()
         {
             line.SetData(new[] { Color.DarkSlateGray });
-            _sprite_batch.Draw(line, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), null,
+            _sprite_batch.Draw(line, new Rectangle(0, 0,
+                Window.ClientBounds.Width, Window.ClientBounds.Height), null,
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateSettingsScreen();
         }
+        /// <summary>----------------------------------------------------------
+        /// Returns hole size
+        /// </summary>---------------------------------------------------------
 
         public float getHoleSize()
         {
             return _holeSize;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Returns sensitivity value
+        /// </summary>---------------------------------------------------------
+
         public float getSensitivityVal()
         {
             return _sensitivity;
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Returns volume value
+        /// </summary>---------------------------------------------------------
         public float getVolumeVal()
         {
             return _volume;
         }
 
-        public float getSpeedVal()
-        {
-            
-            float value = getSensitivityVal();
-            
-            if (value == 5)
-            {
-                return 1;
-            }
-            else
-            {
-                if (value>5)
-                {
-                    workVal = value - 5;
-                    return 1 + workVal * incrementVal;
-                }
-                else if(value < 5)
-                {
-                    workVal = 5 - value;
-                    return 1 - workVal * incrementVal;
-                }
-            }
-            
-            return value;
-        }
-
+        /// <summary>----------------------------------------------------------
+        ///Checks of the key "P" has been pressed and released
+        /// </summary>---------------------------------------------------------
         public bool IsKeyPressed()
         {
             KeyboardState currentKeyState = Keyboard.GetState();
@@ -1594,7 +1868,8 @@ namespace PVegas2K25ProTour
 
         public void mainMusicCheck()
         {
-            if ((stateOfGame == "menu" || stateOfGame == "Settings" || stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
+            if ((stateOfGame == "menu" || stateOfGame == "Settings" ||
+                stateOfGame == "levels" || stateOfGame == "store") && songStart == false)
             {
                 playSong(0);
 
