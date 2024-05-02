@@ -1546,27 +1546,54 @@ namespace PVegas2K25ProTour
             }
             return level_score;
         }
+
+<<<<<<< HEAD
         public int getShotPenalty()
         {
             return SHOT_PENALTY;
-        }
-
-        //// <summary>----------------------------------------------------------
-        /// Method used to alter the score of a level
-        /// </summary>---------------------------------------------------------
-        public void reduceScore()
-        {
-            score -= SCORE_REDUCTION_SCALE;
         }
         public int getMaxScore()
         {
             return MAX_SCORE;
         }
-         //// <summary>----------------------------------------------------------
+
+=======
+        //// <summary>----------------------------------------------------------
+        /// Method used to alter the score of a level
+        /// </summary>---------------------------------------------------------
+>>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
+        public void reduceScore()
+        {
+            score -= SCORE_REDUCTION_SCALE;
+        }
+<<<<<<< HEAD
+
+=======
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to calculate the coin amount obtained in a level
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
+        public int calculateCoins(int number_of_shots)
+        {
+            //scaling value to be determined
+            int coins = (level_manager.currentLevel() + 1) * 2 - number_of_shots;
+
+            if (coins < 0)
+            {
+                coins = 0;
+            }
+            //this.coins += coins;
+            return (int)this.coins;
+        }
+
+        //// <summary>----------------------------------------------------------
         /// Method used to add the calculated coin amount to the users total 
         /// <param name="number_of_shots"> the number of strokes the user
         /// performed in a given level.</param>
         /// </summary>---------------------------------------------------------
+>>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1597,17 +1624,19 @@ namespace PVegas2K25ProTour
                 coins += (int)amount;
             }
         }
-
-        public int getCoins()
-        {
-            return coins;
-        }
         /// <summary>----------------------------------------------------------
         /// Used to control the swing sound effect
         /// </summary>---------------------------------------------------------
         private void swingCounter()
         {
 
+<<<<<<< HEAD
+        public int getCoins()
+        {
+            return coins;
+        }
+
+=======
             if (golf_ball.getStrokeCount() > counter)
             {
                 counter++;
@@ -1622,6 +1651,7 @@ namespace PVegas2K25ProTour
         //// <summary>----------------------------------------------------------
         /// Method that is used to populate the vicoty screen
         /// </summary>---------------------------------------------------------
+>>>>>>> 4ec5c195cc76af8b5901a195a72af4accd44dd4f
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
