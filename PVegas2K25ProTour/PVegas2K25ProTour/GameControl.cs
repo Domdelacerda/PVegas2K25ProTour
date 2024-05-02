@@ -163,6 +163,7 @@ namespace PVegas2K25ProTour
 
             //Set volume based on settings
             MediaPlayer.Volume = getVolumeVal() / 10;
+            SoundEffect.MasterVolume = getVolumeVal() / 10;
 
             // Load the graphics device
             _device = GraphicsDevice;
