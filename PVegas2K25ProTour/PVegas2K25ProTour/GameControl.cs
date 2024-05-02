@@ -35,10 +35,10 @@ namespace PVegas2K25ProTour
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _sprite_batch;
         private Renderer renderer;
-        private float MAX_SCORE = 5000f;
-        private float SCORE_REDUCTION_SCALE = 1f;
-        private float SHOT_PENALTY = 250f;
-        private float score;
+        private int MAX_SCORE = 5000;
+        private int SCORE_REDUCTION_SCALE = 1;
+        private int SHOT_PENALTY = 250;
+        private int score;
 
         //Settings variables for now
         Texture2D arrowTexture;
@@ -1314,29 +1314,28 @@ namespace PVegas2K25ProTour
 
         public int calculateScore(int number_of_shots)
         {
-            int level_score = (int)(score - number_of_shots * SHOT_PENALTY);
+            int level_score = (score - number_of_shots * SHOT_PENALTY);
             if (level_score < 0)
             {
                 level_score = 0;
             }
             return level_score;
         }
+
+        public int getShotPenalty()
+        {
+            return SHOT_PENALTY;
+        }
+        public int getMaxScore()
+        {
+            return MAX_SCORE;
+        }
+
         public void reduceScore()
         {
             score -= SCORE_REDUCTION_SCALE;
         }
-        public int calculateCoins(int number_of_shots)
-        {
-            //scaling value to be determined
-            int coins = (level_manager.currentLevel() + 1) * 2 - number_of_shots;
 
-            if (coins < 0)
-            {
-                coins = 0;
-            }
-            //this.coins += coins;
-            return (int)this.coins;
-        }
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1368,6 +1367,11 @@ namespace PVegas2K25ProTour
             }
         }
 
+        public int getCoins()
+        {
+            return coins;
+        }
+
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
@@ -1380,7 +1384,7 @@ namespace PVegas2K25ProTour
 
             //Methods to format the text 
             String score = "Score: " + calculateScore(number_of_shots).ToString();
-            String coins = "Coins: " + calculateCoins(number_of_shots).ToString();
+            String coins = "Coins: " + this.coins;
 
             //Populates the victory screen
             _sprite_batch.DrawString(font, "You Won!", win_text_pos, Color.Gold, 0, textMiddlePoint, 3.0f, SpriteEffects.None, 0.5f);
@@ -1550,32 +1554,6 @@ namespace PVegas2K25ProTour
         public float getVolumeVal()
         {
             return _volume;
-        }
-
-        public float getSpeedVal()
-        {
-            
-            float value = getSensitivityVal();
-            
-            if (value == 5)
-            {
-                return 1;
-            }
-            else
-            {
-                if (value>5)
-                {
-                    workVal = value - 5;
-                    return 1 + workVal * incrementVal;
-                }
-                else if(value < 5)
-                {
-                    workVal = 5 - value;
-                    return 1 - workVal * incrementVal;
-                }
-            }
-            
-            return value;
         }
 
         public bool IsKeyPressed()
