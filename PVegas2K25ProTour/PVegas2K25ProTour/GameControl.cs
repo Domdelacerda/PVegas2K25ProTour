@@ -1693,7 +1693,7 @@ namespace PVegas2K25ProTour
                 soundEffects[2].Play();
                 volume += 1;
             }
-            if (choice == 2 && volume >= MIN_SETTINGS_VAL)
+            if (choice == 2 && volume >= MIN_SETTINGS_VAL - 1)
             {
                 soundEffects[2].Play();
                 volume -= 1;
@@ -1782,7 +1782,7 @@ namespace PVegas2K25ProTour
                     font.MeasureString(holeSize).X / 2 - 5, hole_value_pos.Y),
               Color.Black, 0, textMiddlePoint, 2f, SpriteEffects.None, 0.5f);
             }
-            if (getVolumeVal() >= 1 && getVolumeVal() < 10)
+            if (getVolumeVal() >= 0 && getVolumeVal() < 10)
             {
                 _sprite_batch.DrawString(font, volume, new Vector2(volume_text_pos.X
                     - font.MeasureString(volume).X / 2,
