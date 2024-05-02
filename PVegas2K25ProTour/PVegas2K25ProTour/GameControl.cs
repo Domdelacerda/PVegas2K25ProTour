@@ -45,7 +45,6 @@ namespace PVegas2K25ProTour
         private float _holeSize = 5;
         private float _sensitivity = 5;
         private float _volume = 5;
-        11111111111111111111111111111111111111111111111111111111111111111111111111111111
         private Vector2 mouse_pos;
         private bool dragging_mouse = false;
         private bool game_paused = false;
@@ -445,7 +444,8 @@ namespace PVegas2K25ProTour
                 }
                 Cosmetic3Button.Click += Cosmetic3Button_Click;
 
-                var NoveltySodaDrinkHat = new Button(Content.Load<Texture2D>("NoveltySodaDrinkHat"),
+                var NoveltySodaDrinkHat = new Button(
+                    Content.Load<Texture2D>("NoveltySodaDrinkHat"),
                     Content.Load<SpriteFont>("Font"))
                 {
                     Position = new Vector2(65, 390),
