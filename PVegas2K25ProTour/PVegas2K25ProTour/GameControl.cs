@@ -28,8 +28,6 @@ namespace PVegas2K25ProTour
     {
         private const int DEFAULT_RES_WIDTH = 800;
         private const int DEFAULT_RES_HEIGHT = 480;
-        private const float incrementVal = (float)0.01;
-        
 
         private GraphicsDevice _device;
         private GraphicsDeviceManager _graphics;
@@ -40,7 +38,6 @@ namespace PVegas2K25ProTour
         private float SHOT_PENALTY = 250f;
         private float score;
 
-        //Settings variables for now
         Texture2D arrowTexture;
         private const int MAX_SETTINGS_VAL = 9;
         private const int DEFAULT_SETTINGS_VAL = 5;
@@ -622,7 +619,7 @@ namespace PVegas2K25ProTour
                 shot.LoadContent(Content);
                 hitbox = new Hitbox();
                 hole = new Hole(new Vector2(100, 200), _sprite_batch,
-                    hitbox, Vector2.One, _holeSize/DEFAULT_SETTINGS_VAL);
+                    hitbox, Vector2.One, _holeSize / DEFAULT_SETTINGS_VAL);
                 hole.LoadContent(Content);
 
                 level_manager = new LevelManager(golf_ball, hole, hitbox);
@@ -638,11 +635,12 @@ namespace PVegas2K25ProTour
             }
         }
 
-        /*
-         * This method subtracts the appropriate amount of coins for purchasing
-         * a new hat cosmetic and saves the new player coin total to the save file. 
-         */
-
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the color blank button
+        /// which when clicked resets the balls color to white
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void BlankButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -650,6 +648,13 @@ namespace PVegas2K25ProTour
             saveGame();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the cosmetic blank button
+        /// which resents the ball back to its defualt appearance
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void NoHat_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -658,6 +663,13 @@ namespace PVegas2K25ProTour
             saveGame();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the red button in the shop
+        /// which changes the ball to red
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void RedButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -665,6 +677,13 @@ namespace PVegas2K25ProTour
             saveGame();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the green button in the shop
+        /// which changes the ball to green
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void GreenButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -672,6 +691,13 @@ namespace PVegas2K25ProTour
             saveGame();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the blue button in the shop
+        /// which changes the ball to blue
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void BlueButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -680,32 +706,73 @@ namespace PVegas2K25ProTour
             LoadContent();
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the hat button 
+        /// which will put a hat on the ball
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void purchaseHat()
         {
             coins -= 50;
             playerRecord.Coins = coins;
             SaveLoadSystem.Save(playerRecord);
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up volume button 
+        /// in the settings screen 
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void upVolume_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(1);
             _volume = volume;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality down volume button 
+        /// in the settings screen 
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void downVolume_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(2);
             _volume = volume;
         }
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up sensitivity button
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+
         private void upSens_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(3);
             _sensitivity = sensitivity;
         }
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the down sensitivity button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
+
         private void downSens_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(4);
             _sensitivity = sensitivity;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the up hole size button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void upHole_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(5);
@@ -713,12 +780,25 @@ namespace PVegas2K25ProTour
 
 
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the down hole size button 
+        /// in the settings screen
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void downHole_Click(object sender, EventArgs e)
         {
             (int volume, int sensitivity, int holeSize) = AdjustSettingVal(6);
             _holeSize = holeSize;
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the NovelySodaHat cosmetic 
+        /// button in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void Cosmetic3Button_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -736,6 +816,12 @@ namespace PVegas2K25ProTour
             }
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the Top Hat button 
+        /// in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void Cosmetic2Button_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -753,6 +839,12 @@ namespace PVegas2K25ProTour
             }
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the sunglasses button 
+        /// in the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void Cosmetic1Button_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -770,6 +862,12 @@ namespace PVegas2K25ProTour
                 LoadContent();
             }
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the shop button which will open the shop
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void ShopingButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -777,6 +875,12 @@ namespace PVegas2K25ProTour
             LoadContent();
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the Next level button
+        /// which when clicked loads the next level
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void NextButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -802,6 +906,12 @@ namespace PVegas2K25ProTour
             }
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the level 6 button which will
+        /// load level 6
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void SixButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -834,7 +944,11 @@ namespace PVegas2K25ProTour
                 Debug.WriteLine("Level 5 not unlocked!!");
             }
         }
-
+        /// Method used to give functionality to the level 5 button which will
+        /// load level 5
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void FiveButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -868,6 +982,12 @@ namespace PVegas2K25ProTour
             }
 
         }
+
+        /// Method used to give functionality to the level 4 button which will
+        /// load level 4
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void FourButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -901,6 +1021,12 @@ namespace PVegas2K25ProTour
             }
 
         }
+
+        /// Method used to give functionality to the level 3 button which will
+        /// load level 3
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void ThreeButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -935,6 +1061,11 @@ namespace PVegas2K25ProTour
             }
         }
 
+        /// Method used to give functionality to the level 2 button which will
+        /// load level 2
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void TwoButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -968,6 +1099,11 @@ namespace PVegas2K25ProTour
             }
         }
 
+        /// Method used to give functionality to the level 1 button which will
+        /// load level 1
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void OneButton_Click(object sender, EventArgs e)
         {
             soundEffects[2].Play();
@@ -1001,6 +1137,12 @@ namespace PVegas2K25ProTour
             }
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the settings button
+        /// which will load the settings screen when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             previousGameState = stateOfGame;
@@ -1008,6 +1150,13 @@ namespace PVegas2K25ProTour
             soundEffects[2].Play();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the menu button which 
+        /// will load the main menu when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void menuButton_Click(Object sender, EventArgs e)
         {
             previousGameState = "menu";
@@ -1015,6 +1164,13 @@ namespace PVegas2K25ProTour
             soundEffects[2].Play();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the level button 
+        /// which brings up a list of level buttons when clicked
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void LevelButton_Click(object sender, EventArgs e)
         {
             previousGameState = stateOfGame;
@@ -1022,17 +1178,38 @@ namespace PVegas2K25ProTour
             soundEffects[2].Play();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the back button 
+        /// which reverts the game to the previous game state
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void BackButton_Click(object sender, EventArgs e)
         {
             stateOfGame = previousGameState;
             soundEffects[2].Play();
             LoadContent();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the quit button which
+        /// closes the game
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void QuitButton_Click(object sender, System.EventArgs e)
         {
             soundEffects[2].Play();
             Exit();
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the play button 
+        /// which will load the game from level 1
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void PlayButton_Click(object sender, System.EventArgs e)
         {
             stateOfGame = "play";
@@ -1050,6 +1227,11 @@ namespace PVegas2K25ProTour
             MenuButton.setOffset(renderer.getOffset());
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to resize the screen
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// </summary>---------------------------------------------------------
         private void windowClientSizeChanged(object sender, System.EventArgs e)
         {
             _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
@@ -1065,6 +1247,12 @@ namespace PVegas2K25ProTour
             }
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to give functionality to the "delete button"
+        /// which resets all user currency and consmetics
+        /// <param name="sender"> The object that triggers the event</param>
+        /// <param name="e">The event data used in this instance</param>
+        /// </summary>---------------------------------------------------------
         private void DeleteButton_Click(object sender, System.EventArgs e)
         {
             //add delete progress conditions here
@@ -1108,7 +1296,7 @@ namespace PVegas2K25ProTour
                 if (canIncrementHolesCompleted)
                 {
                     Debug.WriteLine("Updating stats counters...");
-                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()), 
+                    saveLevelScore(calculateScore(golf_ball.getStrokeCount()),
                         level_manager.currentLevel());
                     totalHolesCompleted++;
 
@@ -1135,19 +1323,6 @@ namespace PVegas2K25ProTour
             shot.setSensitivity(getSensitivityVal());
 
             base.Update(gameTime);
-        }
-        private void swingCounter()
-        {
-
-            if (golf_ball.getStrokeCount() > counter)
-            {
-                counter++;
-                soundEffects[1].Play();
-            }
-            else if (golf_ball.getStrokeCount() == 0)
-            {
-                counter = 0;
-            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -1307,11 +1482,19 @@ namespace PVegas2K25ProTour
             dragging_mouse = newDraggingState;
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Returns the "game_paused" bool
+        /// </summary>---------------------------------------------------------
         public bool isGamePaused()
         {
             return game_paused;
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to calculate the score for a level
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int calculateScore(int number_of_shots)
         {
             int level_score = (int)(score - number_of_shots * SHOT_PENALTY);
@@ -1321,10 +1504,20 @@ namespace PVegas2K25ProTour
             }
             return level_score;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to alter the score of a level
+        /// </summary>---------------------------------------------------------
         public void reduceScore()
         {
             score -= SCORE_REDUCTION_SCALE;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to calculate the coin amount obtained in a level
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int calculateCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1337,6 +1530,12 @@ namespace PVegas2K25ProTour
             //this.coins += coins;
             return (int)this.coins;
         }
+
+        //// <summary>----------------------------------------------------------
+        /// Method used to add the calculated coin amount to the users total 
+        /// <param name="number_of_shots"> the number of strokes the user
+        /// performed in a given level.</param>
+        /// </summary>---------------------------------------------------------
         public int addCoins(int number_of_shots)
         {
             //scaling value to be determined
@@ -1367,7 +1566,26 @@ namespace PVegas2K25ProTour
                 coins += (int)amount;
             }
         }
+        /// <summary>----------------------------------------------------------
+        /// Used to control the swing sound effect
+        /// </summary>---------------------------------------------------------
+        private void swingCounter()
+        {
 
+            if (golf_ball.getStrokeCount() > counter)
+            {
+                counter++;
+                soundEffects[1].Play();
+            }
+            else if (golf_ball.getStrokeCount() == 0)
+            {
+                counter = 0;
+            }
+        }
+
+        //// <summary>----------------------------------------------------------
+        /// Method that is used to populate the vicoty screen
+        /// </summary>---------------------------------------------------------
         public void populateVictoryScreen(int number_of_shots)
         {
             //Finds the  center of the text
@@ -1387,7 +1605,9 @@ namespace PVegas2K25ProTour
             _sprite_batch.DrawString(font, score, score_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
             _sprite_batch.DrawString(font, coins, coins_text_pos, Color.Black, 0, textMiddlePoint, 2.0f, SpriteEffects.None, 0.5f);
         }
-
+        //// <summary>----------------------------------------------------------
+        /// Method that actually draws the victory screen
+        /// </summary>---------------------------------------------------------
         public void drawVictoryScreen()
         {
             Vector2 screen_center = new Vector2(game_resolution.X / 2, game_resolution.Y / 2);
@@ -1403,12 +1623,21 @@ namespace PVegas2K25ProTour
             populateVictoryScreen(golf_ball.getStrokeCount());
         }
 
+        //// <summary>----------------------------------------------------------
+        /// Method used to adjust all values within the settings screen 
+        /// <param name="songChoice">value used to determine which song 
+        /// in the "song" lists to call and play.</param>
+        /// </summary>---------------------------------------------------------
         public void playSong(int songChoice)
         {
             MediaPlayer.Play(songs[songChoice]);
         }
 
-        //Settings class for now until we implement screen managment
+        //// <summary>----------------------------------------------------------
+        /// Method used to adjust all values within the settings screen 
+        /// <param name="choice">value used to determin which setting
+        /// to alter.</param>
+        /// </summary>---------------------------------------------------------
         public (int volume, int sensitivity, int holeSize) AdjustSettingVal(int choice)
         {
             int volume = playerRecord.volumePreference;
@@ -1455,6 +1684,9 @@ namespace PVegas2K25ProTour
             return (volume, sensitivity, holeSize);
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Method that does the work and logic behind drawing the settings screen
+        /// </summary>---------------------------------------------------------
         public void populateSettingsScreen()
         {
             Vector2 textMiddlePoint = font.MeasureString("Settings") / 2;
@@ -1463,7 +1695,7 @@ namespace PVegas2K25ProTour
 
             Vector2 hole_text_pos = new Vector2(-200, 100) + screen_center;
             Vector2 hole_value_pos = new Vector2(-140, 155) + screen_center;
-        
+
 
             Vector2 sensitivity_text_pos = new Vector2(160, 100) + screen_center;
             Vector2 sensitivity_value_pos = new Vector2(275, 155) + screen_center;
@@ -1530,6 +1762,10 @@ namespace PVegas2K25ProTour
             }
 
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Method that actually draws the settings screen
+        /// </summary>---------------------------------------------------------
         public void drawSettingsScreen()
         {
             line.SetData(new[] { Color.DarkSlateGray });
@@ -1537,47 +1773,35 @@ namespace PVegas2K25ProTour
                 Color.LightGray, angleOfLine, new Vector2(0, 0), SpriteEffects.None, 0);
             populateSettingsScreen();
         }
+        /// <summary>----------------------------------------------------------
+        /// Returns hole size
+        /// </summary>---------------------------------------------------------
 
         public float getHoleSize()
         {
             return _holeSize;
         }
 
+        /// <summary>----------------------------------------------------------
+        /// Returns sensitivity value
+        /// </summary>---------------------------------------------------------
+
         public float getSensitivityVal()
         {
             return _sensitivity;
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Returns volume value
+        /// </summary>---------------------------------------------------------
         public float getVolumeVal()
         {
             return _volume;
         }
 
-        public float getSpeedVal()
-        {
-            
-            float value = getSensitivityVal();
-            
-            if (value == 5)
-            {
-                return 1;
-            }
-            else
-            {
-                if (value>5)
-                {
-                    workVal = value - 5;
-                    return 1 + workVal * incrementVal;
-                }
-                else if(value < 5)
-                {
-                    workVal = 5 - value;
-                    return 1 - workVal * incrementVal;
-                }
-            }
-            
-            return value;
-        }
-
+        /// <summary>----------------------------------------------------------
+        ///Checks of the key "P" has been pressed and released
+        /// </summary>---------------------------------------------------------
         public bool IsKeyPressed()
         {
             KeyboardState currentKeyState = Keyboard.GetState();
