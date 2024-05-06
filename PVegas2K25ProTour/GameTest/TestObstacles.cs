@@ -1,15 +1,10 @@
 ﻿using PVegas2K25ProTour;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace GameTest
 {
     [TestClass]
-    internal class TestObsticles
+    public class TestObstacles
     {
         [TestMethod]
         public void testDownSlope()

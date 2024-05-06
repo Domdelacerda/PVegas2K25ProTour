@@ -59,10 +59,16 @@ namespace PVegas2K25ProTour
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            this.sprite_batch = spriteBatch;
-            this.sprite_batch.Draw(coin_texture, new Rectangle((int)pos.X, 
-                (int)pos.Y, (int)coin_texture.Width / 10, 
-                (int)coin_texture.Height / 10), Color.White);
+            if (this.sprite_batch == null)
+            {
+                this.sprite_batch = spriteBatch;
+            }
+            if (this.sprite_batch != null)
+            {
+                this.sprite_batch.Draw(coin_texture, new Rectangle((int)pos.X,
+                    (int)pos.Y, (int)coin_texture.Width / 10,
+                    (int)coin_texture.Height / 10), Color.White);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -109,6 +115,4 @@ namespace PVegas2K25ProTour
             return coinCost;
         }
     }
-
-   
 }
