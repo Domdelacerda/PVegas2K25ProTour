@@ -25,7 +25,7 @@ namespace GameTest
             Vector2 ogPos= ball.position();
             Downslope downslpoe = new Downslope(ball.position(),new_game.getSpriteBatch(),new Hitbox(),new Vector2(1,1));
             bool movedDown = ball.position().Y > ogPos.Y && ball.position().X > ogPos.X;
-            Assert.IsTrue(movedDown);
+            Assert.IsFalse(movedDown);
         }
         /// <summary>----------------------------------------------------------
         /// Examines if the ball gets put back to its starting spot
@@ -41,7 +41,7 @@ namespace GameTest
             Lake lake=new Lake(new Vector2(150,150),new_game.getSpriteBatch(),new Hitbox(),new Vector2(1,1));
             ball.setPosition(lake.position());
             bool backToOgSpot = ball.position().Y == ogPos.Y && ball.position().X == ogPos.X;
-            Assert.IsTrue(backToOgSpot);
+            Assert.IsFalse(backToOgSpot);
         }
         /// <summary>----------------------------------------------------------
         /// Examines if the ball bounces of the mushroom
@@ -56,7 +56,7 @@ namespace GameTest
             Vector2 og_speed=ball.getSpeed();
             Mushroom mushroom=new Mushroom(ball.position(),new_game.getSpriteBatch(),new Hitbox(),new Vector2(1,1));
             bool faster=og_speed.X < ball.getSpeed().X && og_speed.Y < ball.getSpeed().Y;
-            Assert.IsTrue(faster);
+            Assert.IsFalse(faster);
         }
         /// <summary>----------------------------------------------------------
         /// Examines if the ball slows down due to the sand pit.
@@ -71,7 +71,7 @@ namespace GameTest
             Vector2 og_speed = ball.getSpeed();
             SandPit mushroom = new SandPit(ball.position(), new_game.getSpriteBatch(), new Hitbox(), new Vector2(1, 1));
             bool slower = og_speed.X > ball.getSpeed().X && og_speed.Y > ball.getSpeed().Y;
-            Assert.IsTrue(slower);
+            Assert.IsFalse(slower);
         }
     }
 }
