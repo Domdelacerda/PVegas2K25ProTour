@@ -1,11 +1,21 @@
 ﻿using PVegas2K25ProTour;
 using Microsoft.Xna.Framework;
-
+//-----------------------------------------------------------------------------
+// Team Name: Compu-Force
+// Project: PVegas Tour 2K25 top-down golfing game
+// Purpose: Continuously test the functionality of the obsticles
+//-----------------------------------------------------------------------------
 namespace GameTest
 {
+    /// <summary>--------------------------------------------------------------
+    /// Tests all the different behaviors of obsticles in this test class
+    /// </summary>-------------------------------------------------------------
     [TestClass]
     public class TestObstacles
     {
+        /// <summary>----------------------------------------------------------
+        /// Examines if the ball goes down the slope at all
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void testDownSlope()
         {
@@ -17,7 +27,9 @@ namespace GameTest
             bool movedDown = ball.position().Y > ogPos.Y && ball.position().X > ogPos.X;
             Assert.IsTrue(movedDown);
         }
-
+        /// <summary>----------------------------------------------------------
+        /// Examines if the ball gets put back to its starting spot
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void testLakeAndPuddle()
         {
@@ -31,7 +43,9 @@ namespace GameTest
             bool backToOgSpot = ball.position().Y == ogPos.Y && ball.position().X == ogPos.X;
             Assert.IsTrue(backToOgSpot);
         }
-
+        /// <summary>----------------------------------------------------------
+        /// Examines if the ball bounces of the mushroom
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void testMushroom()
         {
@@ -44,7 +58,9 @@ namespace GameTest
             bool faster=og_speed.X < ball.getSpeed().X && og_speed.Y < ball.getSpeed().Y;
             Assert.IsTrue(faster);
         }
-
+        /// <summary>----------------------------------------------------------
+        /// Examines if the ball slows down due to the sand pit.
+        /// </summary>---------------------------------------------------------
         [TestMethod]
         public void testSandPit()
         {
