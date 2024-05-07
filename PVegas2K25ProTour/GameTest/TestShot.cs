@@ -201,5 +201,55 @@ namespace GameTest
 
             Assert.IsTrue(shot_reference.shotReleased());
         }
+
+        /// <summary>----------------------------------------------------------
+        /// Checks to see if the shot released increments the Stroke counter by 1,
+        /// expected value should be 1
+        /// </summary>---------------------------------------------------------
+        [TestMethod]
+        public void testShotCancelShot()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+
+            // set mouse position and ball center position to different 
+            // then call windup shot
+
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+
+            shot_reference.cancelShot();
+
+            Assert.IsTrue(shot_reference.launchPower() == 0);
+
+        }
+
+        [TestMethod]
+        public void testShotStrokeCounter()
+        {
+            using var new_game = new GameControl();
+            new_game.RunOneFrame();
+            Ball golf_ball_reference = new_game.getBall();
+            Shot shot_reference = new_game.getShot();
+
+            // set mouse position and ball center position to different 
+            // then call windup shot
+
+            Vector2 point_on_map = golf_ball_reference.center();
+            point_on_map.X += golf_ball_reference.radius();
+            point_on_map.Y += golf_ball_reference.radius();
+            shot_reference.windupShot(point_on_map,
+                golf_ball_reference.center());
+
+            shot_reference.releaseShot(golf_ball_reference);
+            shot_reference.Update(false, point_on_map, golf_ball_reference);
+
+            Assert.IsTrue(shot_reference.getStrokeCount() ==1);
+        }
     }
 }
