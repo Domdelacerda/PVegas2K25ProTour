@@ -12,4 +12,6 @@ The last step is to build the solution by clicking on the build tab in the toolb
 Level 5 contains a slight bug, where the 2nd downslope does not act as intended. This happens due to the logic of the obstacle. This would be easy fix, but due to time constraints it was unable to be fixed.
 Obstacles have a bug with collision, where if ball is hit in a perfect way can cause ball to appear to be stuck to whatever it has collided with whether it is an obstacle or border. Due to the construction of our collision, it simple would have been way to large of an undertaking to try and accomplish this debugging. Implementing Full screen doesn't have a bug, but does contains a performance issue, where it may take a while to load Full screen. Coin updating has an issue, where it doen't always update. This issue wasn't fixed we struggled to locate source of the issue.
 
+One of the most prominent design dificencies was our game control class. It became way to bloated, and defintitly was in need of a redesign. It was in desperate need of being broken up into its many functions that it had absorbed. 
 
+(ADD test code coverage regeneration)
