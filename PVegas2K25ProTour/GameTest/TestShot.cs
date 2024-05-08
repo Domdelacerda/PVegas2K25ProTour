@@ -243,13 +243,13 @@ namespace GameTest
             Vector2 point_on_map = golf_ball_reference.center();
             point_on_map.X += golf_ball_reference.radius();
             point_on_map.Y += golf_ball_reference.radius();
-            shot_reference.windupShot(point_on_map,
-                golf_ball_reference.center());
 
-            shot_reference.releaseShot(golf_ball_reference);
+            int initial_stroke_count = shot_reference.getStrokeCount();
+            shot_reference.Update(true, point_on_map, golf_ball_reference);
             shot_reference.Update(false, point_on_map, golf_ball_reference);
 
-            Assert.IsTrue(shot_reference.getStrokeCount() ==1);
+            Assert.IsTrue(shot_reference.getStrokeCount() == 
+                1 + initial_stroke_count);
         }
     }
 }
